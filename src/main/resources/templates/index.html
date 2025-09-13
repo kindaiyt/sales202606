@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<h1>インデックスページ</h1>
+<p>ようこそ、<span th:text="${userName}">ユーザー</span></p>
+
+<div th:if="${loggedIn}">
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">ログアウト</button>
+    </form>
+</div>
+<div th:unless="${loggedIn}">
+    <a th:href="@{/oauth2/authorization/google}">ログイン</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>店舗案内</title>
+</head>
+<body>
+<h1>ホームページ</h1>
+
+<p>こんにちは、<span th:text="${userName}">ゲスト</span> さん</p>
+
+<div th:if="${storeName}">
+    <p>
+        「<span th:text="${storeName}"></span>」の情報を表示します。<br>
+        違う店舗の名前が表示されている場合は、
+        <span th:text="${adminEmail}"></span>
+        までご連絡ください。
+    </p>
+    <a th:href="${storeUrl}">店舗ページへ進む</a><br><br>
+</div>
+
+<div th:if="${storeName == null}">
+    <p>店舗情報が登録されていません。</p>
+</div>
+
+<!-- ログイン/ログアウト切り替え -->
+<div th:if="${userName == 'ゲスト'}">
+    <a th:href="@{/oauth2/authorization/google}">ログイン</a>
+</div>
+<div th:if="${userName != 'ゲスト'}">
+    <a th:href="@{/logout}">ログアウト</a>
+</div>
+
+</body>
+</html>
