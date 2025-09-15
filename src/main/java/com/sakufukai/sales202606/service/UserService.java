@@ -15,20 +15,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public java.util.Optional<User> findByGoogleId(String googleId) {
-        return userRepository.findByGoogleId(googleId);
-    }
-
+    /**
+     * メールアドレスをキーとしてユーザーを取得、なければ作成
+     */
     @Transactional
     public User loadOrCreateUser(OidcUser oidcUser) {
-        String googleId = oidcUser.getSubject();
         String name = oidcUser.getFullName();
         String email = oidcUser.getEmail();
 
-        // DBに存在するか確認
-        return userRepository.findByGoogleId(googleId).orElseGet(() -> {
+        // メールアドレスで存在チェック
+        return userRepository.findByEmail(email).orElseGet(() -> {
             User newUser = new User();
-            newUser.setGoogleId(googleId);
             newUser.setEmail(email);
             newUser.setName(name);
             newUser.setRole(Role.PENDING); // デフォルトは承認待ち
@@ -36,10 +33,13 @@ public class UserService {
         });
     }
 
+    /**
+     * メールアドレスでユーザーのロール変更
+     */
     @Transactional
-    public void changeUserRole(Long userId, Role newRole) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません: " + userId));
+    public void changeUserRole(String email, Role newRole) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません: " + email));
         user.setRole(newRole);
         userRepository.save(user);
     }

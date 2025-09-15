@@ -12,14 +12,8 @@ import lombok.Setter;
 @Setter
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String googleId; // Google OIDC の sub
-
-    @Column(unique = true, nullable = false)
-    private String email;
+    @Column(nullable = false, unique = true)
+    private String email; // 主キーに変更
 
     private String name;
 
