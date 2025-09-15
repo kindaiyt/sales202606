@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー管理</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<main class="content">
+    <h1>ユーザー管理</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Google ID</th>
+            <th>名前</th>
+            <th>現在のロール</th>
+            <th>変更</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.googleId}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <form th:action="@{'/admin/users/' + ${user.id} + '/role'}" method="post">
+                    <select name="role">
+                        <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
+                        <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">ADMIN</option>
+                        <option value="PENDING" th:selected="${user.role == 'PENDING'}">PENDING</option>
+                    </select>
+                    <button type="submit">変更</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+</body>
+</html>
