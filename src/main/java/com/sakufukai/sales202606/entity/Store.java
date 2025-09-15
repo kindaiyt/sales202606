@@ -1,24 +1,24 @@
 package com.sakufukai.sales202606.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
-@Table(name = "Store")
+@Table(name = "store")
+@Getter
+@Setter
 public class Store {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "store")
-    private List<Product> products;
+    private String url; // /store/◯◯ で使うURL
 
     @OneToMany(mappedBy = "store")
     private List<UserStore> userStores;
-
-    // getter/setter
 }
