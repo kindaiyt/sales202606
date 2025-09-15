@@ -1,5 +1,6 @@
 package com.sakufukai.sales202606.controller;
 
+import com.sakufukai.sales202606.entity.Role;
 import com.sakufukai.sales202606.entity.Store;
 import com.sakufukai.sales202606.entity.User;
 import com.sakufukai.sales202606.entity.UserStore;
@@ -32,13 +33,17 @@ public class HomeController {
         User user = userService.loadOrCreateUser(oidcUser);
 
         // 承認待ちなら専用画面へ
-        if ("PENDING".equals(user.getRole())) {
+        if (user.getRole() == Role.PENDING) {
             model.addAttribute("userName", user.getName());
             model.addAttribute("message", "管理者の承認待ちです。");
             return "pending"; // pending.html を用意
         }
 
         model.addAttribute("userName", user.getName());
+
+        // 管理者の場合のフラグ
+        boolean isAdmin = user.getRole() == Role.ADMIN;
+        model.addAttribute("isAdmin", isAdmin);
 
         // ユーザーが持つ店舗を取得（仮に1店舗目を使用）
         List<UserStore> userStores = user.getUserStores();

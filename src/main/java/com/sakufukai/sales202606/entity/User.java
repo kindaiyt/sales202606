@@ -23,7 +23,9 @@ public class User {
 
     private String name;
 
-    private String role = "PENDING"; // 初回は承認待ち（PENDING, USER, ADMIN）
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.PENDING; // 初回は承認待ち（PENDING, USER, ADMIN）
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
