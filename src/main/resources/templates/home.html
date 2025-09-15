@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>店舗案内</title>
+    <!-- 共通CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- CSRFトークン -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<h1>ホームページ</h1>
 
-<p>こんにちは、<span th:text="${userName}">ゲスト</span> さん</p>
+<!-- ヘッダー -->
+<div th:replace="fragments/header :: header"></div>
 
-<div th:if="${storeName}">
-    <p>
-        「<span th:text="${storeName}"></span>」の情報を表示します。<br>
-        違う店舗の名前が表示されている場合は、
-        <span th:text="${adminEmail}"></span>
-        までご連絡ください。
-    </p>
-    <a th:href="${storeUrl}">店舗ページへ進む</a><br><br>
-</div>
+<main class="content">
+    <h1>ホームページ</h1>
+    <p>こんにちは、<span th:text="${userName}">ゲスト</span> さん</p>
 
-<div th:if="${storeName == null}">
-    <p>店舗情報が登録されていません。</p>
-</div>
+    <div th:if="${storeName}" class="store-info">
+        <p>
+            「<span th:text="${storeName}"></span>」の情報を表示します。<br>
+            違う店舗の名前が表示されている場合は、
+            <span th:text="${adminEmail}"></span>までご連絡ください。
+        </p>
+        <a th:href="${storeUrl}" class="store-link">店舗ページへ進む</a>
+    </div>
 
-<!-- ログイン/ログアウト切り替え -->
-<div th:if="${userName == 'ゲスト'}">
-    <a th:href="@{/oauth2/authorization/google}">ログイン</a>
-</div>
-<div th:if="${userName != 'ゲスト'}">
-    <a th:href="@{/logout}">ログアウト</a>
-</div>
+    <div th:if="${storeName == null}" class="store-info">
+        <p>店舗情報が登録されていないか、ログインしていません。
+            ログインしていない場合、右上のメニューからログインしてください。</p>
+    </div>
+</main>
+
+<!-- JS -->
+<script src="/js/logout.js" defer></script>
+<script src="/js/menu.js" defer></script>
 
 </body>
 </html>

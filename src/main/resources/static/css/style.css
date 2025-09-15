@@ -1,0 +1,109 @@
+/* 全体 */
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+    color: #333;
+}
+
+/* ヘッダー */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    padding: 15px 20px;
+    color: white;
+    position: relative;
+}
+
+.logo-link {
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.auth-links .login-btn {
+    background: white;
+    color: #007bff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.auth-links .login-btn:hover {
+    background: #f0f0f0;
+}
+
+/* ハンバーガーメニュー */
+.menu-toggle {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.menu {
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: height 0.3s ease, padding 0.3s ease;
+    z-index: 1000;
+}
+
+.menu.active {
+    padding: 10px;
+    /* 高さはJSで設定 */
+}
+
+.logout-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: 0.3s;
+}
+.logout-btn:hover {
+    background: #e60000;
+}
+
+/* コンテンツ */
+.content {
+    padding: 20px;
+}
+
+.store-info {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.store-link {
+    display: inline-block;
+    margin-top: 10px;
+    background: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.store-link:hover {
+    background: #0056b3;
+}

@@ -1,0 +1,21 @@
+<header th:fragment="header" class="site-header">
+    <div class="logo">
+        <a href="/" class="logo-link">店舗案内</a>
+    </div>
+
+    <div class="menu-container">
+        <button id="hamburger" class="menu-toggle">☰</button>
+        <div class="menu" id="menu">ss
+            <!-- ログインしていない場合 -->
+            <div th:if="${userName == 'ゲスト'}" class="menu-links">
+                <a href="/stores" class="menu-link">登録店舗一覧</a>
+                <a href="/oauth2/authorization/google" class="menu-link login-btn">ログイン</a>
+            </div>
+            <!-- ログインしている場合 -->
+            <div th:if="${userName != 'ゲスト'}" class="menu-links">
+                <button id="logoutBtn" class="logout-btn">ログアウト</button>
+                <!-- 他のリンクもここに追加可能 -->
+            </div>
+        </div>
+    </div>
+</header>

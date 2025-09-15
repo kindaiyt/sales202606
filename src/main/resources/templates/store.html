@@ -3,10 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>店舗ページ</title>
+    <!-- 共通CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- CSRFトークン -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<h1>店舗ページ</h1>
-<p>ここに店舗ごとの商品情報を表示します。</p>
-<a href="/">戻る</a>
+
+<!-- 共通ヘッダー -->
+<div th:replace="fragments/header :: header"></div>
+
+<main class="content">
+    <h1>店舗ページ</h1>
+    <p>ここに店舗ごとの商品情報を表示します。</p>
+
+    <div th:if="${storeName}" class="store-info">
+        <p>
+            「<span th:text="${storeName}"></span>」の商品情報を表示します。
+        </p>
+    </div>
+
+    <div th:if="${storeName == null}" class="store-info">
+        <p>店舗情報が登録されていないか、ログインしていません。</p>
+    </div>
+
+    <a href="/" class="store-link">ホームに戻る</a>
+</main>
+
+<!-- JS -->
+<script src="/js/logout.js" defer></script>
+<script src="/js/menu.js" defer></script>
+
 </body>
 </html>

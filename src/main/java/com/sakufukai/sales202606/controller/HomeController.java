@@ -15,8 +15,8 @@ public class HomeController {
     // 仮のマッピング（本番はDB管理が推奨）
     private static final Map<String, StoreInfo> storeMapping = new HashMap<>();
     static {
-        storeMapping.put("2533340439b@kindai.ac.jp", new StoreInfo("Aliceのお店", "/store/alice", "admin-alice@example.com"));
-        storeMapping.put("bob@gmail.com", new StoreInfo("Bobのショップ", "/store/bob", "admin-bob@example.com"));
+        storeMapping.put("2533340439b@kindai.ac.jp", new StoreInfo("Aliceのお店", "/store/alice"));
+        storeMapping.put("bob@gmail.com", new StoreInfo("Bobのショップ", "/store/bob"));
     }
 
     @GetMapping("/")
@@ -29,7 +29,6 @@ public class HomeController {
             if (storeInfo != null) {
                 model.addAttribute("storeName", storeInfo.getName());
                 model.addAttribute("storeUrl", storeInfo.getUrl());
-                model.addAttribute("adminEmail", storeInfo.getAdminEmail());
             }
         } else {
             model.addAttribute("userName", "ゲスト");
@@ -41,15 +40,12 @@ public class HomeController {
     static class StoreInfo {
         private String name;
         private String url;
-        private String adminEmail;
 
-        public StoreInfo(String name, String url, String adminEmail) {
+        public StoreInfo(String name, String url) {
             this.name = name;
             this.url = url;
-            this.adminEmail = adminEmail;
         }
         public String getName() { return name; }
         public String getUrl() { return url; }
-        public String getAdminEmail() { return adminEmail; }
     }
 }
