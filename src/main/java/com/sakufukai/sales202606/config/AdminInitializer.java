@@ -36,8 +36,6 @@ public class AdminInitializer implements CommandLineRunner {
                         newAdmin.setEmail(email);
                         newAdmin.setName("Admin");
                         newAdmin.setRole(Role.ADMIN);
-                        // google_id は必須なのでダミー値を設定
-                        newAdmin.setGoogleId(email);
                         newAdmin.setCreatedAt(LocalDateTime.now());
                         newAdmin.setUpdatedAt(LocalDateTime.now());
                         userRepository.save(newAdmin);

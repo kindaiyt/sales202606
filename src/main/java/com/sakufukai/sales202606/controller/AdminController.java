@@ -43,14 +43,14 @@ public class AdminController {
     }
 
     // ユーザーロール変更
-    @PostMapping("/users/{id}/role")
+    @PostMapping("/users/{email}/role")
     public String changeRole(@AuthenticationPrincipal OidcUser oidcUser,
-                             @PathVariable Long id,
+                             @PathVariable String email,
                              @RequestParam Role role) {
         if (!isAdmin(oidcUser)) {
             return "redirect:/";
         }
-        userService.changeUserRole(id, role);
+        userService.changeUserRole(email, role);
         return "redirect:/admin/users";
     }
 }
