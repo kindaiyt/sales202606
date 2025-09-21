@@ -16,7 +16,13 @@
 
 <main class="content">
     <h1>ホームページ</h1>
-    <p>こんにちは、<span th:text="${userName}">ゲスト</span> さん</p>
+    <div th:if="${#authorization.expression('isAnonymous()')}">
+        ようこそ、ゲストさん
+    </div>
+
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+        ようこそ、[[${#authentication.principal.attributes['name']}]] さん
+    </div>
 
     <div th:if="${storeName}" class="store-info">
         <p>

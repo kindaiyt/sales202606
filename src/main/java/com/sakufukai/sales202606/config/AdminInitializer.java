@@ -34,7 +34,7 @@ public class AdminInitializer implements CommandLineRunner {
                     () -> {
                         User newAdmin = new User();
                         newAdmin.setEmail(email);
-                        newAdmin.setName("Admin");
+                        newAdmin.setName("（未ログイン）");
                         newAdmin.setRole(Role.ADMIN);
                         newAdmin.setCreatedAt(LocalDateTime.now());
                         newAdmin.setUpdatedAt(LocalDateTime.now());
