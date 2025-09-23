@@ -21,4 +21,7 @@ public class Store {
 
     @OneToMany(mappedBy = "store")
     private List<UserStore> userStores;
+
+    @OneToMany(mappedBy = "store")
+    private List<Product> products;
 }

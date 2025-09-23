@@ -41,19 +41,18 @@ public class HomeController {
 
         model.addAttribute("userName", user.getName());
 
-        // 管理者の場合のフラグ
-        boolean isAdmin = user.getRole() == Role.ADMIN;
-        model.addAttribute("isAdmin", isAdmin);
+        // 管理者フラグ
+        model.addAttribute("isAdmin", user.getRole() == Role.ADMIN);
 
-        // ユーザーが持つ店舗を取得（仮に1店舗目を使用）
+        // ユーザーが持つ店舗を取得
         List<UserStore> userStores = user.getUserStores();
         if (userStores != null && !userStores.isEmpty()) {
+            // ひとまず最初の店舗のみ利用
             Store store = userStores.get(0).getStore();
             model.addAttribute("storeName", store.getName());
-            model.addAttribute("storeUrl", "/store/" + store.getName());
-        } else {
-            model.addAttribute("storeName", "店舗が登録されていません");
+            model.addAttribute("storeUrl", "/store/" + store.getUrl());
         }
+        // 店舗が無い場合は何もセットしない → home.html 側の null 判定に委ねる
 
         return "home"; // home.html
     }

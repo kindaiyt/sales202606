@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>プロフィール編集</title>
+</head>
+<body>
+<h1>プロフィール編集</h1>
+
+<form th:action="@{/users/me/edit}" method="post">
+    <p>メール: <span th:text="${user.email}"></span></p>
+    <p>名前: <input type="text" th:name="name" th:value="${user.name}" /></p>
+    <p>ロール: <span th:text="${user.role}"></span></p>
+    <button type="submit">更新</button>
+</form>
+
+
+</body>
+</html>

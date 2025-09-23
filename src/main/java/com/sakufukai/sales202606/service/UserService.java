@@ -7,6 +7,9 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -44,7 +47,23 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Iterable<User> findAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Transactional
+    public void updateUserInfo(String email, String name) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません: " + email));
+
+        user.setName(name);
+        user.setUpdatedAt(java.time.LocalDateTime.now());
+
+        userRepository.save(user);
+    }
+
 }

@@ -23,6 +23,7 @@
             <th>名前</th>
             <th>現在のロール</th>
             <th>変更</th>
+            <th>所属店舗</th>
         </tr>
         </thead>
         <tbody>
@@ -38,6 +39,19 @@
                         <option value="PENDING" th:selected="${user.role == 'PENDING'}">PENDING</option>
                     </select>
                     <button type="submit">変更</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{'/admin/users/' + ${user.email} + '/store'}" method="post">
+                    <select name="storeId">
+                        <option value="">未設定</option>
+                        <option th:each="store : ${stores}"
+                                th:value="${store.id}"
+                                th:text="${store.name}"
+                                th:selected="${user.userStores[0]?.store?.id == store.id}">
+                        </option>
+                    </select>
+                    <button type="submit">付与</button>
                 </form>
             </td>
         </tr>

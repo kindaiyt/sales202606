@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>店舗案内</title>
-    <!-- 共通CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- CSRFトークン -->
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
@@ -16,21 +14,21 @@
 
 <main class="content">
     <h1>ホームページ</h1>
-    <div th:if="${#authorization.expression('isAnonymous()')}">
+
+    <div th:if="${userName == 'ゲスト'}">
         ようこそ、ゲストさん
     </div>
 
-    <div th:if="${#authorization.expression('isAuthenticated()')}">
-        ようこそ、[[${#authentication.principal.attributes['name']}]] さん
+    <div th:if="${userName != 'ゲスト'}">
+        ようこそ、[[${userName}]] さん
     </div>
 
     <div th:if="${storeName}" class="store-info">
         <p>
             「<span th:text="${storeName}"></span>」の情報を表示します。<br>
-            違う店舗の名前が表示されている場合は、
-            <span th:text="${adminEmail}"></span>までご連絡ください。
+            違う店舗の名前が表示されている場合は、管理者までご連絡ください。
         </p>
-        <a th:href="${storeUrl}" class="store-link">店舗ページへ進む</a>
+        <a th:href="@{${storeUrl}}" class="store-link">店舗ページへ進む</a>
     </div>
 
     <div th:if="${storeName == null}" class="store-info">
@@ -39,7 +37,6 @@
     </div>
 </main>
 
-<!-- JS -->
 <script src="/js/logout.js" defer></script>
 <script src="/js/menu.js" defer></script>
 

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Page</title>
+</head>
+<body>
+<h1>My Page</h1>
+<p>Email: <span th:text="${user.email}"></span></p>
+<p>Name: <span th:text="${user.name}"></span></p>
+<p>Role: <span th:text="${user.role}"></span></p>
+<p>Created At: <span th:text="${user.createdAt}"></span></p>
+</body>
+</html>
