@@ -3,17 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>プロフィール編集</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<h1>プロフィール編集</h1>
 
-<form th:action="@{/users/me/edit}" method="post">
-    <p>メール: <span th:text="${user.email}"></span></p>
-    <p>名前: <input type="text" th:name="name" th:value="${user.name}" /></p>
-    <p>ロール: <span th:text="${user.role}"></span></p>
-    <button type="submit">更新</button>
-</form>
+<!-- ヘッダー -->
+<div th:replace="fragments/header :: header"></div>
 
+<main class="content">
+    <h1>プロフィール編集</h1>
+
+    <form th:action="@{/users/me/edit}" method="post">
+        <p>メール: <span th:text="${user.email}"></span></p>
+        <p>名前: <input type="text" th:name="name" th:value="${user.name}" /></p>
+        <button type="submit" class="btn">更新</button>
+        <a th:href="@{/users/me}" class="btn btn-secondary">戻る</a>
+    </form>
+</main>
+
+<script src="/js/logout.js" defer></script>
+<script src="/js/menu.js" defer></script>
 
 </body>
 </html>

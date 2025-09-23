@@ -14,6 +14,7 @@
             <!-- ログインしている場合 -->
             <div th:if="${userName != 'ゲスト'}" class="menu-links">
                 <button id="logoutBtn" class="logout-btn">ログアウト</button>
+                <a href="/users/me" class="menu-link">マイページ</a>
 
                 <!-- 管理者のみ表示 -->
                 <a th:if="${isAdmin}" href="/admin/users" class="menu-link">ユーザー管理</a>

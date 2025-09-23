@@ -107,3 +107,42 @@ body {
 .store-link:hover {
     background: #0056b3;
 }
+
+.form-box {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 6px;
+}
+
+.actions {
+    margin-top: 15px;
+}
+
+/* 共通ボタンスタイル */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* 戻るボタン用（色違い） */
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
