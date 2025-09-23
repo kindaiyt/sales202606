@@ -1,36 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>My Page</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>マイページ</title>
 </head>
 <body>
+<th:block layout:fragment="content">
 
-<!-- ヘッダー -->
-<div th:replace="fragments/header :: header"></div>
+    <main class="content">
+        <h1>マイページ</h1>
 
-<main class="content">
-    <h1>マイページ</h1>
+        <div class="user-info">
+            <p><strong>メールアドレス:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>名前:</strong> <span th:text="${user.name}"></span></p>
+            <!-- <p><strong>Role:</strong> <span th:text="${user.role}"></span></p> -->
+            <!-- <p><strong>Created At:</strong> <span th:text="${user.createdAt}"></span></p> -->
+        </div>
 
-    <div class="user-info">
-        <p><strong>メールアドレス:</strong> <span th:text="${user.email}"></span></p>
-        <p><strong>名前:</strong> <span th:text="${user.name}"></span></p>
-<!--        <p><strong>Role:</strong> <span th:text="${user.role}"></span></p>-->
-<!--        <p><strong>Created At:</strong> <span th:text="${user.createdAt}"></span></p>-->
-    </div>
+        <!-- 編集ページへのリンク -->
+        <div class="actions">
+            <a th:href="@{/users/me/edit}" class="btn">名前を変更</a>
+            <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+        </div>
+    </main>
 
-    <!-- 編集ページへのリンク -->
-    <div class="actions">
-        <a th:href="@{/users/me/edit}" class="btn">名前を変更</a>
-        <a href="/" class="btn btn-secondary">ホームへ戻る</a>
-    </div>
-</main>
-
-<script src="/js/logout.js" defer></script>
-<script src="/js/menu.js" defer></script>
-
+</th:block>
 </body>
 </html>

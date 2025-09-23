@@ -1,20 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
     <title>承認待ち</title>
-    <!-- 共通CSS -->
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- CSRFトークン -->
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-
-<!-- 共通ヘッダー -->
-<div th:replace="fragments/header :: header"></div>
-
-<main class="content">
+<main layout:fragment="content">
     <h1>承認待ち</h1>
 
     <div class="pending-info">
@@ -31,10 +23,6 @@
         </p>
     </div>
 </main>
-
-<!-- JS -->
-<script src="/js/logout.js" defer></script>
-<script src="/js/menu.js" defer></script>
 
 </body>
 </html>

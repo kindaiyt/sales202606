@@ -1,19 +1,35 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <title>店舗作成</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<h1>新しい店舗を作成</h1>
+<th:block layout:fragment="content">
 
-<form th:action="@{/admin/stores}" th:object="${store}" method="post">
-    <label>店舗名: <input type="text" th:field="*{name}" required></label><br>
-    <label>店舗URL: <input type="text" th:field="*{url}" required></label><br>
-    <button type="submit">作成</button>
-</form>
+    <main class="content">
+        <h1>新しい店舗を作成</h1>
 
-<a th:href="@{/admin/stores}">戻る</a>
+        <form th:action="@{/admin/stores}" th:object="${store}" method="post">
+            <div class="form-group">
+                <label for="name">店舗名:</label>
+                <input type="text" id="name" th:field="*{name}" required>
+            </div>
 
+            <div class="form-group">
+                <label for="url">店舗URL:</label>
+                <input type="text" id="url" th:field="*{url}" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">作成</button>
+                <a th:href="@{/admin/stores}" class="btn btn-secondary">戻る</a>
+            </div>
+        </form>
+    </main>
+
+</th:block>
 </body>
 </html>

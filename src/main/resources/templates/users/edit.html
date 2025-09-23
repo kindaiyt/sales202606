@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
     <title>プロフィール編集</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-
-<!-- ヘッダー -->
-<div th:replace="fragments/header :: header"></div>
-
-<main class="content">
+<main layout:fragment="content">
     <h1>プロフィール編集</h1>
 
     <form th:action="@{/users/me/edit}" method="post">
@@ -22,9 +16,5 @@
         <a th:href="@{/users/me}" class="btn btn-secondary">戻る</a>
     </form>
 </main>
-
-<script src="/js/logout.js" defer></script>
-<script src="/js/menu.js" defer></script>
-
 </body>
 </html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">店舗システム</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+
+<!-- 共通ヘッダー -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- コンテンツ -->
+<main class="content" layout:fragment="content"></main>
+
+<!-- 共通 JS -->
+<script src="/js/logout.js" defer></script>
+<script src="/js/menu.js" defer></script>
+
+<!-- ページ固有 JS の挿入ポイント -->
+<div layout:fragment="scripts"></div>
+
+</body>
+</html>

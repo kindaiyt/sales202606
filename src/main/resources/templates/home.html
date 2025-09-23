@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>店舗案内</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>ホーム</title>
 </head>
 <body>
-
-<!-- ヘッダー -->
-<div th:replace="fragments/header :: header"></div>
-
-<main class="content">
+<main layout:fragment="content">
     <h1>ホームページ</h1>
 
     <div th:if="${userName == 'ゲスト'}">
@@ -36,9 +30,6 @@
             ログインしていない場合、右上のメニューからログインしてください。</p>
     </div>
 </main>
-
-<script src="/js/logout.js" defer></script>
-<script src="/js/menu.js" defer></script>
 
 </body>
 </html>

@@ -1,20 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
     <title>店舗ページ</title>
-    <!-- 共通CSS -->
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- CSRFトークン -->
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-
-<!-- 共通ヘッダー -->
-<div th:replace="fragments/header :: header"></div>
-
-<main class="content">
+<main layout:fragment="content">
     <h1>店舗ページ</h1>
 
     <div th:if="${store != null}" class="store-info">
@@ -31,19 +23,16 @@
     </div>
 
     <div th:if="${store == null}" class="store-info">
-        <p>店舗情報が登録されていないか、Googleアカウントが朔風会に承認されていません。
-            ログインしているGoogleアカウントが正しいかどうか確かめてください。
+        <p>
+            店舗情報が登録されていないか、Googleアカウントが朔風会に承認されていません。<br>
+            ログインしているGoogleアカウントが正しいかどうか確かめてください。<br>
             正しい場合、
             <a href="mailto:sakufukai@gmail.com">sakufukai@gmail.com</a>
-            までご連絡ください。</p>
+            までご連絡ください。
+        </p>
     </div>
 
     <a href="/" class="store-link">ホームに戻る</a>
 </main>
-
-<!-- JS -->
-<script src="/js/logout.js" defer></script>
-<script src="/js/menu.js" defer></script>
-
 </body>
 </html>
