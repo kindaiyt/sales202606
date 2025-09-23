@@ -7,6 +7,7 @@ import com.sakufukai.sales202606.repository.StoreRepository;
 import com.sakufukai.sales202606.repository.UserRepository;
 import com.sakufukai.sales202606.repository.UserStoreRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,5 +54,10 @@ public class StoreService {
 
     public List<Store> findAll() {
         return storeRepository.findAll();
+    }
+
+    @Transactional
+    public Store save(Store store) {
+        return storeRepository.save(store);
     }
 }

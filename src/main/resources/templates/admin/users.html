@@ -42,17 +42,23 @@
                 </form>
             </td>
             <td>
-                <form th:action="@{'/admin/users/' + ${user.email} + '/store'}" method="post">
-                    <select name="storeId">
-                        <option value="">未設定</option>
-                        <option th:each="store : ${stores}"
-                                th:value="${store.id}"
-                                th:text="${store.name}"
-                                th:selected="${user.userStores[0]?.store?.id == store.id}">
-                        </option>
-                    </select>
-                    <button type="submit">付与</button>
-                </form>
+                <div th:if="${user.userStores == null or #lists.isEmpty(user.userStores)}">
+                    <!-- 店舗未割り当てなら作成ページにリンク -->
+                    <a th:href="@{'/admin/users/' + ${user.email} + '/store/create'}" class="btn">店舗を作成</a>
+                </div>
+                <div th:if="${user.userStores != null and !#lists.isEmpty(user.userStores)}">
+                    <!-- 既に店舗があるならセレクトボックス -->
+                    <form th:action="@{'/admin/users/' + ${user.email} + '/store'}" method="post">
+                        <select name="storeId">
+                            <option th:each="store : ${stores}"
+                                    th:value="${store.id}"
+                                    th:text="${store.name}"
+                                    th:selected="${user.userStores[0]?.store?.id == store.id}">
+                            </option>
+                        </select>
+                        <button type="submit">付与</button>
+                    </form>
+                </div>
             </td>
         </tr>
         </tbody>

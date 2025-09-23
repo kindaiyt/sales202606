@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>店舗作成</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<h1>新しい店舗を作成</h1>
+
+<form th:action="@{/admin/stores}" th:object="${store}" method="post">
+    <label>店舗名: <input type="text" th:field="*{name}" required></label><br>
+    <label>店舗URL: <input type="text" th:field="*{url}" required></label><br>
+    <button type="submit">作成</button>
+</form>
+
+<a th:href="@{/admin/stores}">戻る</a>
+
+</body>
+</html>

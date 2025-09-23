@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>店舗管理</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- CSRFトークンを追加 -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<main class="content">
+    <h1>店舗一覧</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>店舗名</th>
+            <th>店舗URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="store : ${stores}">
+            <td th:text="${store.name}"></td>
+            <td th:text="${store.url}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/admin/stores/new}" class="btn">新しい店舗を作成</a>
+    <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+</main>
+
+<script src="/js/logout.js" defer></script>
+<script src="/js/menu.js" defer></script>
+
+</body>
+</html>
