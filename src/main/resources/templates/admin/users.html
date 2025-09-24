@@ -3,10 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
-<!--<th:block layout:fragment="breadcrumb">-->
-<!--    管理 &gt; ユーザー管理-->
-<!--</th:block>-->
-
 <head>
     <meta charset="UTF-8">
     <title>ユーザー管理</title>
@@ -26,6 +22,7 @@
                 <th>現在のロール</th>
                 <th>変更</th>
                 <th>所属店舗</th>
+                <th>店舗付与</th>
             </tr>
             </thead>
             <tbody>
@@ -43,24 +40,32 @@
                         <button type="submit" class="btn">変更</button>
                     </form>
                 </td>
+
+                <!-- 所属店舗一覧 -->
                 <td>
-                    <div th:if="${user.userStores == null or #lists.isEmpty(user.userStores)}">
-                        <!-- 店舗未割り当てなら作成ページにリンク -->
-                        <a th:href="@{'/admin/users/' + ${user.email} + '/store/create'}" class="btn">店舗を作成</a>
-                    </div>
-                    <div th:if="${user.userStores != null and !#lists.isEmpty(user.userStores)}">
-                        <!-- 既に店舗があるならセレクトボックス -->
-                        <form th:action="@{'/admin/users/' + ${user.email} + '/store'}" method="post">
-                            <select name="storeId">
-                                <option th:each="store : ${stores}"
-                                        th:value="${store.id}"
-                                        th:text="${store.name}"
-                                        th:selected="${user.userStores[0]?.store?.id == store.id}">
-                                </option>
-                            </select>
-                            <button type="submit" class="btn">付与</button>
-                        </form>
-                    </div>
+                    <ul>
+                        <li th:each="us : ${user.userStores}">
+                            <span th:text="${us.store.name}"></span>
+                            <form th:action="@{'/admin/users/' + ${user.email} + '/store/' + ${us.store.id} + '/remove'}"
+                                  method="post"
+                                  style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                            </form>
+                        </li>
+                    </ul>
+                </td>
+
+                <!-- 店舗付与 -->
+                <td>
+                    <form th:action="@{'/admin/users/' + ${user.email} + '/store/add'}" method="post">
+                        <select name="storeId">
+                            <option th:each="store : ${stores}"
+                                    th:value="${store.id}"
+                                    th:text="${store.name}">
+                            </option>
+                        </select>
+                        <button type="submit" class="btn">追加</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
