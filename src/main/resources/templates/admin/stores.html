@@ -19,6 +19,7 @@
                 <th>ID</th>
                 <th>店舗名</th>
                 <th>店舗URL</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -26,6 +27,13 @@
                 <td th:text="${store.id}"></td>
                 <td th:text="${store.name}"></td>
                 <td th:text="${store.url}"></td>
+                <td>
+                    <form th:action="@{'/admin/stores/' + ${store.id} + '/delete'}"
+                          method="post"
+                          onsubmit="return confirm('本当に削除しますか？');">
+                        <button type="submit" class="btn btn-danger">削除</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

@@ -149,3 +149,7 @@ body {
 .breadcrumb ul {
     list-style: none; display: flex; gap: .5em;
 }
+
+.error-message {
+    color: red; margin-bottom: 1em;
+}

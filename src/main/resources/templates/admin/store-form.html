@@ -12,6 +12,9 @@
     <main class="content">
         <h1>新しい店舗を作成</h1>
 
+        <!-- エラー表示 -->
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <form th:action="@{/admin/stores}" th:object="${store}" method="post">
             <div class="form-group">
                 <label for="name">店舗名:</label>

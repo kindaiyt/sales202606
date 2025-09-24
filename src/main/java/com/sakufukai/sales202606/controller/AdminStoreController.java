@@ -37,8 +37,22 @@ public class AdminStoreController {
 
     // 店舗保存
     @PostMapping
-    public String saveStore(@ModelAttribute Store store) {
-        storeService.save(store);
+    public String saveStore(@ModelAttribute Store store, Model model) {
+        try {
+            storeService.save(store);
+            return "redirect:/admin/stores";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("store", store);
+            model.addAttribute("error", e.getMessage());
+            return "admin/store-form"; // エラー時はフォームに戻す
+        }
+    }
+
+
+    // 店舗削除
+    @PostMapping("/{id}/delete")
+    public String deleteStore(@PathVariable Long id) {
+        storeService.deleteStore(id);
         return "redirect:/admin/stores";
     }
 }

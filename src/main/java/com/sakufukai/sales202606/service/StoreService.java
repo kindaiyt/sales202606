@@ -58,6 +58,17 @@ public class StoreService {
 
     @Transactional
     public Store save(Store store) {
+        // 新規作成時のみチェック（id が null の場合）
+        if (store.getId() == null) {
+            storeRepository.findByUrl(store.getUrl()).ifPresent(existing -> {
+                throw new IllegalArgumentException("このURLは既に存在します: " + store.getUrl());
+            });
+        }
         return storeRepository.save(store);
+    }
+
+    @Transactional
+    public void deleteStore(Long id) {
+        storeRepository.deleteById(id);
     }
 }
