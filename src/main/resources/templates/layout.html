@@ -13,6 +13,15 @@
 <!-- 共通ヘッダー -->
 <div th:replace="fragments/header :: header"></div>
 
+<!-- パンくずリスト -->
+<!--<div class="breadcrumb">-->
+<!--    <a th:href="@{/}">ホーム</a>-->
+<!--    <span th:if="${requestURI != '/'}"> &gt;-->
+<!--        <th:block layout:fragment="breadcrumb"></th:block>-->
+<!--    </span>-->
+<!--</div>-->
+
+
 <!-- コンテンツ -->
 <main class="content" layout:fragment="content"></main>
 
