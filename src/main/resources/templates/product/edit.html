@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>商品編集</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <h1>商品編集</h1>
+
+    <form th:action="@{/product/update}" method="post">
+        <input type="hidden" name="id" th:value="${product.id}"/>
+        <div>
+            <label>商品名:</label>
+            <input type="text" name="name" th:value="${product.name}" required/>
+        </div>
+        <div>
+            <label>価格:</label>
+            <input type="number" name="price" th:value="${product.price}" required/>
+        </div>
+        <button type="submit">更新</button>
+    </form>
+
+    <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="margin-top: 1em;">
+        <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
+    </form>
+
+    <a th:href="@{'/store/' + ${product.store.url}}">店舗ページに戻る</a>
+</main>
+</body>
+</html>

@@ -54,4 +54,48 @@ public class ProductController {
         // 商品追加後、店舗ページにリダイレクト
         return "redirect:/store/" + storeUrl;
     }
+
+    // 商品更新処理
+    @PostMapping("/update")
+    public String updateProduct(
+            @RequestParam Long id,
+            @RequestParam String name,
+            @RequestParam double price
+    ) {
+        Product product = productService.findById(id);
+
+        product.setName(name);
+        product.setPrice(price);
+        productService.save(product);
+
+        return "redirect:/store/" + product.getStore().getUrl();
+    }
+
+    // 商品削除処理
+    @PostMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        Product product = productService.findById(id);
+
+        String storeUrl = product.getStore().getUrl();
+        productService.deleteById(id);
+
+        return "redirect:/store/" + storeUrl;
+    }
+
+    // 編集ページ表示
+    @GetMapping("/edit/{id}")
+    public String editProduct(@PathVariable Long id, Model model) {
+        Product product = productService.findById(id);
+        model.addAttribute("product", product);
+        return "product/edit"; // templates/product/edit.html
+    }
+
+    // 編集内容を保存
+    @PostMapping("/edit/{id}")
+    public String updateProduct(@PathVariable Long id,
+                                @ModelAttribute Product product) {
+        product.setId(id);
+        productService.save(product);
+        return "redirect:/stores/my";
+    }
 }

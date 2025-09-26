@@ -18,6 +18,14 @@
             <li th:each="product : ${store.products}">
                 <span th:text="${product.name}"></span> -
                 <span th:text="${product.price}"></span>円
+
+                <!-- 編集リンク -->
+                <a th:href="@{'/product/edit/' + ${product.id}}">編集</a>
+
+                <!-- 削除フォーム -->
+                <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
+                </form>
             </li>
         </ul>
     </div>
