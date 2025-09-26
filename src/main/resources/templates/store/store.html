@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>店舗ページ</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <h1>店舗ページ</h1>
+
+    <div th:if="${store != null}" class="store-info">
+        <p>
+            「<span th:text="${store.name}"></span>」の商品情報を表示します。
+        </p>
+
+        <ul>
+            <li th:each="product : ${store.products}">
+                <span th:text="${product.name}"></span> -
+                <span th:text="${product.price}"></span>円
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${store == null}" class="store-info">
+        <p>
+            店舗情報が登録されていないか、Googleアカウントが朔風会に承認されていません。<br>
+            ログインしているGoogleアカウントが正しいかどうか確かめてください。<br>
+            正しい場合、
+            <a href="mailto:sakufukai@gmail.com">sakufukai@gmail.com</a>
+            までご連絡ください。
+        </p>
+    </div>
+
+    <a th:href="@{/product/add/{url}(url=${store.url})}" class="store-link">商品追加</a>
+    <a href="/" class="store-link">ホームに戻る</a>
+</main>
+</body>
+</html>

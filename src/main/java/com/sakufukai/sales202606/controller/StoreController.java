@@ -57,7 +57,7 @@ public class StoreController {
             throw new IllegalArgumentException("店舗が見つかりません: " + url);
         }
         model.addAttribute("store", store);
-        return "store/detail";
+        return "store/store";
     }
 }
 

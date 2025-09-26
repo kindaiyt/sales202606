@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>商品追加</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <h1 th:text="'『' + ${store.name} + '』の商品追加'"></h1>
+
+    <form th:action="@{/product/save}" method="post">
+        <input type="hidden" name="storeUrl" th:value="${store.url}"/>
+
+        <div>
+            <label>商品名: <input type="text" name="name"/></label>
+        </div>
+        <div>
+            <label>価格: <input type="number" name="price"/></label>
+        </div>
+        <div>
+            <button type="submit">追加</button>
+        </div>
+    </form>
+
+    <a th:href="@{/store/{url}(url=${store.url})}">戻る</a>
+</main>
+</body>
+</html>
