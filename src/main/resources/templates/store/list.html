@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>店舗一覧</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <h1>あなたの店舗一覧</h1>
+
+    <div th:if="${#lists.isEmpty(stores)}">
+        <p>所属店舗は登録されていません。</p>
+    </div>
+
+    <ul th:if="${!#lists.isEmpty(stores)}">
+        <li th:each="store : ${stores}">
+            <a th:href="@{|/store/${store.url}|}" th:text="${store.name}"></a>
+        </li>
+    </ul>
+
+    <div class="actions">
+        <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+    </div>
+</main>
+</body>
+</html>

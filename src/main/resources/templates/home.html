@@ -15,21 +15,14 @@
 
     <div th:if="${userName != 'ゲスト'}">
         ようこそ、[[${userName}]] さん
+        <p>あなたの店舗一覧を確認する場合は、下記リンクから移動してください。</p>
+        <a th:href="@{/store}" class="store-link">自分の店舗一覧へ</a>
     </div>
 
-    <div th:if="${storeName}" class="store-info">
-        <p>
-            「<span th:text="${storeName}"></span>」の情報を表示します。<br>
-            違う店舗の名前が表示されている場合は、管理者までご連絡ください。
-        </p>
-        <a th:href="@{${storeUrl}}" class="store-link">店舗ページへ進む</a>
-    </div>
-
-    <div th:if="${storeName == null}" class="store-info">
-        <p>店舗情報が登録されていないか、ログインしていません。
+    <div th:if="${userName == 'ゲスト'}" class="store-info">
+        <p>店舗情報が表示されていないか、ログインしていません。<br>
             ログインしていない場合、右上のメニューからログインしてください。</p>
     </div>
 </main>
-
 </body>
 </html>
