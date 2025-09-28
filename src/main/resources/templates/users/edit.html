@@ -3,18 +3,35 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>プロフィール編集</title>
+    <title>マイページ</title>
 </head>
 <body>
-<main layout:fragment="content">
-    <h1>プロフィール編集</h1>
+<th:block layout:fragment="content">
 
-    <form th:action="@{/users/me/edit}" method="post">
-        <p>メール: <span th:text="${user.email}"></span></p>
-        <p>名前: <input type="text" th:name="name" th:value="${user.name}" /></p>
-        <button type="submit" class="btn">更新</button>
-        <a th:href="@{/users/me}" class="btn btn-secondary">戻る</a>
-    </form>
-</main>
+    <main class="content">
+        <h1>名前変更</h1>
+
+        <form th:action="@{/users/me/edit}" method="post">
+            <div class="form-group">
+                <p><strong>メールアドレス:</strong> <span th:text="${user.email}"></span></p>
+            </div>
+
+            <div class="form-group">
+                <p><strong>現在の名前:</strong> <span th:text="${user.name}"></span></p>
+            </div>
+
+            <div class="form-group">
+                <label for="name">名前</label>
+                <input type="text" id="name" name="name" th:value="${user.name}" placeholder="ここに新しい名前を入力" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">更新</button>
+                <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+            </div>
+        </form>
+    </main>
+
+</th:block>
 </body>
 </html>

@@ -20,7 +20,7 @@ public class Store {
     @Column(unique = true, nullable = false)
     private String url; // /store/◯◯ で使うURL
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserStore> userStores;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)

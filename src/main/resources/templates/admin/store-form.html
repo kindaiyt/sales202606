@@ -18,12 +18,12 @@
         <form th:action="@{/admin/stores}" th:object="${store}" method="post">
             <div class="form-group">
                 <label for="name">店舗名:</label>
-                <input type="text" id="name" th:field="*{name}" required>
+                <input type="text" id="name" th:field="*{name}" placeholder="ここに店舗名を入力" required>
             </div>
 
             <div class="form-group">
                 <label for="url">店舗URL:</label>
-                <input type="text" id="url" th:field="*{url}" required>
+                <input type="text" id="url" th:field="*{url}" placeholder="ここに店舗URLを入力" required>
             </div>
 
             <div class="form-actions">

@@ -16,7 +16,6 @@
         <table>
             <thead>
             <tr>
-                <th>ID</th>
                 <th>店舗名</th>
                 <th>店舗URL</th>
                 <th>操作</th>
@@ -24,7 +23,6 @@
             </thead>
             <tbody>
             <tr th:each="store : ${stores}">
-                <td th:text="${store.id}"></td>
                 <td th:text="${store.name}"></td>
                 <td th:text="${store.url}"></td>
                 <td>

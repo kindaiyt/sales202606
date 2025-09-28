@@ -228,3 +228,35 @@ form {
     margin: 0 auto;
     padding: 10px;
 }
+
+/* ドロップダウン共通 */
+table select {
+    appearance: none; /* ブラウザ標準の矢印を非表示 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    padding: 6px 28px 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='gray'><path d='M2 4l4 4 4-4z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+table select:hover {
+    border-color: #888;
+}
+
+table select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
+}

@@ -21,8 +21,9 @@
                 <th>名前</th>
                 <th>現在のロール</th>
                 <th>変更</th>
-                <th>所属店舗</th>
-                <th>店舗付与</th>
+                <!-- Storeが存在するときだけ表示 -->
+                <th th:if="${not #lists.isEmpty(stores)}">所属店舗</th>
+                <th th:if="${not #lists.isEmpty(stores)}">店舗付与</th>
             </tr>
             </thead>
             <tbody>
@@ -42,7 +43,7 @@
                 </td>
 
                 <!-- 所属店舗一覧 -->
-                <td>
+                <td th:if="${not #lists.isEmpty(stores)}">
                     <ul>
                         <li th:each="us : ${user.userStores}">
                             <span th:text="${us.store.name}"></span>
@@ -56,7 +57,7 @@
                 </td>
 
                 <!-- 店舗付与 -->
-                <td>
+                <td th:if="${not #lists.isEmpty(stores)}">
                     <form th:action="@{'/admin/users/' + ${user.email} + '/store/add'}" method="post">
                         <select name="storeId">
                             <option th:each="store : ${stores}"

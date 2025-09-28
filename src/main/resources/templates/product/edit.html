@@ -9,24 +9,31 @@
 <main layout:fragment="content">
     <h1>商品編集</h1>
 
+    <!-- 商品更新フォーム -->
     <form th:action="@{/product/update}" method="post">
         <input type="hidden" name="id" th:value="${product.id}"/>
-        <div>
+        <div class="form-group">
             <label>商品名:</label>
             <input type="text" name="name" th:value="${product.name}" required/>
         </div>
-        <div>
+        <div class="form-group">
             <label>価格:</label>
-            <input type="number" name="price" th:value="${product.price}" required/>
+            <input type="number" name="price"
+                   th:value="${product.price % 1 == 0 ? product.price.intValue() : product.price}"
+                   required/>
         </div>
-        <button type="submit">更新</button>
+
+        <!-- 更新ボタン＋削除ボタン横並び -->
+        <div class="form-actions" style="display:flex; gap:1em; align-items:center;">
+            <button type="submit" class="btn">更新</button>
+        </div>
     </form>
 
-    <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="margin-top: 1em;">
-        <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
-    </form>
-
-    <a th:href="@{'/store/' + ${product.store.url}}">店舗ページに戻る</a>
+    <!-- 改行して戻るリンク -->
+    <div style="margin-top:1em;">
+        <a th:href="@{'/store/' + ${product.store.url}}" class="btn btn-secondary">店舗ページに戻る</a>
+    </div>
 </main>
+
 </body>
 </html>

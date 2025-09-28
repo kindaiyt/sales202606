@@ -14,25 +14,34 @@
             「<span th:text="${store.name}"></span>」の商品情報を表示します。
         </p>
 
-        <ul>
-            <li th:each="product : ${store.products}">
-                <span th:text="${product.name}"></span> -
-                <span th:text="${product.price % 1 == 0 ? product.price.intValue() : product.price}"></span>円
-
-                <!-- 編集リンク -->
-                <a th:href="@{'/product/edit/' + ${product.id}}" class="btn">編集</a>
-
-                <!-- 削除フォーム -->
-                <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="display:inline;">
-                    <button type="submit"
-                            class="btn btn-secondary"
-                            onclick="return confirm('本当に削除しますか？')">
-                        削除
-                    </button>
-                </form>
-
-            </li>
-        </ul>
+        <table>
+            <thead>
+            <tr>
+                <th>商品名</th>
+                <th>価格</th>
+                <th>編集</th>
+                <th>削除</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${store.products}">
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price % 1 == 0 ? product.price.intValue() : product.price} + '円'"></td>
+                <td>
+                    <a th:href="@{'/product/edit/' + ${product.id}}" class="btn">編集</a>
+                </td>
+                <td>
+                    <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="display:inline;">
+                        <button type="submit"
+                                class="btn btn-secondary"
+                                onclick="return confirm('本当に削除しますか？')">
+                            削除
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <div th:if="${store == null}" class="store-info">
@@ -45,8 +54,10 @@
         </p>
     </div>
 
-    <a th:href="@{/product/add/{url}(url=${store.url})}" class="store-link">商品追加</a>
-    <a href="/" class="btn btn-secondary">ホームに戻る</a>
+    <div class="actions">
+        <a th:href="@{/product/add/{url}(url=${store.url})}" class="store-link btn">商品追加</a>
+        <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
+    </div>
 </main>
 </body>
 </html>
