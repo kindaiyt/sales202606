@@ -17,15 +17,20 @@
         <ul>
             <li th:each="product : ${store.products}">
                 <span th:text="${product.name}"></span> -
-                <span th:text="${product.price}"></span>円
+                <span th:text="${product.price % 1 == 0 ? product.price.intValue() : product.price}"></span>円
 
                 <!-- 編集リンク -->
-                <a th:href="@{'/product/edit/' + ${product.id}}">編集</a>
+                <a th:href="@{'/product/edit/' + ${product.id}}" class="btn">編集</a>
 
                 <!-- 削除フォーム -->
                 <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
+                    <button type="submit"
+                            class="btn btn-secondary"
+                            onclick="return confirm('本当に削除しますか？')">
+                        削除
+                    </button>
                 </form>
+
             </li>
         </ul>
     </div>
@@ -41,7 +46,7 @@
     </div>
 
     <a th:href="@{/product/add/{url}(url=${store.url})}" class="store-link">商品追加</a>
-    <a href="/" class="store-link">ホームに戻る</a>
+    <a href="/" class="btn btn-secondary">ホームに戻る</a>
 </main>
 </body>
 </html>

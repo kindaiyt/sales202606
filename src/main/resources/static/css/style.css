@@ -73,9 +73,9 @@ body {
     padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
-    width: 100%;
     text-align: left;
     transition: 0.3s;
+    font-size: 100%;
 }
 .logout-btn:hover {
     background: #e60000;
@@ -152,4 +152,79 @@ body {
 
 .error-message {
     color: red; margin-bottom: 1em;
+}
+
+.menu-links {
+    display: flex;
+    flex-direction: column; /* 縦方向に並べる */
+    gap: 10px; /* 要素間に少し余白 */
+    padding: 10px;
+}
+
+.menu-links a,
+.menu-links button {
+    display: block;           /* 横幅いっぱいに */
+    text-align: left;         /* 左寄せ */
+    padding: 8px 12px;        /* 余白調整 */
+    border-radius: 6px;       /* ボタン風に */
+    text-decoration: none;    /* リンクの下線を消す */
+}
+
+.menu-links a::after,
+.menu-links button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.menu-links a:hover,
+.menu-links button:hover {
+    color: #0077cc; /* 文字色をおしゃれに変える */
+}
+
+.menu-links a:hover::after,
+.menu-links button:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* 入力フォーム */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.form-group input {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 8px 4px;
+    font-size: 1rem;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-bottom-color: #007bff; /* フォーカス時に青色 */
+}
+
+/* フォーム全体 */
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 10px;
 }

@@ -8,16 +8,16 @@
         <div class="menu" id="menu">ss
             <!-- ログインしていない場合 -->
             <div th:if="${userName == 'ゲスト'}" class="menu-links">
-                <a href="/stores" class="menu-link">登録店舗一覧</a>
+<!--                <a href="/stores" class="menu-link">登録店舗一覧</a>-->
                 <a href="/oauth2/authorization/google" class="menu-link login-btn">ログイン</a>
             </div>
             <!-- ログインしている場合 -->
             <div th:if="${userName != 'ゲスト'}" class="menu-links">
                 <button id="logoutBtn" class="logout-btn">ログアウト</button>
-                <a href="/users/me" class="menu-link">マイページ</a>
+                <a href="/users/me" class="store-link">マイページ</a>
 
                 <!-- 管理者のみ表示 -->
-                <a th:if="${isAdmin}" href="/admin/users" class="menu-link">ユーザー管理</a>
+                <a th:if="${isAdmin}" href="/admin/users" class="store-link">ユーザー管理</a>
                 <!-- 他のリンクもここに追加可能 -->
             </div>
         </div>

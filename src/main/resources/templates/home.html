@@ -17,6 +17,7 @@
         ようこそ、[[${userName}]] さん
         <p>あなたの店舗一覧を確認する場合は、下記リンクから移動してください。</p>
         <a th:href="@{/store}" class="store-link">自分の店舗一覧へ</a>
+        <a th:if="${isAdmin}" href="/admin/stores" class="store-link">店舗一覧・作成</a>
     </div>
 
     <div th:if="${userName == 'ゲスト'}" class="store-info">
