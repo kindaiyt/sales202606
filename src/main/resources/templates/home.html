@@ -6,8 +6,8 @@
     <title>ホーム</title>
 </head>
 <body>
-<main layout:fragment="content">
-    <h1>ホームページ</h1>
+<main layout:fragment="content" class="content">
+    <h1 class="page-title">ホームページ</h1>
 
     <div th:if="${userName == 'ゲスト'}">
         ようこそ、ゲストさん
@@ -16,8 +16,11 @@
     <div th:if="${userName != 'ゲスト'}">
         ようこそ、[[${userName}]] さん
         <p>あなたの店舗一覧を確認する場合は、下記リンクから移動してください。</p>
-        <a th:href="@{/store}" class="store-link">自分の店舗一覧へ</a>
-        <a th:if="${isAdmin}" href="/admin/stores" class="store-link">店舗一覧・作成</a>
+
+        <div class="home-actions">
+            <a th:href="@{/store}" class="btn">自分の店舗一覧へ</a>
+            <a th:if="${isAdmin}" th:href="@{/admin/stores}" class="btn">店舗一覧・作成</a>
+        </div>
     </div>
 
     <div th:if="${userName == 'ゲスト'}" class="store-info">

@@ -360,3 +360,62 @@ button.btn {
     .btn { transition: none; }
     .btn:hover, .btn:active { transform: none; }
 }
+
+/* ==========================
+   Home専用：タイトル/ボタン配置
+   ========================== */
+
+.page-title {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    margin: 10px 0 18px;
+    line-height: 1.15;
+
+    /* 文字にグラデ（対応ブラウザではリッチに見える） */
+    background: linear-gradient(90deg, #0b63ff, #00c6ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* サブテキストを読みやすく */
+.content p {
+    color: #555;
+    line-height: 1.8;
+}
+
+/* ==========================
+   Home専用：ボタン配置（横→縦）
+   - ふだんは横並び
+   - 画面が狭いと縦並び
+   - ボタン幅は常に固定
+   ========================== */
+
+.home-actions {
+  display: flex;
+  flex-direction: row;     /* 通常は横並び */
+  gap: 14px;
+  margin-top: 18px;
+
+  /* ボタン幅を固定したいので、親は左寄せでも中央でもOK */
+  justify-content: flex-start;
+  align-items: center;
+
+  flex-wrap: nowrap;       /* 横幅が足りない時に勝手に折り返さない */
+}
+
+/* 画面が狭くなったら縦並びに切り替え（幅は固定のまま） */
+@media (max-width: 700px) {
+  .home-actions {
+    flex-direction: column;
+    align-items: flex-start; /* 左寄せで縦に積む（中央にしたいなら center） */
+  }
+}
+
+/* さらに小さいスマホでも幅は変えない（ただし画面より大きいと溢れる） */
+@media (max-width: 340px) {
+  :root{
+    --home-btn-width: 240px; /* 超小型端末だけ例外で少しだけ縮める */
+  }
+}
