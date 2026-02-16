@@ -3,61 +3,82 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
+    <meta charset="UTF-8">
     <title>店舗ページ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<main layout:fragment="content">
-    <h1>店舗ページ</h1>
+<th:block layout:fragment="content">
 
-    <div th:if="${store != null}" class="store-info">
-        <p>
-            「<span th:text="${store.name}"></span>」の商品情報を表示します。
-        </p>
+    <main class="content">
+        <h1 class="page-title">店舗ページ</h1>
 
-        <table>
-            <thead>
-            <tr>
-                <th>商品名</th>
-                <th>価格</th>
-                <th>編集</th>
-                <th>削除</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="product : ${store.products}">
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price % 1 == 0 ? product.price.intValue() : product.price} + '円'"></td>
-                <td>
-                    <a th:href="@{'/product/edit/' + ${product.id}}" class="btn">編集</a>
-                </td>
-                <td>
-                    <form th:action="@{'/product/delete/' + ${product.id}}" method="post" style="display:inline;">
-                        <button type="submit"
-                                class="btn btn-secondary"
-                                onclick="return confirm('本当に削除しますか？')">
-                            削除
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <!-- store がある場合 -->
+        <div th:if="${store != null}" class="store-info">
+            <p>
+                「<span th:text="${store.name}"></span>」の商品情報を表示します。
+            </p>
 
-    <div th:if="${store == null}" class="store-info">
-        <p>
-            店舗情報が登録されていないか、Googleアカウントが朔風会に承認されていません。<br>
-            ログインしているGoogleアカウントが正しいかどうか確かめてください。<br>
-            正しい場合、
-            <a href="mailto:sakufukai@gmail.com">sakufukai@gmail.com</a>
-            までご連絡ください。
-        </p>
-    </div>
+            <!-- 表をカード枠に -->
+            <div class="table-card">
+                <table class="store-table">
+                    <thead>
+                    <tr>
+                        <th>商品名</th>
+                        <th>価格</th>
+                        <th class="col-actions">操作</th>
+                    </tr>
+                    </thead>
 
-    <div class="actions">
-        <a th:href="@{/product/add/{url}(url=${store.url})}" class="store-link btn">商品追加</a>
-        <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
-    </div>
-</main>
+                    <tbody>
+                    <tr th:each="product : ${store.products}">
+                        <td class="cell-name" data-label="商品名" th:text="${product.name}"></td>
+
+                        <td class="cell-url" data-label="価格">
+                            <span class="url-badge"
+                                  th:text="${(product.price % 1 == 0 ? product.price.intValue() : product.price)} + '円'"></span>
+                        </td>
+
+                        <td class="cell-actions" data-label="操作">
+                            <div class="row-actions">
+                                <a th:href="@{'/product/edit/' + ${product.id}}" class="btn btn-sm">編集</a>
+
+                                <form th:action="@{'/product/delete/' + ${product.id}}"
+                                      method="post"
+                                      onsubmit="return confirm('本当に削除しますか？');">
+                                    <button type="submit" class="btn btn-sm btn-danger">削除</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- store がない場合 -->
+        <div th:if="${store == null}" class="store-info">
+            <p>
+                店舗情報が登録されていないか、Googleアカウントが朔風会に承認されていません。<br>
+                ログインしているGoogleアカウントが正しいかどうか確かめてください。<br>
+                正しい場合、
+                <a href="mailto:sakufukai@gmail.com">sakufukai@gmail.com</a>
+                までご連絡ください。
+            </p>
+        </div>
+
+        <!-- 下のボタン（store が null のときに store.url を参照しないように分ける） -->
+        <div class="form-actions mt-16" th:if="${store != null}">
+            <a th:href="@{/product/add/{url}(url=${store.url})}" class="btn">商品追加</a>
+            <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
+        </div>
+
+        <div class="form-actions mt-16" th:if="${store == null}">
+            <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
+        </div>
+
+    </main>
+
+</th:block>
 </body>
 </html>
