@@ -1,4 +1,6 @@
-/* 全体 */
+/* ==========================
+   全体
+   ========================== */
 body {
     font-family: "Helvetica Neue", Arial, sans-serif;
     margin: 0;
@@ -7,7 +9,9 @@ body {
     color: #333;
 }
 
-/* ヘッダー */
+/* ==========================
+   ヘッダー
+   ========================== */
 .site-header {
     display: flex;
     justify-content: space-between;
@@ -38,7 +42,9 @@ body {
     background: #f0f0f0;
 }
 
-/* ハンバーガーメニュー */
+/* ==========================
+   ハンバーガーメニュー
+   ========================== */
 .menu-toggle {
     font-size: 24px;
     background: none;
@@ -81,7 +87,9 @@ body {
     background: #e60000;
 }
 
-/* コンテンツ */
+/* ==========================
+   コンテンツ
+   ========================== */
 .content {
     padding: 20px;
 }
@@ -119,55 +127,39 @@ body {
     margin-top: 15px;
 }
 
-/* 共通ボタンスタイル */
-.btn {
-    display: inline-block;
-    padding: 8px 16px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn:hover {
-    background-color: #45a049;
-}
-
-/* 戻るボタン用（色違い） */
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-}
-
+/* ==========================
+   パンくず / エラー
+   ========================== */
 .breadcrumb ul {
-    list-style: none; display: flex; gap: .5em;
+    list-style: none;
+    display: flex;
+    gap: .5em;
+    padding-left: 0;
 }
 
 .error-message {
-    color: red; margin-bottom: 1em;
+    color: red;
+    margin-bottom: 1em;
 }
 
+/* ==========================
+   メニューリンク（縦並び）
+   ========================== */
 .menu-links {
     display: flex;
-    flex-direction: column; /* 縦方向に並べる */
-    gap: 10px; /* 要素間に少し余白 */
+    flex-direction: column;
+    gap: 10px;
     padding: 10px;
 }
 
 .menu-links a,
 .menu-links button {
-    display: block;           /* 横幅いっぱいに */
-    text-align: left;         /* 左寄せ */
-    padding: 8px 12px;        /* 余白調整 */
-    border-radius: 6px;       /* ボタン風に */
-    text-decoration: none;    /* リンクの下線を消す */
+    display: block;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    position: relative; /* ← ::after の基準点。これがないと下線が迷子になる */
 }
 
 .menu-links a::after,
@@ -186,7 +178,7 @@ body {
 
 .menu-links a:hover,
 .menu-links button:hover {
-    color: #0077cc; /* 文字色をおしゃれに変える */
+    color: #0077cc;
 }
 
 .menu-links a:hover::after,
@@ -195,7 +187,18 @@ body {
     transform-origin: left;
 }
 
-/* 入力フォーム */
+/* menu内buttonの標準スタイルを消す（リンクっぽく統一したい場合） */
+.menu-links button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+}
+
+/* ==========================
+   入力フォーム
+   ========================== */
 .form-group {
     margin-bottom: 20px;
     display: flex;
@@ -219,7 +222,7 @@ body {
 }
 
 .form-group input:focus {
-    border-bottom-color: #007bff; /* フォーカス時に青色 */
+    border-bottom-color: #007bff;
 }
 
 /* フォーム全体 */
@@ -229,9 +232,19 @@ form {
     padding: 10px;
 }
 
-/* ドロップダウン共通 */
+/* 作成/戻るの横並びを確実に揃える（ズレ対策） */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+}
+
+/* ==========================
+   ドロップダウン共通
+   ========================== */
 table select {
-    appearance: none; /* ブラウザ標準の矢印を非表示 */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
 
@@ -259,4 +272,91 @@ table select:focus {
     outline: none;
     border-color: #4a90e2;
     box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
+}
+
+/* ==========================
+   ボタン（完全版・統合）
+   - 以前の緑ボタン定義は削除して統一
+   ========================== */
+.btn {
+    /* aでもbuttonでも同じ見た目になる */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 44px;          /* ← button/aのズレを消す核 */
+    padding: 0 18px;
+    line-height: 1;
+
+    font-size: 16px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+
+    background: linear-gradient(90deg, #1a73e8, #00b0ff);
+    box-shadow:
+        0 8px 18px rgba(26, 115, 232, 0.25),
+        0 2px 6px rgba(0, 0, 0, 0.08);
+
+    transform: translateY(0);
+    transition:
+        transform 0.18s cubic-bezier(.2,.9,.2,1),
+        box-shadow 0.18s cubic-bezier(.2,.9,.2,1),
+        filter 0.18s cubic-bezier(.2,.9,.2,1);
+
+    position: relative;
+    overflow: hidden; /* 将来 ripple を入れるならここが必要 */
+    will-change: transform;
+}
+
+.btn:hover {
+    filter: brightness(1.03);
+    transform: translateY(-2px);
+    box-shadow:
+        0 14px 28px rgba(26, 115, 232, 0.28),
+        0 6px 12px rgba(0, 0, 0, 0.10);
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow:
+        0 8px 18px rgba(26, 115, 232, 0.20),
+        0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 4px rgba(26, 115, 232, 0.25),
+        0 14px 28px rgba(26, 115, 232, 0.22);
+}
+
+/* 戻るボタン用（色違い） */
+.btn.btn-secondary {
+    background: linear-gradient(90deg, #6c757d, #8a939b);
+    box-shadow:
+        0 8px 18px rgba(108, 117, 125, 0.22),
+        0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.btn.btn-secondary:hover {
+    filter: brightness(1.03);
+    transform: translateY(-2px);
+    box-shadow:
+        0 14px 28px rgba(108, 117, 125, 0.24),
+        0 6px 12px rgba(0, 0, 0, 0.10);
+}
+
+/* button のブラウザ差分を消す */
+button.btn {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* 動きを減らす設定の人向け */
+@media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+    .btn:hover, .btn:active { transform: none; }
 }
