@@ -485,3 +485,126 @@ button.btn {
   font-weight: 700;
   color: #444;
 }
+
+/* ==========================
+   店舗一覧：テーブルを見やすく
+   ========================== */
+
+.table-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.store-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.store-table thead th {
+  text-align: left;
+  font-size: 0.92rem;
+  color: #445;
+  background: #f7f9fc;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e9eef5;
+}
+
+.store-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eef2f7;
+  vertical-align: middle;
+}
+
+.store-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.col-actions {
+  width: 240px;
+}
+
+.cell-name {
+  font-weight: 700;
+}
+
+.url-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f1f6ff;
+  color: #2457c7;
+  font-size: 0.92rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.row-actions form {
+  margin: 0;
+}
+
+.btn.btn-sm {
+  height: 38px;
+  padding: 0 14px;
+  font-size: 14px;
+  border-radius: 999px;
+}
+
+.btn.btn-danger {
+  background: linear-gradient(90deg, #ff3b30, #ff6b60);
+  box-shadow: 0 8px 18px rgba(255,59,48,0.18), 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.mt-16 { margin-top: 16px; }
+
+/* ==========================
+   スマホ：テーブル → カード表示
+   ========================== */
+@media (max-width: 640px) {
+  .table-card { box-shadow: none; background: transparent; }
+
+  .store-table, .store-table thead, .store-table tbody, .store-table th, .store-table td, .store-table tr {
+    display: block;
+  }
+
+  .store-table thead {
+    display: none;
+  }
+
+  .store-table tbody tr {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+    padding: 12px 12px 14px;
+    margin-bottom: 12px;
+  }
+
+  .store-table tbody td {
+    border: none;
+    padding: 8px 4px;
+  }
+
+  .store-table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.78rem;
+    color: #667;
+    margin-bottom: 4px;
+  }
+
+  .row-actions { gap: 10px; flex-wrap: wrap; }
+  .col-actions { width: auto; }
+}

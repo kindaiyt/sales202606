@@ -11,34 +11,45 @@
 <th:block layout:fragment="content">
 
     <main class="content">
-        <h1>店舗一覧</h1>
+        <h1 class="page-title">店舗一覧</h1>
 
-        <table>
-            <thead>
-            <tr>
-                <th>店舗名</th>
-                <th>店舗URL</th>
-                <th>店員割り当て</th>
-                <th>削除</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="store : ${stores}">
-                <td th:text="${store.name}"></td>
-                <td th:text="${store.url}"></td>
-                <td><a th:href="@{/admin/stores/{id}/assign(id=${store.id})}" class="btn">割り当て</a></td>
-                <td>
-                    <form th:action="@{'/admin/stores/' + ${store.id} + '/delete'}"
-                          method="post"
-                          onsubmit="return confirm('本当に削除しますか？');">
-                        <button type="submit" class="btn btn-danger">削除</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- 表をカード枠に入れて見栄えUP -->
+        <div class="table-card">
+            <table class="store-table">
+                <thead>
+                <tr>
+                    <th>店舗名</th>
+                    <th>店舗URL</th>
+                    <th class="col-actions">操作</th>
+                </tr>
+                </thead>
 
-        <div class="actions">
+                <tbody>
+                <tr th:each="store : ${stores}">
+                    <td class="cell-name" data-label="店舗名" th:text="${store.name}"></td>
+
+                    <td class="cell-url" data-label="店舗URL">
+                        <span class="url-badge" th:text="${store.url}"></span>
+                    </td>
+
+                    <td class="cell-actions" data-label="操作">
+                        <div class="row-actions">
+                            <a th:href="@{/admin/stores/{id}/assign(id=${store.id})}" class="btn btn-sm">割り当て</a>
+
+                            <form th:action="@{'/admin/stores/' + ${store.id} + '/delete'}"
+                                  method="post"
+                                  onsubmit="return confirm('本当に削除しますか？');">
+                                <button type="submit" class="btn btn-sm btn-danger">削除</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 下のボタン（既存actionsを form-actions にして揃える） -->
+        <div class="form-actions mt-16">
             <a th:href="@{/admin/stores/new}" class="btn">新しい店舗を作成</a>
             <a href="/" class="btn btn-secondary">ホームへ戻る</a>
         </div>
