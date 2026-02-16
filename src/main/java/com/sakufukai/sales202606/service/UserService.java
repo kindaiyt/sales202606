@@ -107,4 +107,18 @@ public class UserService {
         return userRepository.findByRoleNot(Role.PENDING);
     }
 
+    public String getNameByEmailOrGuest(String email) {
+        if (email == null) return "ゲスト";
+        return userRepository.findById(email)
+                .map(User::getName)
+                .orElse("ゲスト");
+    }
+
+    public boolean isAdminByEmail(String email) {
+        if (email == null) return false;
+        return userRepository.findById(email)
+                .map(u -> u.getRole() == Role.ADMIN)
+                .orElse(false);
+    }
+
 }
