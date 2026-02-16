@@ -143,58 +143,60 @@ body {
 }
 
 /* ==========================
-   メニューリンク（縦並び）
+   ハンバーガーメニュー専用UI
    ========================== */
+
 .menu-links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
 }
 
-.menu-links a,
-.menu-links button {
-    display: block;
-    text-align: left;
-    padding: 8px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    position: relative; /* ← ::after の基準点。これがないと下線が迷子になる */
+/* メニュー内ボタン統一 */
+.menu-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 40px;
+  padding: 0 16px;
+
+  border-radius: 10px;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+
+  color: #fff;
+  background: linear-gradient(90deg, #1a73e8, #00b0ff);
+
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  box-shadow:
+    0 8px 18px rgba(26,115,232,.18),
+    0 2px 6px rgba(0,0,0,.06);
+
+  transition: transform .15s ease, filter .15s ease;
 }
 
+.menu-item:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+/* ログアウトだけ赤 */
+.logout-item {
+  background: linear-gradient(90deg, #ff4d4d, #d60000);
+}
+
+/* 旧スタイルの干渉を無効化 */
 .menu-links a::after,
 .menu-links button::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, #4facfe, #00f2fe);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s ease;
+  content: none !important;
 }
 
-.menu-links a:hover,
-.menu-links button:hover {
-    color: #0077cc;
-}
-
-.menu-links a:hover::after,
-.menu-links button:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-}
-
-/* menu内buttonの標準スタイルを消す（リンクっぽく統一したい場合） */
-.menu-links button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font: inherit;
-    color: inherit;
-}
 
 /* ==========================
    入力フォーム

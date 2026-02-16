@@ -5,21 +5,34 @@
 
     <div class="menu-container">
         <button id="hamburger" class="menu-toggle">☰</button>
-        <div class="menu" id="menu">ss
-            <!-- ログインしていない場合 -->
-            <div th:if="${userName == 'ゲスト'}" class="menu-links">
-<!--                <a href="/stores" class="menu-link">登録店舗一覧</a>-->
-                <a href="/oauth2/authorization/google" class="menu-link login-btn">ログイン</a>
-            </div>
-            <!-- ログインしている場合 -->
-            <div th:if="${userName != 'ゲスト'}" class="menu-links">
-                <button id="logoutBtn" class="logout-btn">ログアウト</button>
-                <a href="/users/me" class="store-link">マイページ</a>
 
-                <!-- 管理者のみ表示 -->
-                <a th:if="${isAdmin}" href="/admin/users" class="store-link">ユーザー管理</a>
-                <!-- 他のリンクもここに追加可能 -->
+        <div class="menu" id="menu">
+
+            <!-- 未ログイン -->
+            <div th:if="${userName == 'ゲスト'}" class="menu-links">
+                <a href="/oauth2/authorization/google" class="menu-item">
+                    ログイン
+                </a>
             </div>
+
+            <!-- ログイン済 -->
+            <div th:if="${userName != 'ゲスト'}" class="menu-links">
+
+                <button id="logoutBtn" class="menu-item logout-item">
+                    ログアウト
+                </button>
+
+                <a href="/users/me" class="menu-item">
+                    マイページ
+                </a>
+
+                <!-- 管理者のみ -->
+                <a th:if="${isAdmin}" href="/admin/users" class="menu-item">
+                    ユーザー管理
+                </a>
+
+            </div>
+
         </div>
     </div>
 </header>
