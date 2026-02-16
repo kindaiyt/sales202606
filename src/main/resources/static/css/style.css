@@ -421,3 +421,67 @@ button.btn {
     --home-btn-width: 240px; /* 超小型端末だけ例外で少しだけ縮める */
   }
 }
+
+/* ==========================
+   割り当てページ用
+   ========================== */
+.section-title {
+  margin: 18px 0 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #333;
+}
+
+.assign-users {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0 20px;
+}
+
+.assign-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.assign-chip-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.assign-name {
+  font-weight: 800;
+}
+
+.assign-email {
+  font-size: 12px;
+  color: #666;
+}
+
+.assign-chip-form {
+  margin-left: auto;
+  max-width: none;
+  padding: 0;
+}
+
+.assign-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.assign-add label {
+  font-weight: 700;
+  color: #444;
+}

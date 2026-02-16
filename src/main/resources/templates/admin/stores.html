@@ -18,13 +18,15 @@
             <tr>
                 <th>店舗名</th>
                 <th>店舗URL</th>
-                <th>操作</th>
+                <th>店員割り当て</th>
+                <th>削除</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="store : ${stores}">
                 <td th:text="${store.name}"></td>
                 <td th:text="${store.url}"></td>
+                <td><a th:href="@{/admin/stores/{id}/assign(id=${store.id})}" class="btn">割り当て</a></td>
                 <td>
                     <form th:action="@{'/admin/stores/' + ${store.id} + '/delete'}"
                           method="post"

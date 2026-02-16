@@ -71,4 +71,42 @@ public class StoreService {
     public void deleteStore(Long id) {
         storeRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public Store findByIdWithUsers(Long storeId) {
+        return storeRepository.findWithUsersById(storeId)
+                .orElseThrow(() -> new RuntimeException("Store not found"));
+    }
+
+    @Transactional
+    public void addUserToStore(Long storeId, String userEmail) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new RuntimeException("Store not found"));
+
+        // User の主キーは email なので findById が最短（findByEmailでもOK）
+        User user = userRepository.findById(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 二重登録防止
+        if (userStoreRepository.existsByUserAndStore(user, store)) {
+            return;
+        }
+
+        UserStore userStore = new UserStore();
+        userStore.setUser(user);
+        userStore.setStore(store);
+        userStoreRepository.save(userStore);
+    }
+
+    @Transactional
+    public void removeUserFromStore(Long storeId, String userEmail) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new RuntimeException("Store not found"));
+
+        User user = userRepository.findById(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userStoreRepository.deleteByUserAndStore(user, store);
+    }
+
 }

@@ -103,5 +103,8 @@ public class UserService {
         userStoreRepository.findByUserAndStore(user, store).ifPresent(userStoreRepository::delete);
     }
 
+    public List<User> findAllApprovedUsers() {
+        return userRepository.findByRoleNot(Role.PENDING);
+    }
 
 }
