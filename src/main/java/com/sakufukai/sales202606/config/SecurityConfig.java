@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2Authorization
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpStatus;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -43,15 +44,25 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/error", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+
+                // ★追加：権限不足(403)を 404専用ページへ
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler((request, response, e) -> {
+                            response.setStatus(HttpStatus.NOT_FOUND.value());
+                            request.getRequestDispatcher("/error/404").forward(request, response);
+                        })
+                )
+
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint
                                 .authorizationRequestResolver(resolver)
                         )
                         .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(customOidcUserService) // ←ここで CustomOAuth2UserService を登録
+                                .oidcUserService(customOidcUserService)
                         )
                         .defaultSuccessUrl("/", true)
                 )
@@ -63,6 +74,7 @@ public class SecurityConfig {
                         .clearAuthentication(true)
                         .permitAll()
                 );
+
 
         return http.build();
     }
