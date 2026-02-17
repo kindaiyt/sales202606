@@ -36,6 +36,7 @@ public class AdminController {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("stores", storeService.findAllWithUsers());
         model.addAttribute("fixedAdmins", appProperties.getAdminEmails());
+        model.addAttribute("myEmail", oidcUser != null ? oidcUser.getAttribute("email") : null);
         return "admin/users"; // admin/users.html
     }
 
@@ -45,9 +46,9 @@ public class AdminController {
                              @PathVariable String email,
                              @RequestParam Role role,
                              RedirectAttributes redirectAttributes) {
-
+        String actorEmail = oidcUser.getAttribute("email");
         try {
-            userService.changeUserRole(email, role);
+            userService.changeUserRole(email, role, actorEmail);
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -121,9 +122,9 @@ public class AdminController {
     public String deleteUser(@AuthenticationPrincipal OidcUser oidcUser,
                              @PathVariable String email,
                              RedirectAttributes redirectAttributes) {
-
+        String actorEmail = oidcUser.getAttribute("email");
         try {
-            userService.deleteUserByEmail(email);
+            userService.deleteUserByEmail(email, actorEmail);
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

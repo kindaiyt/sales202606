@@ -35,8 +35,9 @@
 
                     <td class="cell-actions" data-label="ロールを変更">
                         <div class="row-actions">
-                            <!-- 固定管理者でない場合のみロール変更表示 -->
-                            <form th:if="${fixedAdmins == null || !fixedAdmins.contains(user.email)}"
+                            <!-- 操作可能: 固定管理者でもなく、自分でもない -->
+                            <form th:if="${(fixedAdmins == null || !fixedAdmins.contains(user.email))
+                                            and (myEmail == null || myEmail != user.email)}"
                                   th:action="@{'/admin/users/' + ${user.email} + '/role'}"
                                   method="post"
                                   style="display:flex; gap:10px; align-items:center; margin:0;">
@@ -54,7 +55,16 @@
                                   class="fixed-admin-label">
                                 固定管理者
                             </span>
-                            <form th:if="${fixedAdmins == null || !fixedAdmins.contains(user.email)}"
+
+                            <!-- 自分自身 -->
+                            <span th:if="${myEmail != null && myEmail == user.email}"
+                                  class="fixed-admin-label">
+                                自分
+                            </span>
+
+                            <!-- 削除ボタン: 固定管理者でもなく自分でもない -->
+                            <form th:if="${(fixedAdmins == null || !fixedAdmins.contains(user.email))
+                                            and (myEmail == null || myEmail != user.email)}"
                                   th:action="@{'/admin/users/' + ${user.email} + '/delete'}"
                                   method="post"
                                   onsubmit="return confirm('本当に削除しますか?');">

@@ -38,15 +38,24 @@ public class UserService {
      * メールアドレスでユーザーのロール変更
      */
     @Transactional
-    public void changeUserRole(String email, Role newRole) {
-        if (isFixedAdmin(email)) {
+    public void changeUserRole(String targetEmail, Role newRole, String actorEmail) {
+
+        if (isFixedAdmin(targetEmail)) {
             throw new IllegalArgumentException("この管理者アカウントのロールは変更できません。");
         }
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません: " + email));
+
+        // 自分自身の ADMIN を USER に変更するのを禁止
+        if (isSelf(targetEmail, actorEmail) && newRole == Role.USER) {
+            throw new IllegalArgumentException("自分自身の管理者権限は外せません。");
+        }
+
+        User user = userRepository.findByEmail(targetEmail)
+                .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません。"));
+
         user.setRole(newRole);
         userRepository.save(user);
     }
+
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -131,11 +140,18 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserByEmail(String email) {
-        if (isFixedAdmin(email)) {
+    public void deleteUserByEmail(String targetEmail, String actorEmail) {
+
+        if (isFixedAdmin(targetEmail)) {
             throw new IllegalArgumentException("この管理者アカウントは削除できません。");
         }
-        User user = userRepository.findByEmail(email)
+
+        // 自分自身の削除を禁止
+        if (isSelf(targetEmail, actorEmail)) {
+            throw new IllegalArgumentException("自分自身は削除できません。");
+        }
+
+        User user = userRepository.findByEmail(targetEmail)
                 .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません。"));
 
         // 紐付けを先に削除（FK対策）
@@ -147,6 +163,11 @@ public class UserService {
     private boolean isFixedAdmin(String email) {
         return appProperties.getAdminEmails() != null
                 && appProperties.getAdminEmails().contains(email);
+    }
+
+    private boolean isSelf(String targetEmail, String actorEmail) {
+        if (targetEmail == null || actorEmail == null) return false;
+        return targetEmail.trim().equalsIgnoreCase(actorEmail.trim());
     }
 
 }
