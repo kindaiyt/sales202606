@@ -1,5 +1,6 @@
 package com.sakufukai.sales202606.service;
 
+import com.sakufukai.sales202606.entity.Role;
 import com.sakufukai.sales202606.entity.Store;
 import com.sakufukai.sales202606.entity.User;
 import com.sakufukai.sales202606.entity.UserStore;
@@ -8,6 +9,7 @@ import com.sakufukai.sales202606.repository.UserRepository;
 import com.sakufukai.sales202606.repository.UserStoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -108,5 +110,45 @@ public class StoreService {
 
         userStoreRepository.deleteByUserAndStore(user, store);
     }
+
+    @Transactional
+    public void updateStoreNote(String url, String note, Authentication authentication) {
+        Store store = findByUrl(url);
+
+        // ログインユーザーのemail取得（Google OAuth）
+        String email = extractEmail(authentication);
+        if (email == null) throw new RuntimeException("email not found");
+
+        // ADMINならOK
+        boolean isAdmin = userRepository.findByEmail(email)
+                .map(u -> u.getRole() == Role.ADMIN)
+                .orElse(false);
+
+        // 店舗に割り当て済みならOK
+        boolean assigned = userRepository.findByEmail(email)
+                .map(u -> userStoreRepository.existsByUserAndStore(u, store))
+                .orElse(false);
+
+        if (!isAdmin && !assigned) {
+            throw new org.springframework.security.access.AccessDeniedException("権限がありません");
+        }
+
+        store.setNote(note); // 空欄OK（null/""でもOK）
+        storeRepository.save(store);
+    }
+
+    private String extractEmail(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) return null;
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {
+            return oauth2User.getAttribute("email");
+        }
+        if (principal instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
+            return oidcUser.getEmail();
+        }
+        return null;
+    }
+
 
 }

@@ -15,9 +15,20 @@
 
         <!-- store がある場合 -->
         <div th:if="${store != null}" class="store-info">
-            <p>
-                「<span th:text="${store.name}"></span>」の商品情報を表示します。
-            </p>
+
+            <div class="store-note-box" th:if="${store != null}">
+                <h2 class="section-title">店舗の説明</h2>
+
+                <p class="note-view"
+                   th:text="${#strings.isEmpty(store.note) ? '（未入力）' : store.note}">
+                </p>
+
+                <div class="actions">
+                    <a th:href="@{'/store/' + ${store.url} + '/note/edit'}" class="btn btn-sm">
+                        説明を編集
+                    </a>
+                </div>
+            </div>
 
             <!-- 表をカード枠に -->
             <div class="table-card">
@@ -26,6 +37,7 @@
                     <tr>
                         <th>商品名</th>
                         <th>価格</th>
+                        <th>説明</th>
                         <th class="col-actions">操作</th>
                     </tr>
                     </thead>
@@ -38,6 +50,8 @@
                             <span class="url-badge"
                                   th:text="${(product.price % 1 == 0 ? product.price.intValue() : product.price)} + '円'"></span>
                         </td>
+
+                        <td th:text="${#strings.isEmpty(product.note) ? '-' : product.note}"></td>
 
                         <td class="cell-actions" data-label="操作">
                             <div class="row-actions">

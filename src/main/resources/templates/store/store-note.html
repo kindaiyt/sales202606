@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>店舗説明の編集</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <main class="content" th:if="${store != null}">
+        <h1>店舗説明の編集</h1>
+
+        <div class="store-info">
+            <p>
+                店舗: <strong th:text="${store.name}"></strong>
+            </p>
+
+            <form th:action="@{'/store/' + ${store.url} + '/note'}" method="post">
+                <div class="form-group">
+                    <label for="note">説明（空欄OK）</label>
+                    <textarea id="note" name="note" rows="6"
+                              class="note-textarea"
+                              th:text="${store.note}"></textarea>
+                </div>
+
+                <div class="form-actions mt-16">
+                    <button type="submit" class="btn">保存</button>
+                    <a th:href="@{'/store/' + ${store.url}}" class="btn btn-secondary">戻る</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <main class="content" th:if="${store == null}">
+        <h1 class="page-title">店舗が見つかりません</h1>
+        <div class="store-info">
+            <p>指定された店舗は存在しないか、アクセスできません。</p>
+            <div class="form-actions mt-16">
+                <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
+            </div>
+        </div>
+    </main>
+
+</th:block>
+</body>
+</html>

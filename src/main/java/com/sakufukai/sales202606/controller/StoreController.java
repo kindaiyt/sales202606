@@ -4,11 +4,10 @@ import com.sakufukai.sales202606.entity.Store;
 import com.sakufukai.sales202606.entity.UserStore;
 import com.sakufukai.sales202606.service.StoreService;
 import com.sakufukai.sales202606.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -59,5 +58,22 @@ public class StoreController {
         model.addAttribute("store", store);
         return "store/store";
     }
+
+    @PostMapping("/{url}/note")
+    public String updateStoreNote(@PathVariable String url,
+                                  @RequestParam(required = false) String note,
+                                  Authentication authentication) {
+
+        storeService.updateStoreNote(url, note, authentication);
+        return "redirect:/store/" + url;
+    }
+
+    @GetMapping("/{url}/note/edit")
+    public String editStoreNotePage(@PathVariable String url, Model model) {
+        Store store = storeService.findByUrl(url);
+        model.addAttribute("store", store);
+        return "store/store-note"; // templates/store/store-note.html
+    }
+
 }
 

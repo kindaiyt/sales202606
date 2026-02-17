@@ -608,3 +608,22 @@ button.btn {
   .row-actions { gap: 10px; flex-wrap: wrap; }
   .col-actions { width: auto; }
 }
+
+.note-view{
+  background: #fff;
+  border: 1px solid #e9eef5;
+  border-radius: 12px;
+  padding: 12px 14px;
+  line-height: 1.7;
+  white-space: pre-wrap; /* 改行を表示 */
+}
+
+.note-textarea{
+  width: 100%;
+  border: 1px solid #d7e2f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  resize: vertical;
+  font-size: 1rem;
+  line-height: 1.7;
+}
