@@ -4,42 +4,54 @@
       layout:decorate="~{layout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <title>店舗詳細</title>
 </head>
 <body>
 <th:block layout:fragment="content">
     <main class="content">
         <h1>店舗詳細</h1>
 
-        <!-- 店舗情報 -->
+        <!-- 店舗情報: 編集フォーム -->
         <div class="store-info">
-            <p><b>店舗名: </b><span th:text="${store.name}"></span></p>
-        </div>
+            <!-- 店舗情報 -->
+            <div class="store-info">
+                <p><b>店舗名: </b><span th:text="${store.name}"></span></p>
+                <p><b>店舗URL: </b><span th:text="${store.url}"></span></p>
 
-        <!-- 現在所属ユーザー -->
+                <div class="actions" style="margin-top: 10px;">
+                    <a th:href="@{/admin/stores/{url}/edit/info(url=${store.url})}" class="btn btn-sm">
+                        店舗情報を編集
+                    </a>
+                </div>
+            </div>
+
+            <!-- 現在所属ユーザー -->
         <h2 class="section-title">現在所属しているユーザー</h2>
 
-        <div th:if="${#lists.isEmpty(store.userStores)}" class="store-info">
+        <div th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}" class="store-info">
             未割り当てです。
         </div>
 
-        <div th:if="${!#lists.isEmpty(store.userStores)}" class="assign-users">
+        <div th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}" class="assign-users">
             <div th:each="us : ${store.userStores}"
                  class="assign-chip"
-                 style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+                 style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
 
                 <!-- 左側: 名前・メール -->
-                <div class="assign-chip-text" style="min-width:0;">
+                <div class="assign-chip-text" style="min-width: 0;">
                     <div class="assign-name"
-                         th:text="${us.user.name}">User Name</div>
-                    <div class="assign-email"
-                         th:text="${us.user.email}">email@example.com</div>
+                         th:text="${#strings.isEmpty(us.user.name) ? us.user.email : us.user.name}">
+                        User Name
+                    </div>
+                    <div class="assign-email" th:text="${us.user.email}">email@example.com</div>
                 </div>
 
-                <!-- 右側: 解除ボタン（右端固定） -->
-                <form th:action="@{/admin/stores/{id}/edit/remove(id=${store.id})}"
+                <!-- 右側: 解除ボタン -->
+                <form th:action="@{/admin/stores/{url}/edit/remove(url=${store.url})}"
                       method="post"
                       class="assign-chip-form"
-                      style="margin-left:auto;">
+                      style="margin-left: auto;">
                     <input type="hidden" name="userEmail" th:value="${us.user.email}">
                     <button type="submit" class="btn btn-secondary">解除</button>
                 </form>
@@ -49,7 +61,9 @@
         <!-- 追加 -->
         <h2 class="section-title">ユーザーを追加</h2>
 
-        <form th:action="@{/admin/stores/{id}/assign/add(id=${store.id})}" method="post" class="assign-add">
+        <form th:action="@{/admin/stores/{url}/edit/add(url=${store.url})}"
+              method="post"
+              class="assign-add">
             <label for="userEmail">追加するユーザー: </label>
 
             <select id="userEmail" name="userEmail" class="assign-select">

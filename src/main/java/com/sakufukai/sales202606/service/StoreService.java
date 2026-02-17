@@ -155,4 +155,39 @@ public class StoreService {
         return storeRepository.findAllWithUsers();
     }
 
+    public Store findByUrlWithUsers(String url) {
+        return storeRepository.findByUrlWithUsers(url)
+                .orElseThrow(() -> new IllegalArgumentException("店舗が存在しません: " + url));
+    }
+
+    public void addUserToStoreByUrl(String url, String userEmail) {
+        Store store = findByUrlWithUsers(url);
+        addUserToStore(store.getId(), userEmail);
+    }
+
+    public void removeUserFromStoreByUrl(String url, String userEmail) {
+        Store store = findByUrlWithUsers(url);
+        removeUserFromStore(store.getId(), userEmail);
+    }
+
+    @Transactional
+    public void updateStoreInfo(String currentUrl, String name, String newUrl) {
+        Store store = storeRepository.findByUrl(currentUrl)
+                .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません: " + currentUrl));
+
+        String trimmedName = name.trim();
+        String trimmedUrl = newUrl.trim();
+
+        // URLが変更される場合のみ重複チェック
+        if (!store.getUrl().equals(trimmedUrl)) {
+            storeRepository.findByUrl(trimmedUrl).ifPresent(existing -> {
+                throw new IllegalArgumentException("このURLは既に存在します: " + trimmedUrl);
+            });
+            store.setUrl(trimmedUrl);
+        }
+
+        store.setName(trimmedName);
+        storeRepository.save(store);
+    }
+
 }

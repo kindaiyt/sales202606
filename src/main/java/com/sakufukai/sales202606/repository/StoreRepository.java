@@ -4,6 +4,7 @@ import com.sakufukai.sales202606.entity.Store;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,5 +23,14 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
   order by s.id desc
 """)
     List<Store> findAllWithUsers();
+
+    @Query("""
+        SELECT s
+        FROM Store s
+        LEFT JOIN FETCH s.userStores us
+        LEFT JOIN FETCH us.user
+        WHERE s.url = :url
+    """)
+    Optional<Store> findByUrlWithUsers(@Param("url") String url);
 
 }

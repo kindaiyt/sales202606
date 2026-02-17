@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>店舗情報編集</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <main class="content">
+        <h1>店舗情報編集</h1>
+
+        <form th:action="@{/admin/stores/{url}/edit/info(url=${store.url})}" method="post">
+
+            <!-- 店舗名 -->
+            <div class="form-group">
+                <label for="name">店舗名: </label>
+
+                <input type="text"
+                       id="name"
+                       name="name"
+                       placeholder="ここに店舗名を入力"
+                       th:value="${name != null ? name : store.name}">
+
+                <!-- 店舗名エラー -->
+                <div th:if="${nameError}" class="error-message" th:text="${nameError}"></div>
+            </div>
+
+            <!-- 店舗URL -->
+            <div class="form-group">
+                <label for="newUrl">店舗URL: </label>
+
+                <input type="text"
+                       id="newUrl"
+                       name="newUrl"
+                       placeholder="ここに店舗URLを入力"
+                       th:value="${newUrl != null ? newUrl : store.url}">
+
+                <!-- URLエラー -->
+                <div th:if="${urlError}" class="error-message" th:text="${urlError}"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">更新</button>
+                <a th:href="@{/admin/stores/{url}/edit(url=${store.url})}" class="btn btn-secondary">戻る</a>
+            </div>
+
+        </form>
+    </main>
+
+</th:block>
+</body>
+</html>

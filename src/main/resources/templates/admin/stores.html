@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>店舗管理</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <th:block layout:fragment="content">
@@ -27,40 +26,36 @@
                 <tbody>
                 <tr th:each="store : ${stores}">
                     <!-- 店舗名 -->
-                    <td class="cell-name" data-label="店舗名" th:text="${store.name}"></td>
+                    <td class="cell-name"
+                        data-label="店舗名"
+                        th:text="${store.name}">
+                    </td>
 
-                    <!-- 店舗の説明（空なら - ） -->
+                    <!-- 店舗の説明 -->
                     <td data-label="店舗の説明"
                         th:text="${#strings.isEmpty(store.note) ? '-' : store.note}">
                     </td>
 
                     <!-- 所属ユーザー -->
                     <td data-label="所属している人">
+                        <div th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}">-</div>
 
-                        <!-- 誰もいない -->
-                        <div th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}">
-                            -
-                        </div>
-
-                        <!-- 1人ずつ縦に表示 -->
-                        <div th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
-                             th:each="us : ${store.userStores}">
-
-                            <span th:text="${us.user.name != null ? us.user.name : us.user.email}"></span>
-
-                        </div>
-
+                        <ul th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
+                            style="margin: 0; padding-left: 1.2em;">
+                            <li th:each="us : ${store.userStores}"
+                                th:text="${#strings.isEmpty(us.user.name) ? us.user.email : us.user.name}">
+                            </li>
+                        </ul>
                     </td>
-
 
                     <!-- 操作 -->
                     <td class="cell-actions" data-label="操作">
                         <div class="row-actions">
-                            <a th:href="@{/admin/stores/{id}/edit(id=${store.id})}" class="btn btn-sm">割り当て</a>
+                            <a th:href="@{/admin/stores/{url}/edit(url=${store.url})}" class="btn btn-sm">編集</a>
 
-                            <form th:action="@{'/admin/stores/' + ${store.id} + '/delete'}"
+                            <form th:action="@{'/admin/stores/' + ${store.url} + '/delete'}"
                                   method="post"
-                                  onsubmit="return confirm('本当に削除しますか？');">
+                                  onsubmit="return confirm('本当に削除しますか?');">
                                 <button type="submit" class="btn btn-sm btn-danger">削除</button>
                             </form>
                         </div>
@@ -72,7 +67,7 @@
 
         <div class="form-actions mt-16">
             <a th:href="@{/admin/stores/new}" class="btn">新しい店舗を作成</a>
-            <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+            <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
         </div>
     </main>
 
