@@ -49,7 +49,13 @@ public class ProductController {
         model.addAttribute("price", price);
         model.addAttribute("note", note);
 
-        // サーバ側バリデーション
+        // サーバ側バリデーション: 商品名
+        if (name == null || name.trim().isEmpty()) {
+            model.addAttribute("nameError", "商品名を入力してください。");
+            return "product/add";
+        }
+
+        // サーバ側バリデーション: 価格
         Integer priceInt;
         try {
             priceInt = Integer.valueOf(price);
@@ -63,7 +69,7 @@ public class ProductController {
         }
 
         Product product = new Product();
-        product.setName(name);
+        product.setName(name.trim());
         product.setPrice(priceInt);
         product.setNote(note);
         product.setStore(store);
@@ -71,9 +77,6 @@ public class ProductController {
         productService.save(product);
         return "redirect:/store/" + storeUrl;
     }
-
-
-
 
     // 商品更新処理
     @PostMapping("/update")
@@ -92,6 +95,13 @@ public class ProductController {
         model.addAttribute("price", price);
         model.addAttribute("note", note);
 
+        // サーバ側バリデーション: 商品名
+        if (name == null || name.trim().isEmpty()) {
+            model.addAttribute("nameError", "商品名を入力してください。");
+            return "product/edit";
+        }
+
+        // サーバ側バリデーション: 価格
         Integer priceInt;
         try {
             priceInt = Integer.valueOf(price);
@@ -104,7 +114,7 @@ public class ProductController {
             return "product/edit";
         }
 
-        product.setName(name);
+        product.setName(name.trim());
         product.setPrice(priceInt);
         product.setNote(note);
 

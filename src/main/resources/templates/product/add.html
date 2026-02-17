@@ -25,6 +25,8 @@
                    required>
         </div>
 
+        <div th:if="${nameError}" class="error-message" th:text="${nameError}"></div>
+
         <div class="form-group">
             <label for="price">価格</label>
             <input
