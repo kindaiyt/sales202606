@@ -36,7 +36,7 @@
                     inputmode="numeric"
                     pattern="^[0-9]+$"
                     placeholder="ここに金額を入力"
-                    th:value="${price}"
+                    th:value="${price != null ? price : product.price}"
                     required
             >
             <div th:if="${priceError}" class="error-message" th:text="${priceError}"></div>
