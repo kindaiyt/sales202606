@@ -723,3 +723,196 @@ button.btn {
   border-color: #4a90e2;
   box-shadow: 0 0 0 3px rgba(74,144,226,0.2), 0 2px 6px rgba(0,0,0,0.06);
 }
+
+/* ==========================
+   ユーザー管理テーブル: 文字かぶり & 操作列の横並び固定
+   - 通常: 操作列は必ず横一列 + 列幅を確保
+   - スマホ幅: 折り返しOK
+   ========================== */
+
+/* 列幅を固定して、セル内で折り返す */
+.store-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* 全セル: 長文を強制的に折り返し（メール等） */
+.store-table th,
+.store-table td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* 操作列: 必ず必要幅を確保して、右端で潰れないようにする */
+.col-actions {
+  width: 320px; /* ここが「横並び分の確保幅」。足りなければ 340px などに */
+}
+
+/* 操作列のセルは折り返さない（中の row-actions が横一列を担保） */
+.cell-actions {
+  white-space: nowrap;
+}
+
+/* 操作エリア: 通常は横一列固定 */
+.row-actions {
+  display: inline-flex;     /* セル内で必要幅を取りやすい */
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;        /* ← 通常は折り返し禁止 */
+}
+
+/* ボタン/セレクトは縮まない */
+.row-actions .btn,
+.row-actions select {
+  flex: 0 0 auto;
+}
+
+/* ボタンの見た目を維持（小さくならない） */
+.btn {
+  white-space: nowrap;
+}
+
+/* btn-sm の最小幅を確保（「変更」「削除」が潰れない） */
+.btn.btn-sm {
+  min-width: 64px;          /* 必要なら 72px に */
+}
+
+/* セレクトも最低幅を確保 */
+.row-actions select {
+  min-width: 92px;
+}
+
+/* ==========================
+   スマホ相当: 操作列は折り返しOK（今の挙動に戻す）
+   ========================== */
+@media (max-width: 640px) {
+  .col-actions {
+    width: auto;
+  }
+
+  .cell-actions {
+    white-space: normal;
+  }
+
+  .row-actions {
+    display: flex;
+    flex-wrap: wrap;        /* ← スマホは折り返し許可 */
+    gap: 10px;
+  }
+}
+
+/* ==========================
+   操作ボタンのサイズを文字幅に合わせる
+   ========================== */
+
+/* aタグのボタンが横に伸びないようにする */
+.row-actions a.btn {
+  display: inline-block;   /* block → inline-block に */
+  width: auto;
+  flex: 0 0 auto;
+}
+
+/* すべてのボタンを文字サイズ基準に */
+.row-actions .btn {
+  white-space: nowrap;
+  min-width: unset;        /* 以前の min-width を無効化 */
+  padding: 8px 16px;       /* 見た目を統一（必要なら調整） */
+}
+
+/* セレクトはそのまま */
+.row-actions select {
+  flex: 0 0 auto;
+}
+
+/* ==========================
+   テーブル共通: 折り返し(かぶり)対策 + 操作列は横並びで幅確保
+   対象: .store-table を使っている一覧(店舗一覧/ユーザー一覧)
+   ========================== */
+
+/* 文字が列間でかぶらないようにする */
+.store-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.store-table th,
+.store-table td {
+  vertical-align: top;
+  overflow-wrap: anywhere;   /* 長いURL/メールを強制的に折る */
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* 店舗名など強調セルが横に伸びすぎないように */
+.store-table .cell-name,
+.store-table .cell-url {
+  min-width: 0;
+}
+
+/* 操作列: 必ず必要幅を確保(PC/タブレット) */
+.store-table .col-actions {
+  width: 260px;      /* 好みで 240〜320 くらいに調整OK */
+}
+
+.store-table td.cell-actions {
+  white-space: nowrap;       /* 操作セル内は基本1行 */
+}
+
+/* 操作エリア: 横並び固定(PC/タブレット) */
+.store-table td.cell-actions .row-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;         /* ← 重要: 折り返さない */
+}
+
+/* 操作セル内の form の “全フォーム共通 max-width:500px/margin:auto” を無効化 */
+.store-table td.cell-actions form {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+/* select が潰れないように最低幅を確保 */
+.store-table td.cell-actions select {
+  min-width: 92px;
+}
+
+/* ボタンサイズを確実に統一: 編集(青)も削除(赤)も同じ高さ・幅感にする */
+.store-table .btn.btn-sm,
+.store-table button.btn-sm,
+.store-table a.btn-sm {
+  height: 38px;
+  padding: 0 14px;
+  font-size: 14px;
+  border-radius: 999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* aタグだけ変に大きく見えるのを防ぐ(念のため) */
+.store-table a.btn.btn-sm {
+  text-decoration: none;
+}
+
+/* ==========================
+   スマホ: 操作列は今まで通り折り返しOK
+   ========================== */
+@media (max-width: 640px) {
+  .store-table .col-actions {
+    width: auto;
+  }
+
+  .store-table td.cell-actions {
+    white-space: normal;
+  }
+
+  .store-table td.cell-actions .row-actions {
+    flex-wrap: wrap;          /* スマホは折り返しOK */
+    justify-content: flex-start;
+  }
+}

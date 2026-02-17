@@ -102,4 +102,12 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    // ユーザー削除
+    @PostMapping("/users/{email}/delete")
+    public String deleteUser(@AuthenticationPrincipal OidcUser oidcUser,
+                             @PathVariable String email) {
+        userService.deleteUserByEmail(email);
+        return "redirect:/admin/users";
+    }
+
 }

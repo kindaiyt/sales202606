@@ -44,6 +44,12 @@
 
                                 <button type="submit" class="btn btn-sm">変更</button>
                             </form>
+                            <form th:action="@{'/admin/users/' + ${user.email} + '/delete'}"
+                                  method="post"
+                                  onsubmit="return confirm('本当に削除しますか?');"
+                                  style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                            </form>
                         </div>
                     </td>
                 </tr>

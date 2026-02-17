@@ -14,4 +14,5 @@ public interface UserStoreRepository extends JpaRepository<UserStore, Long> {
     boolean existsByUserAndStore(User user, Store store);
     void deleteByUserAndStore(User user, Store store); // 削除用にも便利
     Optional<UserStore> findByUserAndStore(User user, Store store);
+    void deleteByUser(User user);
 }

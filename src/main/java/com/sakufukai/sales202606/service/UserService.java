@@ -123,4 +123,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void deleteUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません。"));
+
+        // 紐付けを先に削除（FK対策）
+        userStoreRepository.deleteByUser(user);
+
+        userRepository.delete(user);
+    }
+
 }
