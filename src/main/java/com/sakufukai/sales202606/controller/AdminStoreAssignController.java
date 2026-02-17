@@ -33,16 +33,25 @@ public class AdminStoreAssignController {
 
     @PostMapping("/admin/stores/{storeId}/assign/add")
     public String add(@PathVariable Long storeId,
-                      @RequestParam String userEmail) {
+                      @RequestParam(required = false) String userEmail,
+                      Model model) {
+
+        if (userEmail == null || userEmail.trim().isEmpty()) {
+            Store store = storeService.findByIdWithUsers(storeId);
+            List<User> users = userService.findAllApprovedUsers();
+
+            model.addAttribute("store", store);
+            model.addAttribute("users", users);
+
+            model.addAttribute("userError", "追加するユーザーを選択してください。");
+            model.addAttribute("selectedUserEmail", userEmail);
+
+            return "admin/store-assign";
+        }
+
         storeService.addUserToStore(storeId, userEmail);
         return "redirect:/admin/stores/" + storeId + "/assign";
     }
 
-    @PostMapping("/admin/stores/{storeId}/assign/remove")
-    public String remove(@PathVariable Long storeId,
-                         @RequestParam String userEmail) {
-        storeService.removeUserFromStore(storeId, userEmail);
-        return "redirect:/admin/stores/" + storeId + "/assign";
-    }
 }
 

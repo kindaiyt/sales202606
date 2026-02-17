@@ -52,16 +52,19 @@
         <form th:action="@{/admin/stores/{id}/assign/add(id=${store.id})}" method="post" class="assign-add">
             <label for="userEmail">追加するユーザー: </label>
 
-            <select id="userEmail" name="userEmail" required class="assign-select">
+            <select id="userEmail" name="userEmail" class="assign-select">
                 <option value="">選択してください</option>
                 <option th:each="u : ${users}"
                         th:value="${u.email}"
-                        th:text="${u.name + '（' + u.email + '）'}">
+                        th:text="${u.name + '（' + u.email + '）'}"
+                        th:selected="${selectedUserEmail != null and selectedUserEmail == u.email}">
                 </option>
             </select>
 
             <button type="submit" class="btn">追加</button>
         </form>
+
+        <div th:if="${userError}" class="error-message" th:text="${userError}"></div>
 
         <div class="actions">
             <a th:href="@{/admin/stores}" class="btn btn-secondary">店舗一覧へ戻る</a>
