@@ -70,9 +70,12 @@ public class StoreService {
     }
 
     @Transactional
-    public void deleteStore(Long id) {
-        storeRepository.deleteById(id);
+    public void deleteStoreByUrl(String url) {
+        Store store = storeRepository.findByUrl(url)
+                .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません。"));
+        storeRepository.delete(store);
     }
+
 
     @Transactional(readOnly = true)
     public Store findByIdWithUsers(Long storeId) {

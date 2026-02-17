@@ -87,9 +87,10 @@ public class AdminStoreController {
     }
 
     // 店舗削除
-    @PostMapping("/{id}/delete")
-    public String deleteStore(@PathVariable Long id) {
-        storeService.deleteStore(id);
+    @PostMapping("/{url}/delete")
+    public String deleteStore(@PathVariable String url) {
+        storeService.deleteStoreByUrl(url);
         return "redirect:/admin/stores";
     }
+
 }
