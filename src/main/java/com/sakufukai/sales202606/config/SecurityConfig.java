@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // ★追加：権限不足(403)を 404専用ページへ
+                // ★追加: 権限不足(403)を 404専用ページへ
                 .exceptionHandling(ex -> ex
                         .accessDeniedHandler((request, response, e) -> {
                             response.setStatus(HttpStatus.NOT_FOUND.value());

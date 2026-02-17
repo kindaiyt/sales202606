@@ -12,7 +12,7 @@
 
         <!-- 店舗情報 -->
         <div class="store-info">
-            <p><b>店舗名：</b><span th:text="${store.name}"></span></p>
+            <p><b>店舗名: </b><span th:text="${store.name}"></span></p>
         </div>
 
         <!-- 現在所属ユーザー -->
@@ -27,7 +27,7 @@
                  class="assign-chip"
                  style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
 
-                <!-- 左側：名前・メール -->
+                <!-- 左側: 名前・メール -->
                 <div class="assign-chip-text" style="min-width:0;">
                     <div class="assign-name"
                          th:text="${us.user.name}">User Name</div>
@@ -35,7 +35,7 @@
                          th:text="${us.user.email}">email@example.com</div>
                 </div>
 
-                <!-- 右側：解除ボタン（右端固定） -->
+                <!-- 右側: 解除ボタン（右端固定） -->
                 <form th:action="@{/admin/stores/{id}/assign/remove(id=${store.id})}"
                       method="post"
                       class="assign-chip-form"
@@ -50,7 +50,7 @@
         <h2 class="section-title">ユーザーを追加</h2>
 
         <form th:action="@{/admin/stores/{id}/assign/add(id=${store.id})}" method="post" class="assign-add">
-            <label for="userEmail">追加するユーザー：</label>
+            <label for="userEmail">追加するユーザー: </label>
 
             <select id="userEmail" name="userEmail" required class="assign-select">
                 <option value="">選択してください</option>

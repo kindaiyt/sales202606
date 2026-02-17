@@ -56,7 +56,7 @@ public class StoreController {
             throw new IllegalArgumentException("店舗が見つかりません: " + url);
         }
         model.addAttribute("store", store);
-        // ★追加：リンク化した備考を作る
+        // ★追加: リンク化した備考を作る
         model.addAttribute("noteWithLinks",
                 convertUrlsToLinks(store.getNote()));
         return "store/store";
