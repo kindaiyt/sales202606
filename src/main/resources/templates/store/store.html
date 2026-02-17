@@ -17,6 +17,9 @@
         <div th:if="${store != null}" class="store-info">
 
             <div class="store-note-box" th:if="${store != null}">
+
+                <h2 th:text="'店舗名: ' + ${store.name}"></h2>
+
                 <h2 class="section-title">店舗の説明</h2>
 
                 <div class="note-display"
