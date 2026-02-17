@@ -13,8 +13,4 @@ import java.util.List;
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
     private List<String> adminEmails;
-
-    public void setAdminEmails(List<String> adminEmails) {
-        this.adminEmails = adminEmails;
-    }
 }

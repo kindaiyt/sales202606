@@ -1,5 +1,6 @@
 package com.sakufukai.sales202606.controller;
 
+import com.sakufukai.sales202606.config.AppProperties;
 import com.sakufukai.sales202606.entity.Role;
 import com.sakufukai.sales202606.entity.User;
 import com.sakufukai.sales202606.service.StoreService;
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -18,10 +20,14 @@ public class AdminController {
 
     private final UserService userService;
     private final StoreService storeService;
+    private final AppProperties appProperties;
 
-    public AdminController(UserService userService, StoreService storeService) {
+    public AdminController(UserService userService,
+                           StoreService storeService,
+                           AppProperties appProperties) {
         this.userService = userService;
         this.storeService = storeService;
+        this.appProperties = appProperties;
     }
 
     // ユーザー一覧ページ
@@ -29,6 +35,7 @@ public class AdminController {
     public String listUsers(@AuthenticationPrincipal OidcUser oidcUser, Model model) {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("stores", storeService.findAllWithUsers());
+        model.addAttribute("fixedAdmins", appProperties.getAdminEmails());
         return "admin/users"; // admin/users.html
     }
 
@@ -36,8 +43,15 @@ public class AdminController {
     @PostMapping("/users/{email}/role")
     public String changeRole(@AuthenticationPrincipal OidcUser oidcUser,
                              @PathVariable String email,
-                             @RequestParam Role role) {
-        userService.changeUserRole(email, role);
+                             @RequestParam Role role,
+                             RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.changeUserRole(email, role);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/admin/users";
     }
 
@@ -105,8 +119,15 @@ public class AdminController {
     // ユーザー削除
     @PostMapping("/users/{email}/delete")
     public String deleteUser(@AuthenticationPrincipal OidcUser oidcUser,
-                             @PathVariable String email) {
-        userService.deleteUserByEmail(email);
+                             @PathVariable String email,
+                             RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.deleteUserByEmail(email);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/admin/users";
     }
 

@@ -1,5 +1,6 @@
 package com.sakufukai.sales202606.service;
 
+import com.sakufukai.sales202606.config.AppProperties;
 import com.sakufukai.sales202606.entity.Role;
 import com.sakufukai.sales202606.entity.Store;
 import com.sakufukai.sales202606.entity.User;
@@ -21,13 +22,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
     private final UserStoreRepository userStoreRepository;
+    private final AppProperties appProperties;
 
     public UserService(UserRepository userRepository,
                        StoreRepository storeRepository,
-                       UserStoreRepository userStoreRepository) {
+                       UserStoreRepository userStoreRepository,
+                       AppProperties appProperties) {
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
         this.userStoreRepository = userStoreRepository;
+        this.appProperties = appProperties;
     }
 
     /**
@@ -35,6 +39,9 @@ public class UserService {
      */
     @Transactional
     public void changeUserRole(String email, Role newRole) {
+        if (isFixedAdmin(email)) {
+            throw new IllegalArgumentException("この管理者アカウントのロールは変更できません。");
+        }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません: " + email));
         user.setRole(newRole);
@@ -125,6 +132,9 @@ public class UserService {
 
     @Transactional
     public void deleteUserByEmail(String email) {
+        if (isFixedAdmin(email)) {
+            throw new IllegalArgumentException("この管理者アカウントは削除できません。");
+        }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません。"));
 
@@ -132,6 +142,11 @@ public class UserService {
         userStoreRepository.deleteByUser(user);
 
         userRepository.delete(user);
+    }
+
+    private boolean isFixedAdmin(String email) {
+        return appProperties.getAdminEmails() != null
+                && appProperties.getAdminEmails().contains(email);
     }
 
 }

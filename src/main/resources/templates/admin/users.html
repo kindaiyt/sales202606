@@ -14,6 +14,8 @@
     <main class="content">
         <h1>ユーザー管理</h1>
 
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         <div class="table-card">
             <table class="store-table">
                 <thead>
@@ -33,9 +35,11 @@
 
                     <td class="cell-actions" data-label="ロールを変更">
                         <div class="row-actions">
-                            <form th:action="@{'/admin/users/' + ${user.email} + '/role'}"
+                            <!-- 固定管理者でない場合のみロール変更表示 -->
+                            <form th:if="${fixedAdmins == null || !fixedAdmins.contains(user.email)}"
+                                  th:action="@{'/admin/users/' + ${user.email} + '/role'}"
                                   method="post"
-                                  style="display:flex; gap:10px; align-items:center; margin:0; padding:0; max-width:none;">
+                                  style="display:flex; gap:10px; align-items:center; margin:0;">
 
                                 <select name="role">
                                     <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
@@ -44,10 +48,16 @@
 
                                 <button type="submit" class="btn btn-sm">変更</button>
                             </form>
-                            <form th:action="@{'/admin/users/' + ${user.email} + '/delete'}"
+
+                            <!-- 固定管理者なら表示だけ（任意） -->
+                            <span th:if="${fixedAdmins != null && fixedAdmins.contains(user.email)}"
+                                  class="fixed-admin-label">
+                                固定管理者
+                            </span>
+                            <form th:if="${fixedAdmins == null || !fixedAdmins.contains(user.email)}"
+                                  th:action="@{'/admin/users/' + ${user.email} + '/delete'}"
                                   method="post"
-                                  onsubmit="return confirm('本当に削除しますか?');"
-                                  style="display: inline;">
+                                  onsubmit="return confirm('本当に削除しますか?');">
                                 <button type="submit" class="btn btn-danger btn-sm">削除</button>
                             </form>
                         </div>
