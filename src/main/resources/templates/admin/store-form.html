@@ -13,32 +13,39 @@
     <main class="content">
         <h1>新しい店舗を作成</h1>
 
-        <!-- エラー表示 -->
-        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+        <form th:action="@{/admin/stores}" method="post">
 
-        <form th:action="@{/admin/stores}" th:object="${store}" method="post">
+            <!-- 店舗名 -->
             <div class="form-group">
                 <label for="name">店舗名: </label>
+
                 <input type="text"
                        id="name"
-                       th:field="*{name}"
+                       name="name"
                        placeholder="ここに店舗名を入力"
-                       required>
+                       th:value="${name}">
+
+                <div th:if="${nameError}" class="error-message" th:text="${nameError}"></div>
             </div>
 
+            <!-- 店舗URL -->
             <div class="form-group">
                 <label for="url">店舗URLの末尾になるID: </label>
+
                 <input type="text"
                        id="url"
-                       th:field="*{url}"
+                       name="url"
                        placeholder="ここに店舗URLとなるIDを入力"
-                       required>
+                       th:value="${url}">
+
+                <div th:if="${urlError}" class="error-message" th:text="${urlError}"></div>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn">作成</button>
                 <a th:href="@{/admin/stores}" class="btn btn-secondary">戻る</a>
             </div>
+
         </form>
     </main>
 

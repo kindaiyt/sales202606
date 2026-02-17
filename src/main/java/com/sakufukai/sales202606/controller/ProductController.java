@@ -36,8 +36,8 @@ public class ProductController {
     @PostMapping("/save")
     public String saveProduct(
             @RequestParam String storeUrl,
-            @RequestParam String name,
-            @RequestParam String price,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String price,
             @RequestParam(required = false) String note,
             Model model
     ) {
@@ -49,22 +49,34 @@ public class ProductController {
         model.addAttribute("price", price);
         model.addAttribute("note", note);
 
+        boolean hasError = false;
+
         // サーバ側バリデーション: 商品名
         if (name == null || name.trim().isEmpty()) {
             model.addAttribute("nameError", "商品名を入力してください。");
-            return "product/add";
+            hasError = true;
         }
 
         // サーバ側バリデーション: 価格
-        Integer priceInt;
-        try {
-            priceInt = Integer.valueOf(price);
-        } catch (Exception e) {
-            model.addAttribute("priceError", "価格は整数で入力してください。");
-            return "product/add";
+        Integer priceInt = null;
+
+        if (price == null || price.trim().isEmpty()) {
+            model.addAttribute("priceError", "価格を入力してください。");
+            hasError = true;
+        } else {
+            try {
+                priceInt = Integer.valueOf(price.trim());
+                if (priceInt <= 0) {
+                    model.addAttribute("priceError", "価格は1以上の整数で入力してください。");
+                    hasError = true;
+                }
+            } catch (Exception e) {
+                model.addAttribute("priceError", "価格は整数で入力してください。");
+                hasError = true;
+            }
         }
-        if (priceInt <= 0) {
-            model.addAttribute("priceError", "価格は1以上の整数で入力してください。");
+
+        if (hasError) {
             return "product/add";
         }
 
@@ -76,50 +88,6 @@ public class ProductController {
 
         productService.save(product);
         return "redirect:/store/" + storeUrl;
-    }
-
-    // 商品更新処理
-    @PostMapping("/update")
-    public String updateProduct(
-            @RequestParam Long id,
-            @RequestParam String name,
-            @RequestParam String price,
-            @RequestParam(required = false) String note,
-            Model model
-    ) {
-        Product product = productService.findById(id);
-
-        // 画面に戻す用
-        model.addAttribute("product", product);
-        model.addAttribute("name", name);
-        model.addAttribute("price", price);
-        model.addAttribute("note", note);
-
-        // サーバ側バリデーション: 商品名
-        if (name == null || name.trim().isEmpty()) {
-            model.addAttribute("nameError", "商品名を入力してください。");
-            return "product/edit";
-        }
-
-        // サーバ側バリデーション: 価格
-        Integer priceInt;
-        try {
-            priceInt = Integer.valueOf(price);
-        } catch (Exception e) {
-            model.addAttribute("priceError", "価格は整数で入力してください。");
-            return "product/edit";
-        }
-        if (priceInt <= 0) {
-            model.addAttribute("priceError", "価格は1以上の整数で入力してください。");
-            return "product/edit";
-        }
-
-        product.setName(name.trim());
-        product.setPrice(priceInt);
-        product.setNote(note);
-
-        productService.save(product);
-        return "redirect:/store/" + product.getStore().getUrl();
     }
 
     // 商品削除処理
@@ -141,13 +109,60 @@ public class ProductController {
         return "product/edit"; // templates/product/edit.html
     }
 
-    // 編集内容を保存
-    @PostMapping("/edit/{id}")
-    public String updateProduct(@PathVariable Long id,
-                                @ModelAttribute Product product) {
-        product.setId(id);
+    // 商品更新処理
+    @PostMapping("/update")
+    public String updateProduct(
+            @RequestParam Long id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String price,
+            @RequestParam(required = false) String note,
+            Model model
+    ) {
+        Product product = productService.findById(id);
+
+        // 画面に戻す用
+        model.addAttribute("product", product);
+        model.addAttribute("name", name);
+        model.addAttribute("price", price);
+        model.addAttribute("note", note);
+
+        boolean hasError = false;
+
+        // サーバ側バリデーション: 商品名
+        if (name == null || name.trim().isEmpty()) {
+            model.addAttribute("nameError", "商品名を入力してください。");
+            hasError = true;
+        }
+
+        // サーバ側バリデーション: 価格
+        Integer priceInt = null;
+
+        if (price == null || price.trim().isEmpty()) {
+            model.addAttribute("priceError", "価格を入力してください。");
+            hasError = true;
+        } else {
+            try {
+                priceInt = Integer.valueOf(price.trim());
+                if (priceInt <= 0) {
+                    model.addAttribute("priceError", "価格は1以上の整数で入力してください。");
+                    hasError = true;
+                }
+            } catch (Exception e) {
+                model.addAttribute("priceError", "価格は整数で入力してください。");
+                hasError = true;
+            }
+        }
+
+        if (hasError) {
+            return "product/edit";
+        }
+
+        product.setName(name.trim());
+        product.setPrice(priceInt);
+        product.setNote(note);
+
         productService.save(product);
-        return "redirect:/store/";
+        return "redirect:/store/" + product.getStore().getUrl();
     }
 
 }
