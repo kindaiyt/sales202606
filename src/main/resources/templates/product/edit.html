@@ -3,37 +3,47 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
+    <meta charset="UTF-8">
     <title>商品編集</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 <main layout:fragment="content">
     <h1>商品編集</h1>
 
-    <!-- 商品更新フォーム -->
     <form th:action="@{/product/update}" method="post">
         <input type="hidden" name="id" th:value="${product.id}"/>
+
         <div class="form-group">
-            <label>商品名:</label>
-            <input type="text" name="name" th:value="${product.name}" required/>
-        </div>
-        <div class="form-group">
-            <label>価格:</label>
-            <input type="number" name="price"
-                   th:value="${product.price % 1 == 0 ? product.price.intValue() : product.price}"
-                   required/>
+            <label for="name">商品名</label>
+            <input type="text" id="name" name="name"
+                   th:value="${product.name}"
+                   placeholder="ここに商品名を入力"
+                   required>
         </div>
 
-        <!-- 更新ボタン＋削除ボタン横並び -->
-        <div class="form-actions" style="display:flex; gap:1em; align-items:center;">
+        <div class="form-group">
+            <label for="price">価格</label>
+            <input type="number" id="price" name="price"
+                   th:value="${product.price % 1 == 0 ? product.price.intValue() : product.price}"
+                   placeholder="ここに金額を入力"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="note">説明（任意）</label>
+            <textarea id="note" name="note" rows="4"
+                      class="note-textarea"
+                      placeholder="商品の説明を入力（任意）"
+                      th:text="${product.note}"></textarea>
+        </div>
+
+        <div class="form-actions">
             <button type="submit" class="btn">更新</button>
+            <a th:href="@{/store/{url}(url=${product.store.url})}" class="btn btn-secondary">戻る</a>
         </div>
     </form>
-
-    <!-- 改行して戻るリンク -->
-    <div style="margin-top:1em;">
-        <a th:href="@{'/store/' + ${product.store.url}}" class="btn btn-secondary">店舗ページに戻る</a>
-    </div>
 </main>
-
 </body>
 </html>

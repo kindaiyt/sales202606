@@ -22,6 +22,14 @@
             <input type="number" id="price" name="price" placeholder="ここに金額を入力" required>
         </div>
 
+        <div class="form-group">
+            <label for="note">説明（任意）</label>
+            <textarea id="note" name="note" rows="4"
+                      class="note-textarea"
+                      placeholder="商品の説明を入力（任意）"></textarea>
+
+        </div>
+
         <div class="form-actions">
             <button type="submit" class="btn">追加</button>
             <a th:href="@{/store/{url}(url=${store.url})}" class="btn btn-secondary">戻る</a>

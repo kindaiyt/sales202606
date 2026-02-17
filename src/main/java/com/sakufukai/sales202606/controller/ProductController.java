@@ -37,37 +37,35 @@ public class ProductController {
     public String saveProduct(
             @RequestParam String storeUrl,
             @RequestParam String name,
-            @RequestParam double price
+            @RequestParam double price,
+            @RequestParam(required = false) String note
     ) {
         Store store = storeService.findByUrl(storeUrl);
-        if (store == null) {
-            throw new IllegalArgumentException("店舗が見つかりません: " + storeUrl);
-        }
 
         Product product = new Product();
         product.setName(name);
         product.setPrice(price);
+        product.setNote(note); // ★追加
         product.setStore(store);
 
         productService.save(product);
-
-        // 商品追加後、店舗ページにリダイレクト
         return "redirect:/store/" + storeUrl;
     }
+
 
     // 商品更新処理
     @PostMapping("/update")
     public String updateProduct(
             @RequestParam Long id,
             @RequestParam String name,
-            @RequestParam double price
+            @RequestParam double price,
+            @RequestParam(required = false) String note
     ) {
         Product product = productService.findById(id);
-
         product.setName(name);
         product.setPrice(price);
+        product.setNote(note); // ★追加
         productService.save(product);
-
         return "redirect:/store/" + product.getStore().getUrl();
     }
 
@@ -96,6 +94,7 @@ public class ProductController {
                                 @ModelAttribute Product product) {
         product.setId(id);
         productService.save(product);
-        return "redirect:/stores/my";
+        return "redirect:/store/";
     }
+
 }
