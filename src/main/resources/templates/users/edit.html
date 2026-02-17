@@ -12,6 +12,7 @@
         <h1>名前変更</h1>
 
         <form th:action="@{/users/me/edit}" method="post">
+
             <div class="form-group">
                 <p><strong>メールアドレス:</strong> <span th:text="${user.email}"></span></p>
             </div>
@@ -22,14 +23,27 @@
 
             <div class="form-group">
                 <label for="name">名前</label>
-                <input type="text" id="name" name="name" th:value="${user.name}" placeholder="ここに新しい名前を入力" required>
+
+                <input type="text"
+                       id="name"
+                       name="name"
+                       th:value="${name != null ? name : user.name}"
+                       placeholder="ここに新しい名前を入力">
+
+                <!-- ★ エラーメッセージ -->
+                <div th:if="${nameError}"
+                     class="error-message"
+                     th:text="${nameError}">
+                </div>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn">更新</button>
-                <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+                <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
             </div>
+
         </form>
+
     </main>
 
 </th:block>

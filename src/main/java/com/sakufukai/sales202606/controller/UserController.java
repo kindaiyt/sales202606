@@ -6,10 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/users")
@@ -49,15 +46,29 @@ public class UserController {
     }
 
 
-    // 更新処理
     @PostMapping("/me/edit")
-    public String updateUser(@AuthenticationPrincipal OidcUser oidcUser,
-                             @ModelAttribute("user") User formUser) {
-        if (oidcUser == null) {
-            return "redirect:/login";
+    public String updateName(@AuthenticationPrincipal OidcUser oidcUser,
+                             @RequestParam(required = false) String name,
+                             Model model) {
+
+        String email = oidcUser.getEmail();
+        // Optional から User を取り出す
+        User user = userService.findByEmail(oidcUser.getEmail())
+                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+
+        // 入力値保持
+        model.addAttribute("user", user);
+        model.addAttribute("name", name);
+
+        // ★ 空白チェック
+        if (name == null || name.trim().isEmpty()) {
+            model.addAttribute("nameError", "名前を入力してください。");
+            return "users/edit";   // ← edit.html のパスに合わせる
         }
-        userService.updateUserInfo(oidcUser.getEmail(), formUser.getName());
-        return "redirect:/users/me"; // 更新後マイページへ
+
+        userService.updateUserInfo(email, name.trim());
+
+        return "redirect:/users/me";
     }
 
 }
