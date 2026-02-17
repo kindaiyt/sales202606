@@ -19,7 +19,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = Role.PENDING; // 初回は承認待ち（PENDING, USER, ADMIN）
+    private Role role = Role.USER;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();

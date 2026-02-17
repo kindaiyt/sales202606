@@ -85,10 +85,6 @@ public class UserService {
         userStoreRepository.findByUserAndStore(user, store).ifPresent(userStoreRepository::delete);
     }
 
-    public List<User> findAllApprovedUsers() {
-        return userRepository.findByRoleNot(Role.PENDING);
-    }
-
     public String getNameByEmailOrGuest(String email) {
         if (email == null) return "ゲスト";
         return userRepository.findById(email)

@@ -38,12 +38,6 @@ public class HomeController {
             return "pending"; // 既存の pending.html を流用でもOK（画面名は自由）
         }
 
-        if (user.getRole() == Role.PENDING) {
-            model.addAttribute("userName", user.getName());
-            model.addAttribute("message", "管理者の承認待ちです。");
-            return "pending";
-        }
-
         model.addAttribute("userName", user.getName());
         model.addAttribute("isAdmin", user.getRole() == Role.ADMIN);
 

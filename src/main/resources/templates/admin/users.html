@@ -31,7 +31,7 @@
                     <td data-label="名前" th:text="${user.name}"></td>
                     <td data-label="現在のロール" th:text="${user.role}"></td>
 
-                    <td class="cell-actions" data-label="操作">
+                    <td class="cell-actions" data-label="ロールを変更">
                         <div class="row-actions">
                             <form th:action="@{'/admin/users/' + ${user.email} + '/role'}"
                                   method="post"
@@ -40,7 +40,6 @@
                                 <select name="role">
                                     <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
                                     <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">ADMIN</option>
-                                    <option value="PENDING" th:selected="${user.role == 'PENDING'}">PENDING</option>
                                 </select>
 
                                 <button type="submit" class="btn btn-sm">変更</button>
