@@ -2,12 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-
-<!--<th:block layout:fragment="breadcrumb">-->
-<!--    マイページ-->
-<!--</th:block>-->
-
 <head>
+    <meta charset="UTF-8">
     <title>マイページ</title>
 </head>
 <body>
@@ -16,17 +12,32 @@
     <main class="content">
         <h1>マイページ</h1>
 
-        <div class="user-info">
-            <p><strong>メールアドレス:</strong> <span th:text="${user.email}"></span></p>
-            <p><strong>名前:</strong> <span th:text="${user.name}"></span></p>
-            <!-- <p><strong>Role:</strong> <span th:text="${user.role}"></span></p> -->
-            <!-- <p><strong>Created At:</strong> <span th:text="${user.createdAt}"></span></p> -->
+        <div class="table-card">
+            <table class="store-table">
+                <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>内容</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td data-label="項目" class="cell-name">メールアドレス</td>
+                    <td data-label="内容" th:text="${user.email}"></td>
+                </tr>
+
+                <tr>
+                    <td data-label="項目" class="cell-name">名前</td>
+                    <td data-label="内容" th:text="${user.name}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- 編集ページへのリンク -->
-        <div class="actions">
+        <div class="form-actions mt-16">
             <a th:href="@{/users/me/edit}" class="btn">名前を変更</a>
-            <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+            <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
         </div>
     </main>
 
