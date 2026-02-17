@@ -17,6 +17,7 @@
                 <thead>
                 <tr>
                     <th>店舗名</th>
+                    <th>店舗URL</th>
                     <th>店舗の説明</th>
                     <th>所属している人</th>
                     <th class="col-actions">操作</th>
@@ -29,6 +30,12 @@
                     <td class="cell-name"
                         data-label="店舗名"
                         th:text="${store.name}">
+                    </td>
+
+                    <!-- 店舗URL -->
+                    <td class="cell-url"
+                        data-label="店舗URL"
+                        th:text="${store.url}">
                     </td>
 
                     <!-- 店舗の説明 -->
