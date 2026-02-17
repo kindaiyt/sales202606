@@ -8,7 +8,7 @@
 <body>
 <th:block layout:fragment="content">
     <main class="content">
-        <h1>店舗割り当て</h1>
+        <h1>店舗詳細</h1>
 
         <!-- 店舗情報 -->
         <div class="store-info">
@@ -36,7 +36,7 @@
                 </div>
 
                 <!-- 右側: 解除ボタン（右端固定） -->
-                <form th:action="@{/admin/stores/{id}/assign/remove(id=${store.id})}"
+                <form th:action="@{/admin/stores/{id}/edit/remove(id=${store.id})}"
                       method="post"
                       class="assign-chip-form"
                       style="margin-left:auto;">

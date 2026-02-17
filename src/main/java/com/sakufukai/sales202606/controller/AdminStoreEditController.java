@@ -16,22 +16,22 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class AdminStoreAssignController {
+public class AdminStoreEditController {
 
     private final StoreService storeService;
     private final UserService userService;
 
-    @GetMapping("/admin/stores/{storeId}/assign")
-    public String assignPage(@PathVariable Long storeId, Model model) {
+    @GetMapping("/admin/stores/{storeId}/edit")
+    public String editPage(@PathVariable Long storeId, Model model) {
         Store store = storeService.findByIdWithUsers(storeId); // userStores+userを取れると理想
         List<User> users = userService.findAllApprovedUsers(); // PENDING除外推奨
 
         model.addAttribute("store", store);
         model.addAttribute("users", users);
-        return "admin/store-assign";
+        return "admin/store-edit";
     }
 
-    @PostMapping("/admin/stores/{storeId}/assign/add")
+    @PostMapping("/admin/stores/{storeId}/edit/add")
     public String add(@PathVariable Long storeId,
                       @RequestParam(required = false) String userEmail,
                       Model model) {
@@ -46,11 +46,11 @@ public class AdminStoreAssignController {
             model.addAttribute("userError", "追加するユーザーを選択してください。");
             model.addAttribute("selectedUserEmail", userEmail);
 
-            return "admin/store-assign";
+            return "admin/store-edit";
         }
 
         storeService.addUserToStore(storeId, userEmail);
-        return "redirect:/admin/stores/" + storeId + "/assign";
+        return "redirect:/admin/stores/" + storeId + "/edit";
     }
 
 }
