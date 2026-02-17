@@ -29,31 +29,32 @@ public class HomeController {
             return "home";
         }
 
-        // DBからユーザーを取得（初回は新規登録 → role=PENDING）
-        User user = userService.loadOrCreateUser(oidcUser);
+        User user;
+        try {
+            user = userService.requireExistingUser(oidcUser);
+        } catch (IllegalStateException e) {
+            model.addAttribute("userName", "ゲスト");
+            model.addAttribute("message", "このGoogleアカウントは登録されていません。管理者に連絡してください。");
+            return "pending"; // 既存の pending.html を流用でもOK（画面名は自由）
+        }
 
-        // 承認待ちなら専用画面へ
         if (user.getRole() == Role.PENDING) {
             model.addAttribute("userName", user.getName());
             model.addAttribute("message", "管理者の承認待ちです。");
-            return "pending"; // pending.html を用意
+            return "pending";
         }
 
         model.addAttribute("userName", user.getName());
-
-        // 管理者フラグ
         model.addAttribute("isAdmin", user.getRole() == Role.ADMIN);
 
-        // ユーザーが持つ店舗を取得
         List<UserStore> userStores = user.getUserStores();
         if (userStores != null && !userStores.isEmpty()) {
-            // ひとまず最初の店舗のみ利用
             Store store = userStores.get(0).getStore();
             model.addAttribute("storeName", store.getName());
             model.addAttribute("storeUrl", "/store/" + store.getUrl());
         }
-        // 店舗が無い場合は何もセットしない → home.html 側の null 判定に委ねる
 
-        return "home"; // home.html
+        return "home";
     }
+
 }

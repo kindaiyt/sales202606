@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -14,7 +15,9 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class CustomOidcUserService extends OidcUserService {
@@ -33,38 +36,43 @@ public class CustomOidcUserService extends OidcUserService {
         String email = oidcUser.getAttribute("email");
         String googleName = oidcUser.getAttribute("name");
 
-        // DB からユーザー取得または新規作成
-        User user = userRepository.findByEmail(email).orElseGet(() -> {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(googleName != null ? googleName : "(未ログイン)");
-            newUser.setRole(Role.PENDING);
-            newUser.setCreatedAt(LocalDateTime.now());
-            newUser.setUpdatedAt(LocalDateTime.now());
-            return userRepository.save(newUser);
-        });
+        // email が取れない場合はログイン失敗にする
+        if (email == null || email.trim().isEmpty()) {
+            OAuth2Error error = new OAuth2Error("invalid_user", "Email not found from OIDC provider", null);
+            throw new OAuth2AuthenticationException(error);
+        }
 
-        // 登録済みユーザーのうち、名前が「（未ログイン）」なら Google 名で更新
-        if ((user.getName() == null || user.getName().contains("未ログイン")) && googleName != null) {
-            user.setName(googleName);
+        // DB に存在しないユーザーは作らない: ログイン失敗にする
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    OAuth2Error error = new OAuth2Error("not_registered", "User is not registered", null);
+                    return new OAuth2AuthenticationException(error);
+                });
+
+        // 既存ユーザーの名前が空っぽ系なら Google 名で更新（任意）
+        if ((user.getName() == null || user.getName().trim().isEmpty() || user.getName().contains("未ログイン"))
+                && googleName != null && !googleName.trim().isEmpty()) {
+            user.setName(googleName.trim());
             user.setUpdatedAt(LocalDateTime.now());
             userRepository.save(user);
         }
 
-        // DB 上の名前で OidcUserInfo を作り直す
+        // userInfo に email と name を入れて返す: 他の画面で oidcUser.getEmail() が壊れにくい
         OidcIdToken idToken = oidcUser.getIdToken();
-        OidcUserInfo userInfo = new OidcUserInfo(
-                Collections.singletonMap("name", user.getName())
-        );
+
+        Map<String, Object> userInfoMap = new HashMap<>();
+        userInfoMap.put("email", email);
+        userInfoMap.put("name", user.getName());
+
+        OidcUserInfo userInfo = new OidcUserInfo(userInfoMap);
 
         String roleName = "ROLE_" + user.getRole().name();
 
-        // DB 名を反映した OidcUser を返す
         return new DefaultOidcUser(
-                Collections.singleton(new SimpleGrantedAuthority(roleName)),
+                Set.of(new SimpleGrantedAuthority(roleName)),
                 idToken,
                 userInfo,
-                "name" // ここを name にすることで getName() が DB 名になる
+                "name"
         );
     }
 }

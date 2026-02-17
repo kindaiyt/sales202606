@@ -44,10 +44,11 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/pending", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+
 
                 // ★追加: 権限不足(403)を 404専用ページへ
                 .exceptionHandling(ex -> ex
@@ -64,6 +65,22 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(customOidcUserService)
                         )
+                        .failureHandler((request, response, exception) -> {
+                            // 未登録なら pending へ (クエリで理由を渡す)
+                            String msg = "login_failed";
+
+                            
+                            if (exception instanceof org.springframework.security.oauth2.core.OAuth2AuthenticationException ex) {
+                                String code = ex.getError().getErrorCode();
+                                if ("not_registered".equals(code)) {
+                                    msg = "not_registered";
+                                } else if ("invalid_user".equals(code)) {
+                                    msg = "invalid_user";
+                                }
+                            }
+
+                            response.sendRedirect("/pending?reason=" + msg);
+                        })
                         .defaultSuccessUrl("/", true)
                 )
                 .logout(logout -> logout

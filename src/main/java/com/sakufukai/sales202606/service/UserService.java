@@ -29,24 +29,6 @@ public class UserService {
     }
 
     /**
-     * メールアドレスをキーとしてユーザーを取得、なければ作成
-     */
-    @Transactional
-    public User loadOrCreateUser(OidcUser oidcUser) {
-        String name = oidcUser.getFullName();
-        String email = oidcUser.getEmail();
-
-        // メールアドレスで存在チェック
-        return userRepository.findByEmail(email).orElseGet(() -> {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(name);
-            newUser.setRole(Role.PENDING); // デフォルトは承認待ち
-            return userRepository.save(newUser);
-        });
-    }
-
-    /**
      * メールアドレスでユーザーのロール変更
      */
     @Transactional
@@ -119,6 +101,12 @@ public class UserService {
         return userRepository.findById(email)
                 .map(u -> u.getRole() == Role.ADMIN)
                 .orElse(false);
+    }
+
+    public User requireExistingUser(OidcUser oidcUser) {
+        String email = oidcUser.getEmail();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("NOT_REGISTERED"));
     }
 
 }

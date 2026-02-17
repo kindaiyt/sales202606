@@ -3,26 +3,35 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>承認待ち</title>
+    <title>店舗管理者のアカウントではありません</title>
 </head>
 <body>
 <main layout:fragment="content">
-    <h1>承認待ち</h1>
+    <h1>店舗管理者のアカウントではありません</h1>
 
     <div class="pending-info">
+
+        <!-- message が渡されていればそれを表示 -->
+        <p th:if="${message}" th:text="${message}"></p>
+
+        <!-- message が無ければ従来の固定文言 -->
+        <div th:if="${message == null}">
+            <p>
+                このGoogleアカウントは、店舗管理者として登録されていません。
+            </p>
+        </div>
+
         <p>
-            こんにちは、<span th:text="${userName}"></span> さん。
-        </p>
-        <p>
-            現在、管理者による承認待ちです。承認されるまでしばらくお待ちください。
-        </p>
-        <p>
-            承認に関するお問い合わせは
+            店舗管理人としての承認に関するお問い合わせは
             <a href="mailto:sakufukai@gmail.com">sakufukai@gmail.com</a>
             までご連絡ください。
         </p>
+
+        <div class="form-actions mt-16">
+            <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
+        </div>
+
     </div>
 </main>
-
 </body>
 </html>
