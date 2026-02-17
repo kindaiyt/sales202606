@@ -636,3 +636,61 @@ button.btn {
     border-radius: 8px;
     border: 1px solid #e0e6ef;
 }
+
+.page-title {
+  font-size: 32px;
+  margin-bottom: 18px;
+}
+
+.table-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  margin-top: 14px;
+}
+
+.store-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.store-table thead th {
+  text-align: left;
+  font-weight: 700;
+  padding: 14px 12px;
+  border-bottom: 1px solid #eaeaea;
+  color: #333;
+}
+
+.store-table tbody td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.url-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f3f6ff;
+  color: #2b5cff;
+  font-size: 14px;
+}
+
+.col-actions {
+  width: 180px;
+}
+
+.row-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.btn-sm {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+}

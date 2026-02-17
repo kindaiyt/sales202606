@@ -3,25 +3,54 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>店舗一覧</title>
+    <meta charset="UTF-8">
+    <title>あなたの店舗一覧</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<main layout:fragment="content">
-    <h1>あなたの店舗一覧</h1>
+<th:block layout:fragment="content">
 
-    <div th:if="${#lists.isEmpty(stores)}">
-        <p>所属店舗は登録されていません。</p>
-    </div>
+    <main class="content">
+        <h1>あなたの店舗一覧</h1>
 
-    <ul th:if="${!#lists.isEmpty(stores)}">
-        <li th:each="store : ${stores}">
-            <a th:href="@{|/store/${store.url}|}" th:text="${store.name}"></a>
-        </li>
-    </ul>
+        <!-- 店舗が0件 -->
+        <div th:if="${#lists.isEmpty(stores)}" class="store-info">
+            <p>現在、あなたに割り当てられている店舗がありません。</p>
+        </div>
 
-    <div class="actions">
-        <a href="/" class="btn btn-secondary">ホームへ戻る</a>
-    </div>
-</main>
+        <!-- 店舗一覧（表カード） -->
+        <div th:if="${!#lists.isEmpty(stores)}" class="table-card">
+            <table class="store-table">
+                <thead>
+                <tr>
+                    <th>店舗名</th>
+                    <th class="col-actions">操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="store : ${stores}">
+                    <td class="cell-name" data-label="店舗名" th:text="${store.name}"></td>
+
+                    <td class="cell-actions" data-label="操作">
+                        <div class="row-actions">
+                            <a th:href="@{/store/{url}(url=${store.url})}" class="btn btn-sm">
+                                店舗ページへ
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 戻る -->
+        <div class="actions mt-16">
+            <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+        </div>
+
+    </main>
+
+</th:block>
 </body>
 </html>
