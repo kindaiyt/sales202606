@@ -466,7 +466,7 @@ button.btn {
 }
 
 .assign-chip-form {
-  margin-left: auto;
+  margin: 0 0 0 auto; /* ← 右寄せ確定（左だけauto） */
   max-width: none;
   padding: 0;
 }
