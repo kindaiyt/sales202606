@@ -52,7 +52,7 @@
         <form th:action="@{/admin/stores/{id}/assign/add(id=${store.id})}" method="post" class="assign-add">
             <label for="userEmail">追加するユーザー：</label>
 
-            <select id="userEmail" name="userEmail" required>
+            <select id="userEmail" name="userEmail" required class="assign-select">
                 <option value="">選択してください</option>
                 <option th:each="u : ${users}"
                         th:value="${u.email}"

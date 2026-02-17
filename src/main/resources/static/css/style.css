@@ -694,3 +694,32 @@ button.btn {
   border-radius: 999px;
   font-size: 14px;
 }
+
+/* 割り当て追加の select を周りと揃える */
+.assign-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  height: 44px;                 /* btn と高さ合わせ */
+  padding: 0 44px 0 14px;       /* 右は矢印分 */
+  border: 1px solid #d7e2f0;
+  border-radius: 12px;
+  background: #fff;
+  color: #333;
+  font-size: 16px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: border-color .2s, box-shadow .2s;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='gray'><path d='M2 4l4 4 4-4z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px;
+}
+
+.assign-select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74,144,226,0.2), 0 2px 6px rgba(0,0,0,0.06);
+}
