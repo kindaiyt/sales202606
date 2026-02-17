@@ -42,7 +42,7 @@ public class AdminController {
             return "redirect:/";
         }
         model.addAttribute("users", userService.findAll());
-        model.addAttribute("stores", storeService.findAll()); // ★ 店舗一覧を追加
+        model.addAttribute("stores", storeService.findAllWithUsers());
         return "admin/users"; // admin/users.html
     }
 

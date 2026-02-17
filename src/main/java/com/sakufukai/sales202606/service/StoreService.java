@@ -150,5 +150,9 @@ public class StoreService {
         return null;
     }
 
+    @Transactional(readOnly = true)
+    public List<Store> findAllWithUsers() {
+        return storeRepository.findAllWithUsers();
+    }
 
 }
