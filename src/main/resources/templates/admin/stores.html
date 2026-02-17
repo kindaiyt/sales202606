@@ -36,14 +36,22 @@
 
                     <!-- 所属ユーザー -->
                     <td data-label="所属している人">
-                        <span th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}">-</span>
 
-                        <span th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
-                              th:each="us, stat : ${store.userStores}">
+                        <!-- 誰もいない -->
+                        <div th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}">
+                            -
+                        </div>
+
+                        <!-- 1人ずつ縦に表示 -->
+                        <div th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
+                             th:each="us : ${store.userStores}">
+
                             <span th:text="${us.user.name != null ? us.user.name : us.user.email}"></span>
-                            <span th:if="${!stat.last}">, </span>
-                        </span>
+
+                        </div>
+
                     </td>
+
 
                     <!-- 操作 -->
                     <td class="cell-actions" data-label="操作">
