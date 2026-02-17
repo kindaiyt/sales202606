@@ -33,4 +33,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     """)
     Optional<Store> findByUrlWithUsers(@Param("url") String url);
 
+    boolean existsByUrl(String url);
 }

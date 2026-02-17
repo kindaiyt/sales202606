@@ -193,4 +193,8 @@ public class StoreService {
         storeRepository.save(store);
     }
 
+    public boolean existsByUrl(String url) {
+        return storeRepository.existsByUrl(url);
+    }
+
 }
