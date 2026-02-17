@@ -53,5 +53,53 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    @GetMapping("/users/new")
+    public String newUserForm(Model model) {
+        model.addAttribute("email", "");
+        model.addAttribute("role", "USER");
+        return "admin/user-form";
+    }
+
+    @PostMapping("/users")
+    public String createUser(@RequestParam(required = false) String email,
+                             @RequestParam(required = false) String role,
+                             Model model) {
+
+        model.addAttribute("email", email);
+        model.addAttribute("role", role);
+
+        boolean hasError = false;
+
+        if (email == null || email.trim().isEmpty()) {
+            model.addAttribute("emailError", "メールアドレスを入力してください。");
+            hasError = true;
+        } else if (!email.trim().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            model.addAttribute("emailError", "メールアドレスの形式が正しくありません。");
+            hasError = true;
+        }
+
+        Role roleEnum = Role.USER;
+        if (role != null && !role.trim().isEmpty()) {
+            try {
+                roleEnum = Role.valueOf(role.trim());
+            } catch (Exception e) {
+                model.addAttribute("roleError", "ロールの値が不正です。");
+                hasError = true;
+            }
+        }
+
+        if (hasError) {
+            return "admin/user-form";
+        }
+
+        try {
+            userService.createUserWithPlaceholderName(email.trim(), roleEnum);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("emailError", e.getMessage());
+            return "admin/user-form";
+        }
+
+        return "redirect:/admin/users";
+    }
 
 }

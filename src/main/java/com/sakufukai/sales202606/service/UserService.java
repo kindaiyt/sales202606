@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -103,6 +105,22 @@ public class UserService {
         String email = oidcUser.getAttribute("email");
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("NOT_REGISTERED"));
+    }
+
+    @Transactional
+    public void createUserWithPlaceholderName(String email, Role role) {
+        userRepository.findByEmail(email).ifPresent(u -> {
+            throw new IllegalArgumentException("このメールアドレスは既に登録されています。");
+        });
+
+        User user = new User();
+        user.setEmail(email);
+        user.setName("（未ログイン）");
+        user.setRole(role == null ? Role.USER : role);
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
     }
 
 }

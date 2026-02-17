@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー登録</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <main class="content">
+        <h1>ユーザー登録</h1>
+
+        <form th:action="@{/admin/users}" method="post">
+
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input type="text"
+                       id="email"
+                       name="email"
+                       placeholder="ここにメールアドレスを入力"
+                       th:value="${email}">
+                <div th:if="${emailError}" class="error-message" th:text="${emailError}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="role">ロール</label>
+                <select id="role" name="role" class="assign-select">
+                    <option value="USER" th:selected="${role == null or role == 'USER'}">USER</option>
+                    <option value="ADMIN" th:selected="${role == 'ADMIN'}">ADMIN</option>
+                </select>
+                <div th:if="${roleError}" class="error-message" th:text="${roleError}"></div>
+            </div>
+
+            <div class="store-info">
+                <p>登録時の名前は「（未ログイン）」で固定されます。
+                    <br>名前が「（未ログイン）」の場合、初回ログイン時に自動で更新されます。</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">登録</button>
+                <a th:href="@{/admin/users}" class="btn btn-secondary">戻る</a>
+            </div>
+
+        </form>
+    </main>
+</th:block>
+</body>
+</html>
