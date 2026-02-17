@@ -19,28 +19,14 @@ public class AdminController {
     private final UserService userService;
     private final StoreService storeService;
 
-    // 複数の管理者メールを想定
-    private static final List<String> ADMIN_EMAILS = List.of(
-            "2533340439b@kindai.ac.jp",
-            "another.admin@example.com"
-    );
-
     public AdminController(UserService userService, StoreService storeService) {
         this.userService = userService;
         this.storeService = storeService;
     }
 
-    // 管理者チェック
-    private boolean isAdmin(OidcUser oidcUser) {
-        return oidcUser != null && ADMIN_EMAILS.contains(oidcUser.getAttribute("email"));
-    }
-
     // ユーザー一覧ページ
     @GetMapping("/users")
     public String listUsers(@AuthenticationPrincipal OidcUser oidcUser, Model model) {
-        if (!isAdmin(oidcUser)) {
-            return "redirect:/";
-        }
         model.addAttribute("users", userService.findAll());
         model.addAttribute("stores", storeService.findAllWithUsers());
         return "admin/users"; // admin/users.html
@@ -51,9 +37,6 @@ public class AdminController {
     public String changeRole(@AuthenticationPrincipal OidcUser oidcUser,
                              @PathVariable String email,
                              @RequestParam Role role) {
-        if (!isAdmin(oidcUser)) {
-            return "redirect:/";
-        }
         userService.changeUserRole(email, role);
         return "redirect:/admin/users";
     }
