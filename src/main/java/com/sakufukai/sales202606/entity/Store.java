@@ -25,4 +25,8 @@ public class Store {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
+
+    @Column(columnDefinition = "TEXT")
+    private String note;   // 備考（空欄OK）
+
 }

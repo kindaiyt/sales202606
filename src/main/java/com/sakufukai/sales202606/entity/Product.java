@@ -24,4 +24,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+    @Column(columnDefinition = "TEXT")
+    private String note;   // 備考（空欄OK）
+
 }
