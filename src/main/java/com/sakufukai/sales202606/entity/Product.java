@@ -16,7 +16,7 @@ public class Product {
     private Long id;
 
     private String name;
-    private Double price;
+    private Integer price;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();

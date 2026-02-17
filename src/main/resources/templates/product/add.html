@@ -5,36 +5,56 @@
 <head>
     <title>商品追加</title>
 </head>
+
 <body>
 <main layout:fragment="content">
+
     <h1 th:text="'『' + ${store.name} + '』の商品追加'"></h1>
 
-    <form th:action="@{/product/save}" method="post">
+    <!-- エラー表示 -->
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <form th:action="@{/product/save}" method="post" novalidate>
         <input type="hidden" name="storeUrl" th:value="${store.url}"/>
 
         <div class="form-group">
             <label for="name">商品名</label>
-            <input type="text" id="name" name="name" placeholder="ここに商品名を入力" required>
+            <input type="text" id="name" name="name"
+                   placeholder="ここに商品名を入力"
+                   th:value="${name}"
+                   required>
         </div>
 
         <div class="form-group">
             <label for="price">価格</label>
-            <input type="number" id="price" name="price" placeholder="ここに金額を入力" required>
+            <input
+                    type="text"
+                    id="price"
+                    name="price"
+                    inputmode="numeric"
+                    pattern="^[0-9]+$"
+                    placeholder="ここに金額を入力"
+                    th:value="${price}"
+                    required
+            >
+            <div th:if="${priceError}" class="error-message" th:text="${priceError}"></div>
         </div>
 
         <div class="form-group">
             <label for="note">説明（任意）</label>
             <textarea id="note" name="note" rows="4"
                       class="note-textarea"
-                      placeholder="商品の説明を入力（任意）"></textarea>
-
+                      placeholder="商品の説明を入力（任意）"
+                      th:text="${note}"></textarea>
         </div>
 
         <div class="form-actions">
             <button type="submit" class="btn">追加</button>
             <a th:href="@{/store/{url}(url=${store.url})}" class="btn btn-secondary">戻る</a>
         </div>
+
     </form>
+
 </main>
 </body>
 </html>

@@ -37,15 +37,35 @@ public class ProductController {
     public String saveProduct(
             @RequestParam String storeUrl,
             @RequestParam String name,
-            @RequestParam double price,
-            @RequestParam(required = false) String note
+            @RequestParam String price,
+            @RequestParam(required = false) String note,
+            Model model
     ) {
         Store store = storeService.findByUrl(storeUrl);
 
+        // 画面に値を戻す用
+        model.addAttribute("store", store);
+        model.addAttribute("name", name);
+        model.addAttribute("price", price);
+        model.addAttribute("note", note);
+
+        // サーバ側バリデーション
+        Integer priceInt;
+        try {
+            priceInt = Integer.valueOf(price);
+        } catch (Exception e) {
+            model.addAttribute("priceError", "価格は整数で入力してください。");
+            return "product/add";
+        }
+        if (priceInt <= 0) {
+            model.addAttribute("priceError", "価格は1以上の整数で入力してください。");
+            return "product/add";
+        }
+
         Product product = new Product();
         product.setName(name);
-        product.setPrice(price);
-        product.setNote(note); // ★追加
+        product.setPrice(priceInt);
+        product.setNote(note);
         product.setStore(store);
 
         productService.save(product);
@@ -53,18 +73,41 @@ public class ProductController {
     }
 
 
+
+
     // 商品更新処理
     @PostMapping("/update")
     public String updateProduct(
             @RequestParam Long id,
             @RequestParam String name,
-            @RequestParam double price,
-            @RequestParam(required = false) String note
+            @RequestParam String price,
+            @RequestParam(required = false) String note,
+            Model model
     ) {
         Product product = productService.findById(id);
+
+        // 画面に戻す用
+        model.addAttribute("product", product);
+        model.addAttribute("name", name);
+        model.addAttribute("price", price);
+        model.addAttribute("note", note);
+
+        Integer priceInt;
+        try {
+            priceInt = Integer.valueOf(price);
+        } catch (Exception e) {
+            model.addAttribute("priceError", "価格は整数で入力してください。");
+            return "product/edit";
+        }
+        if (priceInt <= 0) {
+            model.addAttribute("priceError", "価格は1以上の整数で入力してください。");
+            return "product/edit";
+        }
+
         product.setName(name);
-        product.setPrice(price);
-        product.setNote(note); // ★追加
+        product.setPrice(priceInt);
+        product.setNote(note);
+
         productService.save(product);
         return "redirect:/store/" + product.getStore().getUrl();
     }
