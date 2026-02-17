@@ -27,6 +27,6 @@ public class Store {
     private List<Product> products;
 
     @Column(columnDefinition = "TEXT")
-    private String note;   // 備考（空欄OK）
+    private String note;   // 説明（空欄OK）
 
 }
