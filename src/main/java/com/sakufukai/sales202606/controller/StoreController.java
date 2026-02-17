@@ -56,7 +56,21 @@ public class StoreController {
             throw new IllegalArgumentException("店舗が見つかりません: " + url);
         }
         model.addAttribute("store", store);
+        // ★追加：リンク化した備考を作る
+        model.addAttribute("noteWithLinks",
+                convertUrlsToLinks(store.getNote()));
         return "store/store";
+    }
+
+    private String convertUrlsToLinks(String text) {
+        if (text == null) return "";
+
+        return text
+                .replaceAll(
+                        "(https?://[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=%]+)",
+                        "<a href=\"$1\" target=\"_blank\">$1</a>"
+                )
+                .replace("\n", "<br>");
     }
 
     @PostMapping("/{url}/note")

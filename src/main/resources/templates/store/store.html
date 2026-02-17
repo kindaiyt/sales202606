@@ -19,9 +19,9 @@
             <div class="store-note-box" th:if="${store != null}">
                 <h2 class="section-title">店舗の説明</h2>
 
-                <p class="note-view"
-                   th:text="${#strings.isEmpty(store.note) ? '（未入力）' : store.note}">
-                </p>
+                <div class="note-display"
+                     th:utext="${noteWithLinks}">
+                </div>
 
                 <div class="actions">
                     <a th:href="@{'/store/' + ${store.url} + '/note/edit'}" class="btn btn-sm">
