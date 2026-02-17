@@ -6,74 +6,55 @@
 <head>
     <meta charset="UTF-8">
     <title>ユーザー管理</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 <th:block layout:fragment="content">
 
     <main class="content">
         <h1>ユーザー管理</h1>
 
-        <table>
-            <thead>
-            <tr>
-                <th>メールアドレス</th>
-                <th>名前</th>
-                <th>現在のロール</th>
-                <th>変更</th>
-                <!-- Storeが存在するときだけ表示 -->
-                <th th:if="${not #lists.isEmpty(stores)}">所属店舗</th>
-                <th th:if="${not #lists.isEmpty(stores)}">店舗付与</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.role}"></td>
-                <td>
-                    <form th:action="@{'/admin/users/' + ${user.email} + '/role'}" method="post">
-                        <select name="role">
-                            <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
-                            <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">ADMIN</option>
-                            <option value="PENDING" th:selected="${user.role == 'PENDING'}">PENDING</option>
-                        </select>
-                        <button type="submit" class="btn">変更</button>
-                    </form>
-                </td>
+        <div class="table-card">
+            <table class="store-table">
+                <thead>
+                <tr>
+                    <th>メールアドレス</th>
+                    <th>名前</th>
+                    <th>現在のロール</th>
+                    <th class="col-actions">操作</th>
+                </tr>
+                </thead>
 
-                <!-- 所属店舗一覧 -->
-                <td th:if="${not #lists.isEmpty(stores)}">
-                    <ul>
-                        <li th:each="us : ${user.userStores}">
-                            <span th:text="${us.store.name}"></span>
-                            <form th:action="@{'/admin/users/' + ${user.email} + '/store/' + ${us.store.id} + '/remove'}"
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td data-label="メールアドレス" th:text="${user.email}"></td>
+                    <td data-label="名前" th:text="${user.name}"></td>
+                    <td data-label="現在のロール" th:text="${user.role}"></td>
+
+                    <td class="cell-actions" data-label="操作">
+                        <div class="row-actions">
+                            <form th:action="@{'/admin/users/' + ${user.email} + '/role'}"
                                   method="post"
-                                  style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                                  style="display:flex; gap:10px; align-items:center; margin:0; padding:0; max-width:none;">
+
+                                <select name="role">
+                                    <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
+                                    <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">ADMIN</option>
+                                    <option value="PENDING" th:selected="${user.role == 'PENDING'}">PENDING</option>
+                                </select>
+
+                                <button type="submit" class="btn btn-sm">変更</button>
                             </form>
-                        </li>
-                    </ul>
-                </td>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
 
-                <!-- 店舗付与 -->
-                <td th:if="${not #lists.isEmpty(stores)}">
-                    <form th:action="@{'/admin/users/' + ${user.email} + '/store/add'}" method="post">
-                        <select name="storeId">
-                            <option th:each="store : ${stores}"
-                                    th:value="${store.id}"
-                                    th:text="${store.name}">
-                            </option>
-                        </select>
-                        <button type="submit" class="btn">追加</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            </table>
+        </div>
 
-        <div class="actions">
-            <a href="/" class="btn btn-secondary">ホームへ戻る</a>
+        <div class="form-actions mt-16">
+            <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
         </div>
     </main>
 
