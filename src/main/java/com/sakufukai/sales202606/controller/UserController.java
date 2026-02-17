@@ -24,9 +24,9 @@ public class UserController {
         if (oidcUser == null) {
             return "redirect:/login";
         }
-        var user = userService.findByEmail(oidcUser.getEmail());
+        var user = userService.findByEmail(oidcUser.getAttribute("email"));
         System.out.println("DEBUG: user = " + user); // ログ出力
-        model.addAttribute("user", userService.findByEmail(oidcUser.getEmail())
+        model.addAttribute("user", userService.findByEmail(oidcUser.getAttribute("email"))
                 .orElseThrow(() -> new RuntimeException("User not found")));
         return "users/me"; // users/me.html
     }
@@ -38,7 +38,7 @@ public class UserController {
         }
 
         // Optional から User を取り出す
-        User user = userService.findByEmail(oidcUser.getEmail())
+        User user = userService.findByEmail(oidcUser.getAttribute("email"))
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
 
         model.addAttribute("user", user);
@@ -51,9 +51,9 @@ public class UserController {
                              @RequestParam(required = false) String name,
                              Model model) {
 
-        String email = oidcUser.getEmail();
+        String email = oidcUser.getAttribute("email");
         // Optional から User を取り出す
-        User user = userService.findByEmail(oidcUser.getEmail())
+        User user = userService.findByEmail(oidcUser.getAttribute("email"))
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
 
         // 入力値保持

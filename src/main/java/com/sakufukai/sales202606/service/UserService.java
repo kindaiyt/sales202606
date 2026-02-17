@@ -104,7 +104,7 @@ public class UserService {
     }
 
     public User requireExistingUser(OidcUser oidcUser) {
-        String email = oidcUser.getEmail();
+        String email = oidcUser.getAttribute("email");
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("NOT_REGISTERED"));
     }

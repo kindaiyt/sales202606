@@ -32,7 +32,7 @@ public class AdminController {
 
     // 管理者チェック
     private boolean isAdmin(OidcUser oidcUser) {
-        return oidcUser != null && ADMIN_EMAILS.contains(oidcUser.getEmail());
+        return oidcUser != null && ADMIN_EMAILS.contains(oidcUser.getAttribute("email"));
     }
 
     // ユーザー一覧ページ

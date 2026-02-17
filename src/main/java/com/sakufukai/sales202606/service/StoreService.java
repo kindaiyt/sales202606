@@ -148,7 +148,7 @@ public class StoreService {
             return oauth2User.getAttribute("email");
         }
         if (principal instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
-            return oidcUser.getEmail();
+            return oidcUser.getAttribute("email");
         }
         return null;
     }
