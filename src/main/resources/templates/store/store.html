@@ -31,50 +31,68 @@
                         説明を編集
                     </a>
 
-                    <!-- ★ 説明文は解除ボタンの下（解除に近く、編集から遠く） -->
-                    <p class="product-sort-help">
-                        タイトル行の「商品名」「価格」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
-                        デフォルトの並び順に戻すこともできます。
+                    <!-- =========================
+                         商品が 1件以上あるときだけ表示する領域
+                         ========================= -->
+                    <th:block th:if="${products != null and !#lists.isEmpty(products)}">
+
+                        <p class="product-sort-help">
+                            タイトル行の「商品名」「価格」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
+                            デフォルトの並び順に戻すこともできます。
+                        </p>
+
+                        <div class="sort-bar">
+                            <!-- 商品名ソート -->
+                            <form th:action="@{|/store/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                                <input type="hidden" name="sort" value="name">
+                                <input type="hidden" name="dir"
+                                       th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                                <button type="submit" class="btn btn-sm sort-bar__btn">
+                                    商品名で並べ替え
+                                    <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                                </button>
+                            </form>
+
+                            <!-- 価格ソート -->
+                            <form th:action="@{|/store/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                                <input type="hidden" name="sort" value="price">
+                                <input type="hidden" name="dir"
+                                       th:value="${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}">
+                                <button type="submit" class="btn btn-sm sort-bar__btn">
+                                    価格で並べ替え
+                                    <span th:if="${sort == 'price'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- 並び替え中だけ表示 -->
+                        <form th:if="${sort != null}"
+                              th:action="@{|/store/${store.url}/view-sort/clear|}"
+                              method="post"
+                              class="product-sort-clear-form">
+                            <button type="submit" class="btn btn-secondary btn-sm">
+                                並び替え解除
+                            </button>
+                        </form>
+
+                    </th:block>
+
+                    <!-- =========================
+                         商品が 0件のときだけ表示
+                         ========================= -->
+                    <p th:if="${products == null or #lists.isEmpty(products)}"
+                       class="product-sort-help">
+                        商品が登録されていません。
                     </p>
-
-                    <div class="sort-bar">
-                        <!-- 商品名ソート -->
-                        <form th:action="@{|/store/${store.url}/view-sort|}" method="post" class="sort-bar__form">
-                            <input type="hidden" name="sort" value="name">
-                            <input type="hidden" name="dir"
-                                   th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
-                            <button type="submit" class="btn btn-sm sort-bar__btn">
-                                商品名で並べ替え
-                                <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
-                            </button>
-                        </form>
-
-                        <!-- 価格ソート -->
-                        <form th:action="@{|/store/${store.url}/view-sort|}" method="post" class="sort-bar__form">
-                            <input type="hidden" name="sort" value="price">
-                            <input type="hidden" name="dir"
-                                   th:value="${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}">
-                            <button type="submit" class="btn btn-sm sort-bar__btn">
-                                価格で並べ替え
-                                <span th:if="${sort == 'price'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- 並び替え中だけ表示 -->
-                    <form th:if="${sort != null}"
-                          th:action="@{|/store/${store.url}/view-sort/clear|}"
-                          method="post"
-                          class="product-sort-clear-form">
-                        <button type="submit" class="btn btn-secondary btn-sm">
-                            並び替え解除
-                        </button>
-                    </form>
 
                 </div>
             </div>
 
-            <table class="store-table">
+            <!-- =========================
+                 商品が 1件以上あるときだけテーブル表示
+                 ========================= -->
+            <table class="store-table"
+                   th:if="${products != null and !#lists.isEmpty(products)}">
                 <thead>
                 <tr>
                     <th>
@@ -133,6 +151,7 @@
                 </tr>
                 </tbody>
             </table>
+
         </div>
 
         <!-- store がない場合 -->
