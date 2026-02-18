@@ -75,22 +75,21 @@ public class AdminStoreEditController {
                                   Model model) {
 
         Store store = storeService.findByUrl(url);
+        model.addAttribute("store", store);
 
         // 入力値保持
-        model.addAttribute("store", store);
         model.addAttribute("name", name);
         model.addAttribute("newUrl", newUrl);
 
         boolean hasError = false;
 
-        // 店舗名チェック
         if (name == null || name.trim().isEmpty()) {
             model.addAttribute("nameError", "店舗名を入力してください。");
             hasError = true;
         }
 
-        // URLチェック
-        if (newUrl == null || newUrl.trim().isEmpty()) {
+        String trimmedNewUrl = (newUrl == null) ? null : newUrl.trim();
+        if (trimmedNewUrl == null || trimmedNewUrl.isEmpty()) {
             model.addAttribute("urlError", "店舗URLを入力してください。");
             hasError = true;
         }
@@ -100,13 +99,13 @@ public class AdminStoreEditController {
         }
 
         try {
-            storeService.updateStoreInfo(url, name, newUrl);
+            storeService.updateStoreInfo(url, name, trimmedNewUrl);
         } catch (IllegalArgumentException e) {
             model.addAttribute("urlError", e.getMessage());
             return "admin/store-info-edit";
         }
 
-        return "redirect:/admin/stores/" + newUrl + "/edit";
+        return "redirect:/admin/stores/" + trimmedNewUrl + "/edit";
     }
 
 }

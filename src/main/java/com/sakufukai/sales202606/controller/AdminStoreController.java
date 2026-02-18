@@ -26,16 +26,16 @@ public class AdminStoreController {
         return "admin/stores";
     }
 
-    // 店舗作成フォーム
+    // 店舗作成フォーム（GET）
     @GetMapping("/new")
     public String newStoreForm(Model model) {
-        // 初期表示では空でOK
         model.addAttribute("name", "");
         model.addAttribute("url", "");
         return "admin/store-form";
     }
 
-    @PostMapping
+    // 店舗保存（POST） ★ /new に寄せる
+    @PostMapping("/new")
     public String saveStore(@RequestParam(required = false) String name,
                             @RequestParam(required = false) String url,
                             Model model) {
@@ -45,17 +45,18 @@ public class AdminStoreController {
 
         boolean hasError = false;
 
+        // 店舗名チェック
         if (name == null || name.trim().isEmpty()) {
             model.addAttribute("nameError", "店舗名を入力してください。");
             hasError = true;
         }
 
+        // URLチェック
         String trimmedUrl = (url == null) ? null : url.trim();
         if (trimmedUrl == null || trimmedUrl.isEmpty()) {
             model.addAttribute("urlError", "店舗URLを入力してください。");
             hasError = true;
         } else {
-            // URL重複チェック（例外にならない）
             if (storeService.existsByUrl(trimmedUrl)) {
                 model.addAttribute("urlError", "このURLは既に存在します。");
                 hasError = true;
@@ -63,6 +64,7 @@ public class AdminStoreController {
         }
 
         if (hasError) {
+            // ★ URLは /admin/stores/new のまま
             return "admin/store-form";
         }
 
@@ -80,12 +82,10 @@ public class AdminStoreController {
         return "redirect:/admin/stores";
     }
 
-
     // 店舗削除
     @PostMapping("/{url}/delete")
     public String deleteStore(@PathVariable String url) {
         storeService.deleteStoreByUrl(url);
         return "redirect:/admin/stores";
     }
-
 }
