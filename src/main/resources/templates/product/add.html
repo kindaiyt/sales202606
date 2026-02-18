@@ -11,11 +11,10 @@
 
     <h1 th:text="'『' + ${store.name} + '』の商品追加'"></h1>
 
-    <!-- エラー表示 -->
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
-    <form th:action="@{/product/save}" method="post" novalidate>
-        <input type="hidden" name="storeUrl" th:value="${store.url}"/>
+    <!-- ★ action を /product/add/{url} に -->
+    <form th:action="@{/product/add/{url}(url=${store.url})}" method="post" novalidate>
 
         <div class="form-group">
             <label for="name">商品名</label>

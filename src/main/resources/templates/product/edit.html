@@ -13,16 +13,15 @@
 
     <h1>商品編集</h1>
 
-    <!-- エラー表示 -->
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
-    <form th:action="@{/product/update}" method="post" novalidate>
-        <input type="hidden" name="id" th:value="${product.id}"/>
+    <!-- ★ action を /product/edit/{id} に -->
+    <form th:action="@{/product/edit/{id}(id=${product.id})}" method="post" novalidate>
 
         <div class="form-group">
             <label for="name">商品名</label>
             <input type="text" id="name" name="name"
-                   th:value="${product.name}"
+                   th:value="${name != null ? name : product.name}"
                    placeholder="ここに商品名を入力"
                    required>
             <div th:if="${nameError}" class="error-message" th:text="${nameError}"></div>
@@ -48,7 +47,7 @@
             <textarea id="note" name="note" rows="4"
                       class="note-textarea"
                       placeholder="商品の説明を入力（任意）"
-                      th:text="${product.note}"></textarea>
+                      th:text="${note != null ? note : product.note}"></textarea>
         </div>
 
         <div class="form-actions">
