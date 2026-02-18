@@ -36,16 +36,13 @@ public class StoreController {
         if (principal == null) {
             return "redirect:/login";
         }
-        // OAuth2 の認証情報にキャスト
+
         var oauthToken = (org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken) principal;
         var attributes = oauthToken.getPrincipal().getAttributes();
-
-        // Google アカウントのメールアドレスを取得
         String email = (String) attributes.get("email");
 
         var user = userService.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
-
 
         model.addAttribute("stores",
                 user.getUserStores().stream()
@@ -55,20 +52,31 @@ public class StoreController {
         return "store/list";
     }
 
-    // 店舗詳細をURLで取得
+    // 店舗詳細
     @GetMapping("/{url}")
-    public String storeDetail(@PathVariable String url, Model model) {
-        Store store = storeService.findByUrl(url);  // Optionalではない
-        if (store == null) {
-            throw new IllegalArgumentException("店舗が見つかりません: " + url);
-        }
+    public String storeDetail(@PathVariable String url,
+                              Model model,
+                              jakarta.servlet.http.HttpSession session) {
+
+        Store store = storeService.findByUrl(url);
+        if (store == null) throw new IllegalArgumentException("店舗が見つかりません: " + url);
+
+        // セッションから並び替え条件を取得（なければnull）
+        String key = "productSort:" + url;
+        SortState state = (SortState) session.getAttribute(key);
+
+        String sort = state != null ? state.sort() : null;
+        String dir  = state != null ? state.dir()  : null;
+
         model.addAttribute("store", store);
-        // ★追加: リンク化した備考を作る
-        model.addAttribute("noteWithLinks",
-                convertUrlsToLinks(store.getNote()));
-        List<Product> products = productService.findByStoreSorted(store);
-        model.addAttribute("products", products);
-        // ★追加: 並べ替えボタン表示用
+        model.addAttribute("noteWithLinks", convertUrlsToLinks(store.getNote()));
+
+        model.addAttribute("products", productService.findByStoreSorted(store, sort, dir));
+
+        // ヘッダの▲▼用
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         model.addAttribute("hasProducts", productService.countByStore(store) > 1);
         return "store/store";
     }
@@ -88,7 +96,6 @@ public class StoreController {
     public String updateStoreNote(@PathVariable String url,
                                   @RequestParam(required = false) String note,
                                   Authentication authentication) {
-
         storeService.updateStoreNote(url, note, authentication);
         return "redirect:/store/" + url;
     }
@@ -97,8 +104,28 @@ public class StoreController {
     public String editStoreNotePage(@PathVariable String url, Model model) {
         Store store = storeService.findByUrl(url);
         model.addAttribute("store", store);
-        return "store/store-note"; // templates/store/store-note.html
+        return "store/store-note";
     }
 
-}
+    @PostMapping("/{url}/view-sort")
+    public String setViewSort(@PathVariable String url,
+                              @RequestParam String sort,
+                              @RequestParam String dir,
+                              jakarta.servlet.http.HttpSession session) {
 
+        String key = "productSort:" + url;
+        session.setAttribute(key, new SortState(sort, dir));
+        return "redirect:/store/" + url; // ★URLを綺麗に保つ
+    }
+
+    @PostMapping("/{url}/view-sort/clear")
+    public String clearViewSort(@PathVariable String url,
+                                jakarta.servlet.http.HttpSession session) {
+        session.removeAttribute("productSort:" + url);
+        return "redirect:/store/" + url;
+    }
+
+    // ここはStoreController内でOK（Java16未満なら普通のstatic classで）
+    public record SortState(String sort, String dir) {}
+
+}

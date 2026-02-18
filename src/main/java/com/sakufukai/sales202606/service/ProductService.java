@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Comparator;
 
 @Service
 public class ProductService {
@@ -96,6 +97,39 @@ public class ProductService {
             p.setSortOrder(order++);
             productRepository.save(p);
         }
+    }
+
+    // ★追加：表示のみソート（DB順は変更しない）
+    public List<Product> findByStoreSorted(Store store, String sort, String dir) {
+        List<Product> base = findByStoreSorted(store); // まずDBの並び（sortOrder）を基準に取る
+
+        if (sort == null || sort.isBlank()) return base;
+
+        boolean asc = !"desc".equalsIgnoreCase(dir);
+
+        Comparator<Product> comparator;
+        switch (sort) {
+            case "name":
+                comparator = Comparator.comparing(
+                        p -> p.getName() == null ? "" : p.getName(),
+                        String.CASE_INSENSITIVE_ORDER
+                );
+                break;
+            case "price":
+                comparator = Comparator.comparing(
+                        p -> p.getPrice() == null ? 0 : p.getPrice()
+                );
+                break;
+            default:
+                return base;
+        }
+
+        if (!asc) comparator = comparator.reversed();
+
+        // 同値のときに順番がブレないように、最後に id を足す（安定化）
+        comparator = comparator.thenComparing(Product::getId);
+
+        return base.stream().sorted(comparator).toList();
     }
 
 }

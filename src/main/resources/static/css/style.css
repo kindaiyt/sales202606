@@ -1072,3 +1072,119 @@ button.btn {
     width: 110px;              /* 固定値でOKなら固定が一番安定 */
   }
 }
+
+.th-sort-btn{
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.th-sort-btn:hover{
+  text-decoration: underline;
+}
+
+/* 説明を編集ボタン（.actions）と、並び替え案内ブロックの間をもう少し空ける */
+.product-sort-actions{
+  margin-top: 24px;     /* ← 10px → 18px（好みで 16〜24px） */
+  margin-bottom: 18px;  /* 表との距離はそのままでもOK */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 文章の文字サイズを下げて、標準寄りにする */
+.product-sort-help{
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.9;
+
+  font-size: 14px;      /* ← 小さめ。標準に近づけるなら 15〜16px */
+}
+
+/* 並び替え解除フォームだけ、共通 form スタイルを無効化して左端ズレを消す */
+.product-sort-clear-form{
+  margin: 0 !important;
+  padding: 0 !important;     /* ★これが重要（10pxズレの原因） */
+  max-width: none !important;/* ★中央寄せ(max-width+auto)を無効化 */
+  width: auto !important;
+}
+
+/* 編集ボタン・解除ボタン・説明文を同じ左端に揃える */
+.store-actions{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ★左端揃え */
+  gap: 12px;               /* ★要素間の距離 */
+  margin-top: 10px;        /* ★説明表示の下に少し余白 */
+  margin-bottom: 14px;     /* ★表との間隔 */
+}
+
+.store-actions form{
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+}
+
+/* ★ここが本命：説明を編集ボタンの下に余白を作る */
+.store-actions .store-edit-btn{
+  margin-bottom: 24px;  /* 好みで 12〜32px */
+}
+/* 文章の余白をリセット（ブラウザ標準のpのmarginが混ざるのを防ぐ） */
+.store-actions .product-sort-help{
+  margin: 0;
+  font-size: 14px;      /* さっきの要望 */
+  line-height: 1.6;
+  opacity: .9;
+}
+
+/* form のデフォルト余白も潰す */
+.store-actions .product-sort-clear-form{
+  margin: 0;
+}
+
+/* PCでは非表示（ヘッダクリックで並べ替えできるため） */
+.sort-bar { display: none; }
+
+/* スマホだけ表示 & 横並び */
+@media (max-width: 640px) {
+  .sort-bar{
+    display: flex;
+    flex-direction: row;      /* ★横並び */
+    gap: 10px;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  /* form 全体の max-width:500px / margin:auto を無効化 */
+  .sort-bar__form{
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    flex: 1 1 0;              /* ★2つを均等幅に */
+  }
+
+  /* ボタンは親いっぱい（=均等幅） */
+  .sort-bar__btn{
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;       /* 折り返しさせない */
+    padding: 0 10px;           /* 少し詰める（任意） */
+    font-size: 13px;           /* 少し小さめ（任意） */
+  }
+}
+
+/* さらに狭い端末だけは縦積みに戻す（任意：崩れ防止） */
+@media (max-width: 380px) {
+  .sort-bar{
+    flex-direction: column;
+  }
+}

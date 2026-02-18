@@ -16,63 +16,123 @@
         <!-- store がある場合 -->
         <div th:if="${store != null}" class="store-info">
 
-            <div class="store-note-box" th:if="${store != null}">
+            <div class="store-note-box">
 
                 <h2 th:text="'店舗名: ' + ${store.name}"></h2>
 
                 <h2 class="section-title">店舗の説明</h2>
 
-                <div class="note-display"
-                     th:utext="${noteWithLinks}">
-                </div>
+                <div class="note-display" th:utext="${noteWithLinks}"></div>
 
-                <div class="actions">
-                    <a th:href="@{'/store/' + ${store.url} + '/note/edit'}" class="btn btn-sm">
+                <!-- ★ ここが肝：ボタンと説明文を同一カラムにする -->
+                <div class="store-actions">
+                    <a th:href="@{'/store/' + ${store.url} + '/note/edit'}"
+                       class="btn btn-sm store-edit-btn">
                         説明を編集
                     </a>
+
+                    <!-- ★ 説明文は解除ボタンの下（解除に近く、編集から遠く） -->
+                    <p class="product-sort-help">
+                        タイトル行の「商品名」「価格」をクリックすると、それぞれの項目で並べ替えて表示することができます。
+                        デフォルトの並び順に戻すこともできます。
+                    </p>
+
+                    <div class="sort-bar">
+                        <!-- 商品名ソート -->
+                        <form th:action="@{|/store/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                            <input type="hidden" name="sort" value="name">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="btn btn-sm sort-bar__btn">
+                                商品名で並べ替え
+                                <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+
+                        <!-- 価格ソート -->
+                        <form th:action="@{|/store/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                            <input type="hidden" name="sort" value="price">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="btn btn-sm sort-bar__btn">
+                                価格で並べ替え
+                                <span th:if="${sort == 'price'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- 並び替え中だけ表示 -->
+                    <form th:if="${sort != null}"
+                          th:action="@{|/store/${store.url}/view-sort/clear|}"
+                          method="post"
+                          class="product-sort-clear-form">
+                        <button type="submit" class="btn btn-secondary btn-sm">
+                            並び替え解除
+                        </button>
+                    </form>
+
                 </div>
             </div>
 
-            <!-- 表をカード枠に -->
-            <div class="table-card">
-                <table class="store-table">
-                    <thead>
-                    <tr>
-                        <th>商品名</th>
-                        <th>価格</th>
-                        <th>説明</th>
-                        <th class="col-actions">操作</th>
-                    </tr>
-                    </thead>
+            <table class="store-table">
+                <thead>
+                <tr>
+                    <th>
+                        <form th:action="@{|/store/${store.url}/view-sort|}" method="post" style="display:inline;">
+                            <input type="hidden" name="sort" value="name">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="th-sort-btn">
+                                商品名
+                                <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
 
-                    <tbody>
-                    <tr th:each="product : ${products}">
-                        <td class="cell-name" data-label="商品名" th:text="${product.name}"></td>
+                    <th>
+                        <form th:action="@{|/store/${store.url}/view-sort|}" method="post" style="display:inline;">
+                            <input type="hidden" name="sort" value="price">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="th-sort-btn">
+                                価格
+                                <span th:if="${sort == 'price'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
 
-                        <td class="cell-url" data-label="価格">
-                            <span class="url-badge"
-                                  th:text="${(product.price % 1 == 0 ? product.price.intValue() : product.price)} + '円'"></span>
-                        </td>
+                    <th>説明</th>
+                    <th class="col-actions">操作</th>
+                </tr>
+                </thead>
 
-                        <td class="cell-note" data-label="説明"
-                            th:text="${#strings.isEmpty(product.note) ? '-' : product.note}">
-                        </td>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td class="cell-name" data-label="商品名" th:text="${product.name}"></td>
 
-                        <td class="cell-actions" data-label="操作">
-                            <div class="row-actions">
-                                <a th:href="@{'/product/edit/' + ${product.id}}" class="btn btn-sm">編集</a>
+                    <td class="cell-url" data-label="価格">
+                        <span class="url-badge"
+                              th:text="${product.price} + '円'"></span>
+                    </td>
 
-                                <form th:action="@{'/product/delete/' + ${product.id}}"
-                                      method="post"
-                                      onsubmit="return confirm('本当に削除しますか？');">
-                                    <button type="submit" class="btn btn-sm btn-danger">削除</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <td class="cell-note" data-label="説明"
+                        th:text="${#strings.isEmpty(product.note) ? '-' : product.note}">
+                    </td>
+
+                    <td class="cell-actions" data-label="操作">
+                        <div class="row-actions">
+                            <a th:href="@{'/product/edit/' + ${product.id}}" class="btn btn-sm">編集</a>
+
+                            <form th:action="@{'/product/delete/' + ${product.id}}"
+                                  method="post"
+                                  onsubmit="return confirm('本当に削除しますか？');">
+                                <button type="submit" class="btn btn-sm btn-danger">削除</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- store がない場合 -->
@@ -86,7 +146,7 @@
             </p>
         </div>
 
-        <!-- 下のボタン（store が null のときに store.url を参照しないように分ける） -->
+        <!-- 下のボタン -->
         <div class="form-actions mt-16" th:if="${store != null}">
             <a th:href="@{/product/add/{url}(url=${store.url})}" class="btn">商品追加</a>
             <a th:if="${hasProducts}"
