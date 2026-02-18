@@ -1030,3 +1030,45 @@ button.btn {
     max-width: 100%;
   }
 }
+
+/* PC幅だけ：ユーザー管理テーブルの行高を揃える */
+@media (min-width: 900px) {
+
+  /* すべての行を同じ高さ（固定値でOKとのことなので） */
+  .store-table tbody tr {
+    height: 64px;              /* 好みで 56/60/64/72 などに */
+  }
+
+  /* セルの縦位置を中央に（見た目が安定） */
+  .store-table td {
+    vertical-align: middle;
+  }
+
+  /* 操作セルの中を1行に固定（折り返しを禁止） */
+  .store-table td.cell-actions .row-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;         /* ★折り返し禁止 */
+    white-space: nowrap;       /* ★中身を改行しない */
+  }
+
+  /* form を横並びにして高さが増えないように */
+  .store-table td.cell-actions .user-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+  }
+
+  /* 固定管理者ラベルも1行固定 */
+  .store-table td.cell-actions .fixed-admin-label {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* select が勝手に広がって折り返しの原因にならないように */
+  .store-table td.cell-actions select {
+    width: 110px;              /* 固定値でOKなら固定が一番安定 */
+  }
+}

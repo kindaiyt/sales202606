@@ -36,11 +36,12 @@
                     <td class="cell-actions" data-label="ロールを変更">
                         <div class="row-actions">
                             <!-- 操作可能: 固定管理者でもなく、自分でもない -->
-                            <form th:if="${(fixedAdmins == null || !fixedAdmins.contains(user.email))
+                            <form
+                                    th:if="${(fixedAdmins == null || !fixedAdmins.contains(user.email))
                                             and (myEmail == null || myEmail != user.email)}"
-                                  th:action="@{'/admin/users/' + ${user.email} + '/role'}"
-                                  method="post"
-                                  style="display:flex; gap:10px; align-items:center; margin:0;">
+                                    th:action="@{'/admin/users/' + ${user.email} + '/role'}"
+                                    method="post"
+                                    class="user-actions user-actions--role">
 
                                 <select name="role">
                                     <option value="USER" th:selected="${user.role == 'USER'}">USER</option>
@@ -67,9 +68,11 @@
                                             and (myEmail == null || myEmail != user.email)}"
                                   th:action="@{'/admin/users/' + ${user.email} + '/delete'}"
                                   method="post"
-                                  onsubmit="return confirm('本当に削除しますか?');">
+                                  onsubmit="return confirm('本当に削除しますか?');"
+                                  class="user-actions user-actions--delete">
                                 <button type="submit" class="btn btn-danger btn-sm">削除</button>
                             </form>
+
                         </div>
                     </td>
                 </tr>
