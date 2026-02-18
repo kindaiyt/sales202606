@@ -12,137 +12,152 @@
     <main class="content">
         <h1>店舗一覧</h1>
 
-        <div class="store-actions">
+        <!-- =========================
+             店舗が 1件以上あるときだけ表示する領域（説明文・ソートUI・解除）
+             ========================= -->
+        <th:block th:if="${stores != null and !#lists.isEmpty(stores)}">
 
-            <p class="sort-help">
-                タイトル行の「店舗名」「店舗URL」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
-                デフォルトの並び順に戻すこともできます。
-            </p>
+            <div class="store-actions">
 
-            <!-- スマホ用ソートボタン -->
-            <div class="sort-bar">
-                <!-- 店舗名 -->
-                <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
-                    <input type="hidden" name="sort" value="name">
-                    <input type="hidden" name="dir"
-                           th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
-                    <button type="submit" class="btn btn-sm sort-bar__btn">
-                        店舗名で並べ替え
-                        <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
-                    </button>
-                </form>
+                <p class="sort-help">
+                    タイトル行の「店舗名」「店舗URL」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
+                    デフォルトの並び順に戻すこともできます。
+                </p>
 
-                <!-- 店舗URL -->
-                <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
-                    <input type="hidden" name="sort" value="url">
-                    <input type="hidden" name="dir"
-                           th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
-                    <button type="submit" class="btn btn-sm sort-bar__btn">
-                        店舗URLで並べ替え
-                        <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- 並び替え解除 -->
-            <form th:if="${sort != null}"
-                  th:action="@{/admin/stores/view-sort/clear}"
-                  method="post"
-                  class="product-sort-clear-form">
-
-                <button type="submit" class="btn btn-secondary btn-sm">
-                    並び替え解除
-                </button>
-            </form>
-
-        </div>
-
-        <div class="table-card">
-            <table class="store-table">
-                <thead>
-                <tr>
-                    <th>
-                        <form th:action="@{/admin/stores/view-sort}"
-                              method="post"
-                              style="display:inline;">
-
-                            <input type="hidden" name="sort" value="name">
-                            <input type="hidden" name="dir"
-                                   th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
-
-                            <button type="submit" class="th-sort-btn">
-                                店舗名
-                                <span th:if="${sort == 'name'}"
-                                      th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
-                            </button>
-                        </form>
-                    </th>
-
-                    <th>
-                        <form th:action="@{/admin/stores/view-sort}" method="post" style="display:inline;">
-                            <input type="hidden" name="sort" value="url">
-                            <input type="hidden" name="dir"
-                                   th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
-                            <button type="submit" class="th-sort-btn">
-                                店舗URL
-                                <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
-                            </button>
-                        </form>
-                    </th>
-
-                    <th>店舗の説明</th>
-                    <th>所属している人</th>
-                    <th class="col-actions">操作</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="store : ${stores}">
+                <!-- スマホ用ソートボタン -->
+                <div class="sort-bar">
                     <!-- 店舗名 -->
-                    <td class="cell-name"
-                        data-label="店舗名"
-                        th:text="${store.name}">
-                    </td>
+                    <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
+                        <input type="hidden" name="sort" value="name">
+                        <input type="hidden" name="dir"
+                               th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                        <button type="submit" class="btn btn-sm sort-bar__btn">
+                            店舗名で並べ替え
+                            <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                        </button>
+                    </form>
 
                     <!-- 店舗URL -->
-                    <td class="cell-url"
-                        data-label="店舗URL"
-                        th:text="${store.url}">
-                    </td>
+                    <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
+                        <input type="hidden" name="sort" value="url">
+                        <input type="hidden" name="dir"
+                               th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
+                        <button type="submit" class="btn btn-sm sort-bar__btn">
+                            店舗URLで並べ替え
+                            <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                        </button>
+                    </form>
+                </div>
 
-                    <!-- 店舗の説明 -->
-                    <td data-label="店舗の説明"
-                        th:text="${#strings.isEmpty(store.note) ? '-' : store.note}">
-                    </td>
+                <!-- 並び替え解除 -->
+                <form th:if="${sort != null}"
+                      th:action="@{/admin/stores/view-sort/clear}"
+                      method="post"
+                      class="product-sort-clear-form">
+                    <button type="submit" class="btn btn-secondary btn-sm">
+                        並び替え解除
+                    </button>
+                </form>
 
-                    <!-- 所属ユーザー -->
-                    <td data-label="所属している人">
-                        <div th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}">-</div>
+            </div>
 
-                        <ul th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
-                            style="margin: 0; padding-left: 1.2em;">
-                            <li th:each="us : ${store.userStores}"
-                                th:text="${#strings.isEmpty(us.user.name) ? us.user.email : us.user.name}">
-                            </li>
-                        </ul>
-                    </td>
-
-                    <!-- 操作 -->
-                    <td class="cell-actions" data-label="操作">
-                        <div class="row-actions">
-                            <a th:href="@{/admin/stores/{url}/edit(url=${store.url})}" class="btn btn-sm">編集</a>
-
-                            <form th:action="@{'/admin/stores/' + ${store.url} + '/delete'}"
+            <!-- テーブルも 1件以上のときだけ表示 -->
+            <div class="table-card">
+                <table class="store-table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <form th:action="@{/admin/stores/view-sort}"
                                   method="post"
-                                  onsubmit="return confirm('本当に削除しますか?');">
-                                <button type="submit" class="btn btn-sm btn-danger">削除</button>
+                                  style="display:inline;">
+
+                                <input type="hidden" name="sort" value="name">
+                                <input type="hidden" name="dir"
+                                       th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+
+                                <button type="submit" class="th-sort-btn">
+                                    店舗名
+                                    <span th:if="${sort == 'name'}"
+                                          th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                                </button>
                             </form>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                        </th>
+
+                        <th>
+                            <form th:action="@{/admin/stores/view-sort}" method="post" style="display:inline;">
+                                <input type="hidden" name="sort" value="url">
+                                <input type="hidden" name="dir"
+                                       th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
+                                <button type="submit" class="th-sort-btn">
+                                    店舗URL
+                                    <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                                </button>
+                            </form>
+                        </th>
+
+                        <th>店舗の説明</th>
+                        <th>所属している人</th>
+                        <th class="col-actions">操作</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="store : ${stores}">
+                        <!-- 店舗名 -->
+                        <td class="cell-name"
+                            data-label="店舗名"
+                            th:text="${store.name}">
+                        </td>
+
+                        <!-- 店舗URL -->
+                        <td class="cell-url"
+                            data-label="店舗URL"
+                            th:text="${store.url}">
+                        </td>
+
+                        <!-- 店舗の説明 -->
+                        <td data-label="店舗の説明"
+                            th:text="${#strings.isEmpty(store.note) ? '-' : store.note}">
+                        </td>
+
+                        <!-- 所属ユーザー -->
+                        <td data-label="所属している人">
+                            <div th:if="${store.userStores == null or #lists.isEmpty(store.userStores)}">-</div>
+
+                            <ul th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
+                                style="margin: 0; padding-left: 1.2em;">
+                                <li th:each="us : ${store.userStores}"
+                                    th:text="${#strings.isEmpty(us.user.name) ? us.user.email : us.user.name}">
+                                </li>
+                            </ul>
+                        </td>
+
+                        <!-- 操作 -->
+                        <td class="cell-actions" data-label="操作">
+                            <div class="row-actions">
+                                <a th:href="@{/admin/stores/{url}/edit(url=${store.url})}" class="btn btn-sm">編集</a>
+
+                                <form th:action="@{'/admin/stores/' + ${store.url} + '/delete'}"
+                                      method="post"
+                                      onsubmit="return confirm('本当に削除しますか?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">削除</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </th:block>
+
+        <!-- =========================
+             店舗が 0件のときだけ表示
+             ========================= -->
+        <p th:if="${stores == null or #lists.isEmpty(stores)}"
+           class="sort-help">
+            店舗が登録されていません。
+        </p>
 
         <div class="form-actions mt-16">
             <a th:href="@{/admin/stores/new}" class="btn">新しい店舗を作成</a>
