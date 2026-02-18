@@ -2,9 +2,9 @@ package com.sakufukai.sales202606.controller;
 
 import com.sakufukai.sales202606.config.AppProperties;
 import com.sakufukai.sales202606.entity.Role;
-import com.sakufukai.sales202606.entity.User;
 import com.sakufukai.sales202606.service.StoreService;
 import com.sakufukai.sales202606.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import java.util.Comparator;
 
 @Controller
 @RequestMapping("/admin")
@@ -30,18 +30,82 @@ public class AdminController {
         this.appProperties = appProperties;
     }
 
-    // ユーザー一覧ページ
+    // ユーザー一覧ページ（★ソート対応）
     @GetMapping("/users")
-    public String listUsers(@AuthenticationPrincipal OidcUser oidcUser, Model model) {
+    public String listUsers(@AuthenticationPrincipal OidcUser oidcUser,
+                            Model model,
+                            HttpSession session) {
+
         var users = userService.findAllSorted();
 
-        model.addAttribute("users", userService.findAllSorted());
+        // --- セッションのソート状態 ---
+        String sort = (String) session.getAttribute("userSort"); // "email" / "name" / "role"
+        String dir  = (String) session.getAttribute("userDir");  // "asc" / "desc"
+
+        // --- 表示用にソート適用（URLに載せない）---
+        if (sort != null && dir != null) {
+            Comparator<com.sakufukai.sales202606.entity.User> comp;
+
+            switch (sort) {
+                case "email" -> comp = Comparator.comparing(
+                        u -> u.getEmail() == null ? "" : u.getEmail(),
+                        String.CASE_INSENSITIVE_ORDER
+                );
+                case "name" -> comp = Comparator.comparing(
+                        u -> u.getName() == null ? "" : u.getName(),
+                        String.CASE_INSENSITIVE_ORDER
+                );
+                case "role" -> comp = Comparator.comparing(
+                        u -> u.getRole() == null ? "" : u.getRole().name(),
+                        String.CASE_INSENSITIVE_ORDER
+                );
+                default -> comp = null;
+            }
+
+            if (comp != null) {
+                if ("desc".equals(dir)) comp = comp.reversed();
+                users = users.stream().sorted(comp).toList();
+            }
+        }
+
+        model.addAttribute("users", users);
         model.addAttribute("stores", storeService.findAllWithUsers());
         model.addAttribute("fixedAdmins", appProperties.getAdminEmails());
         model.addAttribute("myEmail", oidcUser != null ? oidcUser.getAttribute("email") : null);
         model.addAttribute("hasUsers", users != null && !users.isEmpty() && users.size() > 1);
 
-        return "admin/users"; // admin/users.html
+        // ★ 画面側で▲▼や解除表示に使う
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
+        return "admin/users";
+    }
+
+    // ★ ソート設定（URLに載せない）
+    @PostMapping("/users/view-sort")
+    public String viewSortUsers(@RequestParam String sort,
+                                @RequestParam String dir,
+                                HttpSession session) {
+
+        // 想定外値は無視（安全側）
+        if (!("email".equals(sort) || "name".equals(sort) || "role".equals(sort))) {
+            return "redirect:/admin/users";
+        }
+        if (!("asc".equals(dir) || "desc".equals(dir))) {
+            dir = "asc";
+        }
+
+        session.setAttribute("userSort", sort);
+        session.setAttribute("userDir", dir);
+        return "redirect:/admin/users";
+    }
+
+    // ★ ソート解除
+    @PostMapping("/users/view-sort/clear")
+    public String clearViewSortUsers(HttpSession session) {
+        session.removeAttribute("userSort");
+        session.removeAttribute("userDir");
+        return "redirect:/admin/users";
     }
 
     // ユーザーロール変更
@@ -56,7 +120,6 @@ public class AdminController {
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-
         return "redirect:/admin/users";
     }
 
@@ -132,7 +195,6 @@ public class AdminController {
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-
         return "redirect:/admin/users";
     }
 
@@ -147,5 +209,4 @@ public class AdminController {
         userService.updateSortOrder(orderedIds);
         return "redirect:/admin/users";
     }
-
 }

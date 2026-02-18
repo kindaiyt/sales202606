@@ -16,13 +16,100 @@
 
         <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
+        <!-- ★説明文＋スマホ用並べ替えボタン＋解除 -->
+        <div class="store-actions">
+            <p class="product-sort-help">
+                タイトル行の「メールアドレス」「名前」「現在のロール」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
+                デフォルトの並び順に戻すこともできます。
+            </p>
+
+            <!-- スマホ用: 3つ横並び -->
+            <div class="sort-bar">
+                <!-- メール -->
+                <form th:action="@{/admin/users/view-sort}" method="post" class="sort-bar__form">
+                    <input type="hidden" name="sort" value="email">
+                    <input type="hidden" name="dir"
+                           th:value="${sort == 'email' and dir == 'asc' ? 'desc' : 'asc'}">
+                    <button type="submit" class="btn btn-sm sort-bar__btn">
+                        メールで並べ替え
+                        <span th:if="${sort == 'email'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                    </button>
+                </form>
+
+                <!-- 名前 -->
+                <form th:action="@{/admin/users/view-sort}" method="post" class="sort-bar__form">
+                    <input type="hidden" name="sort" value="name">
+                    <input type="hidden" name="dir"
+                           th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                    <button type="submit" class="btn btn-sm sort-bar__btn">
+                        名前で並べ替え
+                        <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                    </button>
+                </form>
+
+                <!-- ロール -->
+                <form th:action="@{/admin/users/view-sort}" method="post" class="sort-bar__form">
+                    <input type="hidden" name="sort" value="role">
+                    <input type="hidden" name="dir"
+                           th:value="${sort == 'role' and dir == 'asc' ? 'desc' : 'asc'}">
+                    <button type="submit" class="btn btn-sm sort-bar__btn">
+                        ロールで並べ替え
+                        <span th:if="${sort == 'role'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 並び替え中だけ表示 -->
+            <form th:if="${sort != null}"
+                  th:action="@{/admin/users/view-sort/clear}"
+                  method="post"
+                  class="product-sort-clear-form">
+                <button type="submit" class="btn btn-secondary btn-sm">
+                    並び替え解除
+                </button>
+            </form>
+        </div>
+
         <div class="table-card">
             <table class="store-table">
                 <thead>
                 <tr>
-                    <th>メールアドレス</th>
-                    <th>名前</th>
-                    <th>現在のロール</th>
+                    <!-- メールアドレス -->
+                    <th>
+                        <form th:action="@{/admin/users/view-sort}" method="post" style="display:inline;">
+                            <input type="hidden" name="sort" value="email">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'email' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="th-sort-btn">
+                                メールアドレス
+                                <span th:if="${sort == 'email'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
+                    <!-- 名前 -->
+                    <th>
+                        <form th:action="@{/admin/users/view-sort}" method="post" style="display:inline;">
+                            <input type="hidden" name="sort" value="name">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="th-sort-btn">
+                                名前
+                                <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
+                    <!-- ロール -->
+                    <th>
+                        <form th:action="@{/admin/users/view-sort}" method="post" style="display:inline;">
+                            <input type="hidden" name="sort" value="role">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'role' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="th-sort-btn">
+                                現在のロール
+                                <span th:if="${sort == 'role'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
                     <th class="col-actions">操作</th>
                 </tr>
                 </thead>
