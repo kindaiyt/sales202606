@@ -38,7 +38,7 @@
                     th:value="${price}"
                     required
             >
-            <div th:if="${priceError}" class="error-message" th:text="${priceError}"></div>
+            <div th:if="${priceError}" class="error-message" th:utext="${priceError}"></div>
         </div>
 
         <div class="form-group">

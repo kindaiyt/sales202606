@@ -73,7 +73,7 @@ public class ProductController {
                     hasError = true;
                 }
             } catch (Exception e) {
-                model.addAttribute("priceError", "価格は整数で入力してください。");
+                model.addAttribute("priceError", "価格は1以上の整数で入力してください。<br>また、2147483647より大きい価格は設定できません。");
                 hasError = true;
             }
         }
@@ -150,7 +150,7 @@ public class ProductController {
                     hasError = true;
                 }
             } catch (Exception e) {
-                model.addAttribute("priceError", "価格は整数で入力してください。");
+                model.addAttribute("priceError", "価格は1以上の整数で入力してください。<br>また、2147483647より大きい価格は設定できません。");
                 hasError = true;
             }
         }
