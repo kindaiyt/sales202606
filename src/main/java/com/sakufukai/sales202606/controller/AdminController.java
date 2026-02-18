@@ -79,7 +79,7 @@ public class AdminController {
         return "admin/user-form";
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users/new")
     public String createUser(@RequestParam(required = false) String email,
                              @RequestParam(required = false) String role,
                              Model model) {
