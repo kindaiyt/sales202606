@@ -5,6 +5,7 @@ import com.sakufukai.sales202606.service.StoreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -20,9 +21,38 @@ public class AdminStoreController {
 
     // 店舗一覧
     @GetMapping
-    public String listStores(Model model) {
+    public String listStores(Model model, HttpSession session) {
+
         List<Store> stores = storeService.findAll();
+
+        String sort = (String) session.getAttribute("storeSort"); // "name" or "url"
+        String dir  = (String) session.getAttribute("storeDir");  // "asc" or "desc"
+
+        if ("name".equals(sort)) {
+            stores = stores.stream()
+                    .sorted((a, b) -> {
+                        String an = a.getName() == null ? "" : a.getName();
+                        String bn = b.getName() == null ? "" : b.getName();
+                        int cmp = an.compareToIgnoreCase(bn);
+                        return "desc".equals(dir) ? -cmp : cmp;
+                    })
+                    .toList();
+
+        } else if ("url".equals(sort)) {
+            stores = stores.stream()
+                    .sorted((a, b) -> {
+                        String au = a.getUrl() == null ? "" : a.getUrl();
+                        String bu = b.getUrl() == null ? "" : b.getUrl();
+                        int cmp = au.compareToIgnoreCase(bu);
+                        return "desc".equals(dir) ? -cmp : cmp;
+                    })
+                    .toList();
+        }
+
         model.addAttribute("stores", stores);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "admin/stores";
     }
 
@@ -88,4 +118,25 @@ public class AdminStoreController {
         storeService.deleteStoreByUrl(url);
         return "redirect:/admin/stores";
     }
+
+    @PostMapping("/view-sort")
+    public String sortStores(@RequestParam String sort,
+                             @RequestParam String dir,
+                             HttpSession session) {
+
+        session.setAttribute("storeSort", sort);
+        session.setAttribute("storeDir", dir);
+
+        return "redirect:/admin/stores";
+    }
+
+    @PostMapping("/view-sort/clear")
+    public String clearSort(HttpSession session) {
+
+        session.removeAttribute("storeSort");
+        session.removeAttribute("storeDir");
+
+        return "redirect:/admin/stores";
+    }
+
 }

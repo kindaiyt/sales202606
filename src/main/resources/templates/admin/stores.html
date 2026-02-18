@@ -12,12 +12,84 @@
     <main class="content">
         <h1>店舗一覧</h1>
 
+        <div class="store-actions">
+
+            <p class="sort-help">
+                タイトル行の「店舗名」「店舗URL」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
+                デフォルトの並び順に戻すこともできます。
+            </p>
+
+            <!-- スマホ用ソートボタン -->
+            <div class="sort-bar">
+                <!-- 店舗名 -->
+                <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
+                    <input type="hidden" name="sort" value="name">
+                    <input type="hidden" name="dir"
+                           th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+                    <button type="submit" class="btn btn-sm sort-bar__btn">
+                        店舗名で並べ替え
+                        <span th:if="${sort == 'name'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                    </button>
+                </form>
+
+                <!-- 店舗URL -->
+                <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
+                    <input type="hidden" name="sort" value="url">
+                    <input type="hidden" name="dir"
+                           th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
+                    <button type="submit" class="btn btn-sm sort-bar__btn">
+                        店舗URLで並べ替え
+                        <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 並び替え解除 -->
+            <form th:if="${sort != null}"
+                  th:action="@{/admin/stores/view-sort/clear}"
+                  method="post"
+                  class="product-sort-clear-form">
+
+                <button type="submit" class="btn btn-secondary btn-sm">
+                    並び替え解除
+                </button>
+            </form>
+
+        </div>
+
         <div class="table-card">
             <table class="store-table">
                 <thead>
                 <tr>
-                    <th>店舗名</th>
-                    <th>店舗URL</th>
+                    <th>
+                        <form th:action="@{/admin/stores/view-sort}"
+                              method="post"
+                              style="display:inline;">
+
+                            <input type="hidden" name="sort" value="name">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
+
+                            <button type="submit" class="th-sort-btn">
+                                店舗名
+                                <span th:if="${sort == 'name'}"
+                                      th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
+
+                    <th>
+                        <form th:action="@{/admin/stores/view-sort}" method="post" style="display:inline;">
+                            <input type="hidden" name="sort" value="url">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="th-sort-btn">
+                                店舗URL
+                                <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
+                    </th>
+
                     <th>店舗の説明</th>
                     <th>所属している人</th>
                     <th class="col-actions">操作</th>
