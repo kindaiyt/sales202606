@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー並べ替え</title>
+    <script th:src="@{/js/sort-dnd.js}" defer></script>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <main class="content" data-sort-root>
+        <h1>ユーザー並べ替え</h1>
+
+        <div class="table-card sort-panel">
+            <form th:action="@{/admin/users/sort}" method="post">
+                <input type="hidden" name="orderedIds" value="">
+
+                <ul class="sort-list" data-sort-list>
+                    <li class="sort-item sort-item--user"
+                        th:each="u : ${users}"
+                        data-sort-item
+                        th:attr="data-key=${u.email}">
+
+                        <span class="sort-handle" title="ドラッグして並べ替え" aria-hidden="true">≡</span>
+
+                        <!-- 左：表示名（なければ email） -->
+                        <span class="sort-title"
+                              th:text="${#strings.isEmpty(u.name) ? u.email : u.name}">
+                        </span>
+
+                        <!-- 右：メール（右端固定） -->
+                        <span class="sort-email" th:text="${u.email}"></span>
+                    </li>
+                </ul>
+
+                <div class="form-actions mt-16">
+                    <button type="submit" class="btn">保存</button>
+                    <a th:href="@{/admin/users}" class="btn btn-secondary">戻る</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>商品並べ替え</title>
+    <script th:src="@{/js/sort-dnd.js}" defer></script>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <main class="content" data-sort-root>
+        <h1>商品並べ替え</h1>
+
+        <div class="table-card sort-panel">
+            <form th:action="@{/product/sort/{url}(url=${store.url})}" method="post">
+                <input type="hidden" name="orderedIds" value="">
+
+                <ul class="sort-list" data-sort-list>
+                    <li class="sort-item sort-item--product"
+                        th:each="p : ${products}"
+                        data-sort-item
+                        th:attr="data-key=${p.id}">
+
+                        <span class="sort-handle" aria-hidden="true" title="ドラッグして並べ替え">≡</span>
+
+                        <span class="sort-title" th:text="${p.name}">商品名</span>
+
+                        <span class="sort-price" th:text="${p.price} + '円'">0円</span>
+                    </li>
+                </ul>
+
+                <div class="form-actions mt-16">
+                    <button type="submit" class="btn">この順番で保存</button>
+                    <a th:href="@{'/store/' + ${store.url}}" class="btn btn-secondary">戻る</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</th:block>
+</body>
+</html>

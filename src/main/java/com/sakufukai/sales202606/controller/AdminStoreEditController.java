@@ -24,7 +24,7 @@ public class AdminStoreEditController {
     @GetMapping("/admin/stores/{url}/edit")
     public String editPage(@PathVariable String url, Model model) {
         Store store = storeService.findByUrlWithUsers(url);
-        List<User> users = userService.findAll();
+        List<User> users = userService.findAllSorted();
 
         model.addAttribute("store", store);
         model.addAttribute("users", users);
@@ -39,7 +39,7 @@ public class AdminStoreEditController {
 
         if (userEmail == null || userEmail.trim().isEmpty()) {
             Store store = storeService.findByUrlWithUsers(url);
-            List<User> users = userService.findAll();
+            List<User> users = userService.findAllSorted();
 
             model.addAttribute("store", store);
             model.addAttribute("users", users);

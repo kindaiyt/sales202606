@@ -33,10 +33,14 @@ public class AdminController {
     // ユーザー一覧ページ
     @GetMapping("/users")
     public String listUsers(@AuthenticationPrincipal OidcUser oidcUser, Model model) {
-        model.addAttribute("users", userService.findAll());
+        var users = userService.findAllSorted();
+
+        model.addAttribute("users", userService.findAllSorted());
         model.addAttribute("stores", storeService.findAllWithUsers());
         model.addAttribute("fixedAdmins", appProperties.getAdminEmails());
         model.addAttribute("myEmail", oidcUser != null ? oidcUser.getAttribute("email") : null);
+        model.addAttribute("hasUsers", users != null && !users.isEmpty() && users.size() > 1);
+
         return "admin/users"; // admin/users.html
     }
 
@@ -129,6 +133,18 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/sort")
+    public String sortUsersPage(@AuthenticationPrincipal OidcUser oidcUser, Model model) {
+        model.addAttribute("users", userService.findAllSorted());
+        return "admin/users-sort";
+    }
+
+    @PostMapping("/users/sort")
+    public String saveUsersSort(@RequestParam(required = false) String orderedIds) {
+        userService.updateSortOrder(orderedIds);
         return "redirect:/admin/users";
     }
 

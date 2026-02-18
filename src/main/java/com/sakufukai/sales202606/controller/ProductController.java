@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/product")
 public class ProductController {
@@ -163,6 +165,23 @@ public class ProductController {
 
         productService.save(product);
         return "redirect:/store/" + product.getStore().getUrl();
+    }
+
+    // ProductController に追加
+    @GetMapping("/sort/{url}")
+    public String sortProductsPage(@PathVariable String url, Model model) {
+        Store store = storeService.findByUrl(url);
+        model.addAttribute("store", store);
+        model.addAttribute("products", productService.findByStoreSorted(store)); // ★ sorted
+        return "product/sort";
+    }
+
+    @PostMapping("/sort/{url}")
+    public String saveProductsSort(@PathVariable String url,
+                                   @RequestParam String orderedIds) {
+        Store store = storeService.findByUrl(url);
+        productService.updateSortOrder(store, orderedIds); // ★ id の並びで保存
+        return "redirect:/store/" + url;
     }
 
 }

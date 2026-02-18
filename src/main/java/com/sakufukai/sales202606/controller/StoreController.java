@@ -1,15 +1,18 @@
 package com.sakufukai.sales202606.controller;
 
+import com.sakufukai.sales202606.entity.Product;
 import com.sakufukai.sales202606.entity.Store;
 import com.sakufukai.sales202606.entity.UserStore;
 import com.sakufukai.sales202606.service.StoreService;
 import com.sakufukai.sales202606.service.UserService;
+import com.sakufukai.sales202606.service.ProductService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/store")
@@ -17,10 +20,14 @@ public class StoreController {
 
     private final UserService userService;
     private final StoreService storeService;
+    private final ProductService productService;
 
-    public StoreController(UserService userService, StoreService storeService) {
+    public StoreController(UserService userService,
+                           StoreService storeService,
+                           ProductService productService) {
         this.userService = userService;
         this.storeService = storeService;
+        this.productService = productService;
     }
 
     // 自分の店舗一覧
@@ -59,6 +66,10 @@ public class StoreController {
         // ★追加: リンク化した備考を作る
         model.addAttribute("noteWithLinks",
                 convertUrlsToLinks(store.getNote()));
+        List<Product> products = productService.findByStoreSorted(store);
+        model.addAttribute("products", products);
+        // ★追加: 並べ替えボタン表示用
+        model.addAttribute("hasProducts", productService.countByStore(store) > 1);
         return "store/store";
     }
 

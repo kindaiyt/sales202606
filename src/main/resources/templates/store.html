@@ -15,7 +15,7 @@
         </p>
 
         <ul>
-            <li th:each="product : ${store.products}">
+            <li th:each="product : ${products}">
                 <span th:text="${product.name}"></span> -
                 <span th:text="${product.price}"></span>円
             </li>

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "Product")
 @Getter
 @Setter
-public class Product {
+public class Product implements SortableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +27,11 @@ public class Product {
 
     @Column(columnDefinition = "TEXT")
     private String note;   // 説明（空欄OK）
+
+    @Column(name = "sort_order")
+    private Integer sortOrder;
+
+    @Override
+    public String getSortKey() { return String.valueOf(id); }
 
 }

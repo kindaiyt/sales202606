@@ -170,4 +170,29 @@ public class UserService {
         return targetEmail.trim().equalsIgnoreCase(actorEmail.trim());
     }
 
+    public List<User> findAllSorted() {
+        return userRepository.findAllByOrderBySortOrderAscEmailAsc();
+    }
+
+    @Transactional
+    public void updateSortOrder(String orderedIds) {
+        if (orderedIds == null || orderedIds.trim().isEmpty()) return;
+
+        String[] emails = orderedIds.split(",");
+        int order = 1;
+
+        for (String emailRaw : emails) {
+            String email = emailRaw == null ? null : emailRaw.trim();
+            if (email == null || email.isEmpty()) continue;
+
+            User user = userRepository.findByEmail(email).orElse(null);
+            if (user == null) continue;
+
+            user.setSortOrder(order);
+            userRepository.save(user);
+
+            order++;
+        }
+    }
+
 }

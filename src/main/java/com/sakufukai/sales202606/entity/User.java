@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "users") // User は予約語なので users に変更
 @Getter
 @Setter
-public class User {
+public class User implements SortableEntity {
     @Id
     @Column(nullable = false, unique = true)
     private String email; // 主キーに変更
@@ -26,4 +26,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserStore> userStores;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder;
+
+    @Override
+    public String getSortKey() { return email; }
+
+
 }

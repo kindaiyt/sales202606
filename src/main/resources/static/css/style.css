@@ -916,3 +916,117 @@ button.btn {
     justify-content: flex-start;
   }
 }
+
+/* =========================
+   並べ替え（共通）
+========================= */
+.table-card.sort-panel{
+  padding: 18px;
+}
+
+.sort-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.sort-item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e6e9ef;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* ドラッグ中 */
+.sort-item.dragging{
+  opacity: .6;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ハンドル */
+.sort-handle{
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #f3f5f8;
+  border: 1px solid #e6e9ef;
+  cursor: grab;
+  user-select: none;
+}
+.sort-handle:active{ cursor: grabbing; }
+
+/* ★太字を解除（ここが要望） */
+.sort-title,
+.sort-email,
+.sort-price{
+  font-weight: 400;
+}
+
+/* =========================
+   商品：左=商品名 / 右=価格
+========================= */
+/* 商品：タイトルは改行OK（長い英数字も折る） */
+.sort-item--product .sort-title{
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;          /* ★改行させる */
+  overflow: visible;            /* ★隠さない */
+  text-overflow: clip;          /* ★…にしない */
+  overflow-wrap: anywhere;      /* 長い文字列を強制折り */
+  word-break: break-word;
+}
+
+/* ★価格が長くても崩れないようにする */
+.sort-item--product .sort-price{
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+  min-width: 6.5ch;   /* ★最低でもこの幅を確保（例: 18957342円 程度） */
+  text-align: right;
+
+  /* ここが効く：右端領域に上限を作って省略 */
+  max-width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   ユーザー：左=名前 / 右=メール
+========================= */
+.sort-item--user .sort-title{
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.sort-item--user .sort-email{
+  flex: 0 1 auto;
+  margin-left: auto;
+  white-space: nowrap;
+  text-align: right;
+
+  /* メールも長いときは保険で省略 */
+  max-width: 24ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: .85;
+}
+
+/* =========================
+   画面がかなり狭い時だけ2段表示（任意だけど安定）
+========================= */
+@media (max-width: 480px){
+  .sort-item--product .sort-price,
+  .sort-item--user .sort-email{
+    max-width: 100%;
+  }
+}

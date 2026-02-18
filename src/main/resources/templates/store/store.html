@@ -46,7 +46,7 @@
                     </thead>
 
                     <tbody>
-                    <tr th:each="product : ${store.products}">
+                    <tr th:each="product : ${products}">
                         <td class="cell-name" data-label="商品名" th:text="${product.name}"></td>
 
                         <td class="cell-url" data-label="価格">
@@ -89,11 +89,14 @@
         <!-- 下のボタン（store が null のときに store.url を参照しないように分ける） -->
         <div class="form-actions mt-16" th:if="${store != null}">
             <a th:href="@{/product/add/{url}(url=${store.url})}" class="btn">商品追加</a>
-            <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
+            <a th:if="${hasProducts}"
+               th:href="@{/product/sort/{url}(url=${store.url})}"
+               class="btn">並べ替え</a>
+            <a th:href="@{/store}" class="btn btn-secondary">店舗一覧に戻る</a>
         </div>
 
         <div class="form-actions mt-16" th:if="${store == null}">
-            <a href="/store" class="btn btn-secondary">店舗一覧に戻る</a>
+            <a th:href="@{/store}" class="btn btn-secondary">店舗一覧に戻る</a>
         </div>
 
     </main>
