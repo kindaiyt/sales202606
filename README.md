@@ -2,13 +2,13 @@
 
 ## 説明
 
-兵庫県立明石北高等学校の文化祭運営に使用予定のアプリです。明石北高校の同窓会組織である朔風会の役員が開発しています。
+2026年兵庫県立明石北高等学校の文化祭運営に使用予定のアプリです。明石北高校の同窓会組織である朔風会の役員が開発しています。
 
 ホームページ: [朔風会公式ホームページ](https://www.sakufukai.com/)
 
 ## 使用方法
 
-1. src/main/resources/application.yml を作成し、以下の内容を入力する。`<client-id>`と`<client-secret>`には、Google OAuthのクライアントIDとクライアントシークレットを入力して下さい。また、`admin-emails`には、管理者として登録したいメールアドレスを入れて下さい。
+1. src/main/resources/application.yml を作成し、以下の内容を入力します。`<client-id>`と`<client-secret>`には、Google OAuthのクライアントIDとクライアントシークレットを入力して下さい。また、`admin-emails`には、管理者として登録したいメールアドレスを入れて下さい。
 
 ```
 spring:
@@ -42,6 +42,11 @@ app:
   admin-emails:
     - "example1@gmail.com"
     - "example2@gmail.com"
+
+server:
+  error:
+    whitelabel:
+      enabled: false
 ```
 
 2. 以下のコマンドを実行して、データベースとして MySQL コンテナを立てます。
