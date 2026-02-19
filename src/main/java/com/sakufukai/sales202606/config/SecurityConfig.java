@@ -44,12 +44,23 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/pending", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/stores/**").permitAll() // 公開用
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
 
+                        // ===== 公開ページ（誰でもOK）=====
+                        .requestMatchers("/", "/pending", "/error/**",
+                                "/css/**", "/js/**", "/images/**").permitAll()
+
+                        .requestMatchers("/stores/**").permitAll() // 一般公開
+
+                        // ===== ADMIN専用 =====
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // ===== USER または ADMIN =====
+                        .requestMatchers("/store/**", "/product/**", "/users/**")
+                        .hasAnyRole("USER", "ADMIN")
+
+                        // ===== その他は拒否 =====
+                        .anyRequest().denyAll()
+                )
 
                 // ★追加: 権限不足(403)を 404専用ページへ
                 .exceptionHandling(ex -> ex
