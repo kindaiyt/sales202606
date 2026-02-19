@@ -126,8 +126,12 @@
 
                             <ul th:if="${store.userStores != null and !#lists.isEmpty(store.userStores)}"
                                 style="margin: 0; padding-left: 1.2em;">
-                                <li th:each="us : ${store.userStores}"
-                                    th:text="${#strings.isEmpty(us.user.name) ? us.user.email : us.user.name}">
+                                <li th:each="us : ${store.userStores}">
+                                    <!-- 1段目：名前（空ならメール） -->
+                                    <div th:text="${#strings.isEmpty(us.user.name) ? us.user.email : us.user.name}"></div>
+
+                                    <!-- 2段目：メール（常に表示） -->
+                                    <div class="user-email" th:text="${us.user.email}"></div>
                                 </li>
                             </ul>
                         </td>
