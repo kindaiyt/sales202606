@@ -45,6 +45,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/pending", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/stores/**").permitAll() // 公開用
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

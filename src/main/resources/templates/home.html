@@ -26,13 +26,15 @@
 
         <div class="home-actions">
             <a th:href="@{/store}" class="btn">自分の店舗一覧へ</a>
-            <a th:if="${isAdmin}" th:href="@{/admin/stores}" class="btn">店舗一覧・作成</a>
+            <a th:if="${isAdmin}" th:href="@{/admin/stores}" class="btn">店舗編集・作成</a>
+            <a th:href="@{/stores}" class="btn">お客様から見える店舗一覧画面</a>
         </div>
     </div>
 
     <div th:if="${userName == 'ゲスト'}" class="store-info">
-        <p>店舗情報が表示されていないか、ログインしていません。<br>
-            ログインしていない場合、右上のメニューからログインしてください。</p>
+        <p>2026年明石北高校文化祭の一般店舗情報を下記ボタンから確認できます。<br>
+            店舗管理者は、右上のハンバーガーメニューからログインしてください。</p>
+        <a th:href="@{/stores}" class="btn">店舗一覧</a>
     </div>
 </main>
 </body>
