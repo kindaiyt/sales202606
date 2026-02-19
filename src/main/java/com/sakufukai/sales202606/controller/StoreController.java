@@ -56,10 +56,11 @@ public class StoreController {
     @GetMapping("/{url}")
     public String storeDetail(@PathVariable String url,
                               Model model,
-                              jakarta.servlet.http.HttpSession session) {
+                              jakarta.servlet.http.HttpSession session,
+                              Authentication authentication) {
 
-        Store store = storeService.findByUrl(url);
-        if (store == null) throw new IllegalArgumentException("店舗が見つかりません: " + url);
+        // ★未所属ならここで AccessDeniedException → GlobalExceptionHandler で 404
+        Store store = storeService.getStoreForMemberOrAdmin(url, authentication);
 
         // セッションから並び替え条件を取得（なければnull）
         String key = "productSort:" + url;
@@ -70,16 +71,15 @@ public class StoreController {
 
         model.addAttribute("store", store);
         model.addAttribute("noteWithLinks", convertUrlsToLinks(store.getNote()));
-
         model.addAttribute("products", productService.findByStoreSorted(store, sort, dir));
 
-        // ヘッダの▲▼用
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
-
         model.addAttribute("hasProducts", productService.countByStore(store) > 1);
+
         return "store/store";
     }
+
 
     private String convertUrlsToLinks(String text) {
         if (text == null) return "";
@@ -96,13 +96,17 @@ public class StoreController {
     public String updateStoreNote(@PathVariable String url,
                                   @RequestParam(required = false) String note,
                                   Authentication authentication) {
+
+        // ★存在&権限を先にチェック（updateStoreNote内でもチェックするが、明示的にしてOK）
+        storeService.getStoreForMemberOrAdmin(url, authentication);
+
         storeService.updateStoreNote(url, note, authentication);
         return "redirect:/store/" + url;
     }
 
     @GetMapping("/{url}/note/edit")
-    public String editStoreNotePage(@PathVariable String url, Model model) {
-        Store store = storeService.findByUrl(url);
+    public String editStoreNotePage(@PathVariable String url, Model model, Authentication authentication) {
+        Store store = storeService.getStoreForMemberOrAdmin(url, authentication);
         model.addAttribute("store", store);
         return "store/store-note";
     }
@@ -111,16 +115,25 @@ public class StoreController {
     public String setViewSort(@PathVariable String url,
                               @RequestParam String sort,
                               @RequestParam String dir,
-                              jakarta.servlet.http.HttpSession session) {
+                              jakarta.servlet.http.HttpSession session,
+                              Authentication authentication) {
+
+        // ★未所属なら弾く
+        storeService.getStoreForMemberOrAdmin(url, authentication);
 
         String key = "productSort:" + url;
         session.setAttribute(key, new SortState(sort, dir));
-        return "redirect:/store/" + url; // ★URLを綺麗に保つ
+        return "redirect:/store/" + url;
     }
 
     @PostMapping("/{url}/view-sort/clear")
     public String clearViewSort(@PathVariable String url,
-                                jakarta.servlet.http.HttpSession session) {
+                                jakarta.servlet.http.HttpSession session,
+                                Authentication authentication) {
+
+        // ★未所属なら弾く
+        storeService.getStoreForMemberOrAdmin(url, authentication);
+
         session.removeAttribute("productSort:" + url);
         return "redirect:/store/" + url;
     }

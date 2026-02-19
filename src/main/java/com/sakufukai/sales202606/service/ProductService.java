@@ -5,6 +5,7 @@ import com.sakufukai.sales202606.entity.Store;
 import com.sakufukai.sales202606.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,70 @@ public class ProductService {
         comparator = comparator.thenComparing(Product::getId);
 
         return base.stream().sorted(comparator).toList();
+    }
+
+    /**
+     * 認可込み：保存（追加/更新の両方で使える）
+     */
+    @Transactional
+    public Product saveForMember(Product product, Authentication authentication) {
+        if (product == null) {
+            throw new IllegalArgumentException("product is null");
+        }
+        if (product.getStore() == null) {
+            throw new IllegalArgumentException("store is null");
+        }
+
+        // ★所属 or ADMIN
+        storeService.assertMemberOrAdmin(product.getStore(), authentication);
+
+        // 既存のバリデーション
+        Integer price = product.getPrice();
+        if (price == null || price <= 0) {
+            throw new IllegalArgumentException("価格は1以上の整数で入力してください。");
+        }
+
+        return productRepository.save(product);
+    }
+
+    /**
+     * 認可込み：削除（/product/delete/{id} 用）
+     */
+    @Transactional
+    public void deleteByIdForMember(Long id, Authentication authentication) {
+        Product product = findById(id);
+        if (product.getStore() == null) {
+            throw new IllegalArgumentException("store is null");
+        }
+
+        // ★所属 or ADMIN
+        storeService.assertMemberOrAdmin(product.getStore(), authentication);
+
+        productRepository.deleteById(id);
+    }
+
+    /**
+     * 認可込み：ドラッグ並べ替え保存（/product/sort/{url} の POST 用）
+     */
+    @Transactional
+    public void updateSortOrderForMember(Store store, String orderedIds, Authentication authentication) {
+        if (store == null) throw new IllegalArgumentException("store is null");
+
+        // ★所属 or ADMIN
+        storeService.assertMemberOrAdmin(store, authentication);
+
+        // 既存ロジックへ委譲
+        updateSortOrder(store, orderedIds);
+    }
+
+    /**
+     * 認可込み：旧 sortProducts(url, ids) を使う場合のラッパ
+     */
+    @Transactional
+    public void sortProductsForMember(String url, List<Long> ids, Authentication authentication) {
+        Store store = storeService.getStoreForMemberOrAdmin(url, authentication);
+        // 既存ロジックへ委譲（store 取得済みなので store から取り直さない版にしてもOK）
+        sortProducts(url, ids);
     }
 
 }

@@ -10,6 +10,7 @@ import com.sakufukai.sales202606.repository.UserStoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -118,39 +119,11 @@ public class StoreService {
     public void updateStoreNote(String url, String note, Authentication authentication) {
         Store store = findByUrl(url);
 
-        // ログインユーザーのemail取得（Google OAuth）
-        String email = extractEmail(authentication);
-        if (email == null) throw new RuntimeException("email not found");
-
-        // ADMINならOK
-        boolean isAdmin = userRepository.findByEmail(email)
-                .map(u -> u.getRole() == Role.ADMIN)
-                .orElse(false);
-
-        // 店舗に割り当て済みならOK
-        boolean assigned = userRepository.findByEmail(email)
-                .map(u -> userStoreRepository.existsByUserAndStore(u, store))
-                .orElse(false);
-
-        if (!isAdmin && !assigned) {
-            throw new org.springframework.security.access.AccessDeniedException("権限がありません");
-        }
+        // ★ここだけに統一（ADMIN or 所属）
+        assertMemberOrAdmin(store, authentication);
 
         store.setNote(note); // 空欄OK（null/""でもOK）
         storeRepository.save(store);
-    }
-
-    private String extractEmail(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) return null;
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {
-            return oauth2User.getAttribute("email");
-        }
-        if (principal instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
-            return oidcUser.getAttribute("email");
-        }
-        return null;
     }
 
     @Transactional(readOnly = true)
@@ -195,6 +168,84 @@ public class StoreService {
 
     public boolean existsByUrl(String url) {
         return storeRepository.existsByUrl(url);
+    }
+
+    /**
+     * 認証情報から email を取り出す（他サービスからも使えるよう public）
+     */
+    public String extractEmail(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) return null;
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {
+            return oauth2User.getAttribute("email");
+        }
+        if (principal instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
+            return oidcUser.getAttribute("email");
+        }
+        return null;
+    }
+
+    /**
+     * ADMIN かどうか
+     */
+    @Transactional(readOnly = true)
+    public boolean isAdmin(String email) {
+        if (email == null || email.isBlank()) return false;
+        return userRepository.findByEmail(email)
+                .map(u -> u.getRole() == Role.ADMIN)
+                .orElse(false);
+    }
+
+    /**
+     * 店舗に所属しているか（UserStore があるか）
+     */
+    @Transactional(readOnly = true)
+    public boolean isAssignedToStore(String email, Store store) {
+        if (email == null || email.isBlank() || store == null) return false;
+        return userRepository.findByEmail(email)
+                .map(u -> userStoreRepository.existsByUserAndStore(u, store))
+                .orElse(false);
+    }
+
+    /**
+     * 店舗にアクセス/操作できるか（ADMIN または 所属）
+     */
+    @Transactional(readOnly = true)
+    public boolean canAccessStore(Store store, Authentication authentication) {
+        String email = extractEmail(authentication);
+        if (email == null) return false;
+        return isAdmin(email) || isAssignedToStore(email, store);
+    }
+
+    /**
+     * 失敗したら AccessDeniedException を投げる（Controller 側で 404 に寄せる用途）
+     */
+    @Transactional(readOnly = true)
+    public void assertMemberOrAdmin(Store store, Authentication authentication) {
+        if (!canAccessStore(store, authentication)) {
+            throw new AccessDeniedException("権限がありません");
+        }
+    }
+
+    /**
+     * storeId 版（/product/edit/{id} のように URL が無いケースで使う）
+     */
+    @Transactional(readOnly = true)
+    public void assertMemberOrAdmin(Long storeId, Authentication authentication) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません: " + storeId));
+        assertMemberOrAdmin(store, authentication);
+    }
+
+    /**
+     * url 版：店舗取得 + 権限チェック + 返却（Controller が一行になる）
+     */
+    @Transactional(readOnly = true)
+    public Store getStoreForMemberOrAdmin(String url, Authentication authentication) {
+        Store store = findByUrl(url); // 既存メソッドを利用（見つからなければ例外）
+        assertMemberOrAdmin(store, authentication);
+        return store;
     }
 
 }
