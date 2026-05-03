@@ -29,4 +29,8 @@ public class Store {
     @Column(columnDefinition = "TEXT")
     private String note;   // 説明（空欄OK）
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StoreType storeType = StoreType.STUDENT;
+
 }
