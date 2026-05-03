@@ -1194,3 +1194,46 @@ button.btn {
   color: #667;
   line-height: 1.3;
 }
+
+/* ラジオボタン横並び */
+.radio-inline-group {
+    border: none;
+    padding: 0;
+    margin-top: 8px;
+}
+
+/* inputは画面から隠す（アクセシビリティ維持） */
+.radio-inline__input {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* ボタン見た目 */
+.radio-inline__label {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-right: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* ホバー */
+.radio-inline__label:hover {
+    background-color: #e9ecef;
+}
+
+/* 選択状態（★青に変更） */
+.radio-inline__input:checked + .radio-inline__label {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+/* フォーカス（アクセシビリティ） */
+.radio-inline__input:focus + .radio-inline__label {
+    outline: 3px solid #80bdff;
+    outline-offset: 2px;
+}

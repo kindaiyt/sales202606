@@ -39,23 +39,31 @@
             <div class="form-group">
                 <label>店舗種別: </label>
 
-                <div>
-                    <label>
-                        <input type="radio"
-                               name="storeType"
-                               value="STUDENT"
-                               th:checked="${storeType == null or storeType == 'STUDENT'}">
+                <fieldset class="radio-inline-group">
+
+                    <input id="storeType-student"
+                           class="radio-inline__input"
+                           type="radio"
+                           name="storeType"
+                           value="STUDENT"
+                           th:checked="${storeType == null or storeType == 'STUDENT'}" />
+
+                    <label class="radio-inline__label" for="storeType-student">
                         学生店舗
                     </label>
 
-                    <label style="margin-left: 15px;">
-                        <input type="radio"
-                               name="storeType"
-                               value="GENERAL"
-                               th:checked="${storeType == 'GENERAL'}">
+                    <input id="storeType-general"
+                           class="radio-inline__input"
+                           type="radio"
+                           name="storeType"
+                           value="GENERAL"
+                           th:checked="${storeType == 'GENERAL'}" />
+
+                    <label class="radio-inline__label" for="storeType-general">
                         一般店舗
                     </label>
-                </div>
+
+                </fieldset>
 
                 <div th:if="${storeTypeError}" class="error-message" th:text="${storeTypeError}"></div>
             </div>
