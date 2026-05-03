@@ -1,6 +1,7 @@
 package com.sakufukai.sales202606.controller;
 
 import com.sakufukai.sales202606.entity.Store;
+import com.sakufukai.sales202606.entity.StoreType;
 import com.sakufukai.sales202606.service.StoreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,10 +69,12 @@ public class AdminStoreController {
     @PostMapping("/new")
     public String saveStore(@RequestParam(required = false) String name,
                             @RequestParam(required = false) String url,
+                            @RequestParam(required = false) String storeType,
                             Model model) {
 
         model.addAttribute("name", name);
         model.addAttribute("url", url);
+        model.addAttribute("storeType", storeType);
 
         boolean hasError = false;
 
@@ -93,6 +96,20 @@ public class AdminStoreController {
             }
         }
 
+        // 店舗種別 ← ★追加
+        StoreType type = null;
+        if (storeType == null || storeType.isBlank()) {
+            model.addAttribute("storeTypeError", "店舗種別を選択してください。");
+            hasError = true;
+        } else {
+            try {
+                type = StoreType.valueOf(storeType);
+            } catch (Exception e) {
+                model.addAttribute("storeTypeError", "不正な店舗種別です。");
+                hasError = true;
+            }
+        }
+
         if (hasError) {
             // ★ URLは /admin/stores/new のまま
             return "admin/store-form";
@@ -101,6 +118,7 @@ public class AdminStoreController {
         Store store = new Store();
         store.setName(name.trim());
         store.setUrl(trimmedUrl);
+        store.setStoreType(type);
 
         try {
             storeService.save(store);
