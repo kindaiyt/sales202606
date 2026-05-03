@@ -19,6 +19,11 @@
                 <p><b>店舗名: </b><span th:text="${store.name}"></span></p>
                 <p><b>店舗URL: </b><span th:text="${store.url}"></span></p>
 
+                <p>
+                    <b>店舗分類: </b>
+                    <span th:text="${store.storeType != null ? store.storeType.displayName : '-'}"></span>
+                </p>
+
                 <div class="actions" style="margin-top: 10px;">
                     <a th:href="@{/admin/stores/{url}/edit/info(url=${store.url})}" class="btn btn-sm">
                         店舗情報を編集
