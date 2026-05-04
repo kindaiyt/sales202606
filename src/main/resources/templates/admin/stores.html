@@ -43,8 +43,19 @@
                         <input type="hidden" name="dir"
                                th:value="${sort == 'url' and dir == 'asc' ? 'desc' : 'asc'}">
                         <button type="submit" class="btn btn-sm sort-bar__btn">
-                            店舗URLで並べ替え
+                            URLで並べ替え
                             <span th:if="${sort == 'url'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                        </button>
+                    </form>
+
+                    <!-- 店舗種別 -->
+                    <form th:action="@{/admin/stores/view-sort}" method="post" class="sort-bar__form">
+                        <input type="hidden" name="sort" value="storeType">
+                        <input type="hidden" name="dir"
+                               th:value="${sort == 'storeType' and dir == 'asc' ? 'desc' : 'asc'}">
+                        <button type="submit" class="btn btn-sm sort-bar__btn">
+                            種別で並べ替え
+                            <span th:if="${sort == 'storeType'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
                         </button>
                     </form>
                 </div>
@@ -95,7 +106,18 @@
                             </form>
                         </th>
 
-                        <th>店舗分類</th>
+                        <th>
+                            <form th:action="@{/admin/stores/view-sort}" method="post" style="display:inline;">
+                                <input type="hidden" name="sort" value="storeType">
+                                <input type="hidden" name="dir"
+                                       th:value="${sort == 'storeType' and dir == 'asc' ? 'desc' : 'asc'}">
+                                <button type="submit" class="th-sort-btn">
+                                    店舗種別
+                                    <span th:if="${sort == 'storeType'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                                </button>
+                            </form>
+                        </th>
+
                         <th>店舗の説明</th>
                         <th>所属している人</th>
                         <th class="col-actions">操作</th>

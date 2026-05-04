@@ -48,6 +48,16 @@ public class AdminStoreController {
                         return "desc".equals(dir) ? -cmp : cmp;
                     })
                     .toList();
+
+        } else if ("storeType".equals(sort)) {
+            stores = stores.stream()
+                    .sorted((a, b) -> {
+                        String at = a.getStoreType() == null ? "" : a.getStoreType().name();
+                        String bt = b.getStoreType() == null ? "" : b.getStoreType().name();
+                        int cmp = at.compareToIgnoreCase(bt);
+                        return "desc".equals(dir) ? -cmp : cmp;
+                    })
+                    .toList();
         }
 
         model.addAttribute("stores", stores);
@@ -62,6 +72,7 @@ public class AdminStoreController {
     public String newStoreForm(Model model) {
         model.addAttribute("name", "");
         model.addAttribute("url", "");
+        model.addAttribute("storeType", "");
         return "admin/store-form";
     }
 
@@ -141,6 +152,14 @@ public class AdminStoreController {
     public String sortStores(@RequestParam String sort,
                              @RequestParam String dir,
                              HttpSession session) {
+
+        if (!("name".equals(sort) || "url".equals(sort) || "storeType".equals(sort))) {
+            return "redirect:/admin/stores";
+        }
+
+        if (!("asc".equals(dir) || "desc".equals(dir))) {
+            dir = "asc";
+        }
 
         session.setAttribute("storeSort", sort);
         session.setAttribute("storeDir", dir);
