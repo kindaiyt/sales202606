@@ -1,9 +1,6 @@
 package com.sakufukai.sales202606.service;
 
-import com.sakufukai.sales202606.entity.Role;
-import com.sakufukai.sales202606.entity.Store;
-import com.sakufukai.sales202606.entity.User;
-import com.sakufukai.sales202606.entity.UserStore;
+import com.sakufukai.sales202606.entity.*;
 import com.sakufukai.sales202606.repository.StoreRepository;
 import com.sakufukai.sales202606.repository.UserRepository;
 import com.sakufukai.sales202606.repository.UserStoreRepository;
@@ -147,7 +144,10 @@ public class StoreService {
     }
 
     @Transactional
-    public void updateStoreInfo(String currentUrl, String name, String newUrl) {
+    public void updateStoreInfo(String currentUrl,
+                                String name,
+                                String newUrl,
+                                String storeType) {
         Store store = storeRepository.findByUrl(currentUrl)
                 .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません: " + currentUrl));
 
@@ -163,6 +163,7 @@ public class StoreService {
         }
 
         store.setName(trimmedName);
+        store.setStoreType(StoreType.valueOf(storeType));
         storeRepository.save(store);
     }
 

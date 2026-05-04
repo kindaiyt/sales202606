@@ -43,6 +43,38 @@
                 <div th:if="${urlError}" class="error-message" th:text="${urlError}"></div>
             </div>
 
+            <div class="form-group">
+                <label>店舗種別: </label>
+
+                <fieldset class="radio-inline-group">
+
+                    <input id="storeType-student"
+                           class="radio-inline__input"
+                           type="radio"
+                           name="storeType"
+                           value="STUDENT"
+                           th:checked="${store.storeType.name() == 'STUDENT'}" />
+
+                    <label class="radio-inline__label" for="storeType-student">
+                        学生店舗
+                    </label>
+
+                    <input id="storeType-general"
+                           class="radio-inline__input"
+                           type="radio"
+                           name="storeType"
+                           value="GENERAL"
+                           th:checked="${store.storeType.name() == 'GENERAL'}" />
+
+                    <label class="radio-inline__label" for="storeType-general">
+                        一般店舗
+                    </label>
+
+                </fieldset>
+
+                <div th:if="${storeTypeError}" class="error-message" th:text="${storeTypeError}"></div>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn">更新</button>
                 <a th:href="@{/admin/stores/{url}/edit(url=${store.url})}" class="btn btn-secondary">戻る</a>

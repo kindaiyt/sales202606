@@ -1,6 +1,7 @@
 package com.sakufukai.sales202606.controller;
 
 import com.sakufukai.sales202606.entity.Store;
+import com.sakufukai.sales202606.entity.StoreType;
 import com.sakufukai.sales202606.entity.User;
 import com.sakufukai.sales202606.service.StoreService;
 import com.sakufukai.sales202606.service.UserService;
@@ -72,6 +73,7 @@ public class AdminStoreEditController {
     public String updateStoreInfo(@PathVariable String url,
                                   @RequestParam(required = false) String name,
                                   @RequestParam(required = false) String newUrl,
+                                  @RequestParam(required = false) String storeType,
                                   Model model) {
 
         Store store = storeService.findByUrl(url);
@@ -80,18 +82,35 @@ public class AdminStoreEditController {
         // 入力値保持
         model.addAttribute("name", name);
         model.addAttribute("newUrl", newUrl);
+        model.addAttribute("storeType", storeType);
 
         boolean hasError = false;
 
+        // 店舗名チェック
         if (name == null || name.trim().isEmpty()) {
             model.addAttribute("nameError", "店舗名を入力してください。");
             hasError = true;
         }
 
+        // URLチェック（重複チェックは StoreService 側で実装）
         String trimmedNewUrl = (newUrl == null) ? null : newUrl.trim();
         if (trimmedNewUrl == null || trimmedNewUrl.isEmpty()) {
             model.addAttribute("urlError", "店舗URLを入力してください。");
             hasError = true;
+        }
+
+        // 店舗種別チェック
+        StoreType type = null;
+        if (storeType == null || storeType.isBlank()) {
+            model.addAttribute("storeTypeError", "店舗種別を選択してください。");
+            hasError = true;
+        } else {
+            try {
+                type = StoreType.valueOf(storeType);
+            } catch (Exception e) {
+                model.addAttribute("storeTypeError", "不正な店舗種別です。");
+                hasError = true;
+            }
         }
 
         if (hasError) {
@@ -99,7 +118,7 @@ public class AdminStoreEditController {
         }
 
         try {
-            storeService.updateStoreInfo(url, name, trimmedNewUrl);
+            storeService.updateStoreInfo(url, name, trimmedNewUrl, storeType);
         } catch (IllegalArgumentException e) {
             model.addAttribute("urlError", e.getMessage());
             return "admin/store-info-edit";
