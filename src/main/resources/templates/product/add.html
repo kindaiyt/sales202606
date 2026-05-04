@@ -11,6 +11,8 @@
 
     <h1 th:text="'『' + ${store.name} + '』の商品追加'"></h1>
 
+    商品の新規登録時は、「在庫あり」として保存されます。
+
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
     <!-- ★ action を /product/add/{url} に -->
