@@ -72,7 +72,7 @@ public class AdminStoreController {
     public String newStoreForm(Model model) {
         model.addAttribute("name", "");
         model.addAttribute("url", "");
-        model.addAttribute("storeType", "");
+        model.addAttribute("storeType", "STUDENT");
         return "admin/store-form";
     }
 
