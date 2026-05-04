@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>店舗一覧</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <main class="content">
+        <h1>店舗一覧</h1>
+
+        <div class="store-info">
+            <p>確認したい店舗の種類を選択してください。</p>
+
+            <div class="home-actions">
+                <a th:href="@{/stores/student}" class="btn">学生の模擬店舗一覧</a>
+                <a th:href="@{/stores/general}" class="btn">一般店舗一覧</a>
+            </div>
+        </div>
+
+        <div class="form-actions mt-16">
+            <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
+        </div>
+    </main>
+
+</th:block>
+</body>
+</html>

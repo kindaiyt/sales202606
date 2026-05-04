@@ -1,6 +1,7 @@
 package com.sakufukai.sales202606.repository;
 
 import com.sakufukai.sales202606.entity.Store;
+import com.sakufukai.sales202606.entity.StoreType;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +35,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByUrlWithUsers(@Param("url") String url);
 
     boolean existsByUrl(String url);
+
+    List<Store> findByStoreType(StoreType storeType);
 }

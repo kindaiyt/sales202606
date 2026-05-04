@@ -4,13 +4,13 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>店舗一覧</title>
+    <title th:text="${title != null ? title : '店舗一覧'}"></title>
 </head>
 <body>
 <th:block layout:fragment="content">
 
     <main class="content">
-        <h1>店舗一覧</h1>
+        <h1 th:text="${title != null ? title : '店舗一覧'}"></h1>
 
         <!-- 店舗0件のときは、ソートUI/表を出さずメッセージ -->
         <div th:if="${!hasStores}" class="store-info">
@@ -89,7 +89,7 @@
         </div>
 
         <div class="form-actions mt-16">
-            <a th:href="@{/}" class="btn btn-secondary">ホームへ戻る</a>
+            <a th:href="@{/stores}" class="btn btn-secondary">店舗種別選択へ戻る</a>
         </div>
     </main>
 

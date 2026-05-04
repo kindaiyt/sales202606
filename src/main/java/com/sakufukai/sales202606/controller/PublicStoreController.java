@@ -2,6 +2,7 @@ package com.sakufukai.sales202606.controller;
 
 import com.sakufukai.sales202606.entity.Product;
 import com.sakufukai.sales202606.entity.Store;
+import com.sakufukai.sales202606.entity.StoreType;
 import com.sakufukai.sales202606.service.ProductService;
 import com.sakufukai.sales202606.service.StoreService;
 import jakarta.servlet.http.HttpSession;
@@ -24,35 +25,47 @@ public class PublicStoreController {
         this.productService = productService;
     }
 
-    // =========================
-    // 一般公開：店舗一覧
-    // ・表示: 店舗名、説明、所属(必要なら)
-    // ・ソート対象: 店舗名のみ（URLは扱わない）
-    // ・ソート状態は Session に保持
-    // =========================
     @GetMapping
-    public String listStores(Model model, HttpSession session) {
+    public String storesTop() {
+        return "public/stores-top";
+    }
 
-        List<Store> stores = storeService.findAll();
+    // 学生の模擬店舗用
+    @GetMapping("/student")
+    public String listStudentStores(Model model, HttpSession session) {
 
-        String sort = (String) session.getAttribute("publicStoreSort"); // "name"
-        String dir  = (String) session.getAttribute("publicStoreDir");  // "asc"/"desc"
+        List<Store> stores = storeService.findByType(StoreType.STUDENT);
 
-        if ("name".equals(sort)) {
-            stores = stores.stream()
-                    .sorted((a, b) -> {
-                        String an = a.getName() == null ? "" : a.getName();
-                        String bn = b.getName() == null ? "" : b.getName();
-                        int cmp = an.compareToIgnoreCase(bn);
-                        return "desc".equalsIgnoreCase(dir) ? -cmp : cmp;
-                    })
-                    .toList();
-        }
+        String sort = (String) session.getAttribute("publicStoreSort");
+        String dir  = (String) session.getAttribute("publicStoreDir");
+
+        stores = storeService.sortStores(stores, sort, dir);
 
         model.addAttribute("stores", stores);
         model.addAttribute("hasStores", stores != null && !stores.isEmpty());
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
+        model.addAttribute("title", "学生の模擬店舗一覧"); // ★追加
+
+        return "public/stores";
+    }
+
+    // 一般店舗用
+    @GetMapping("/general")
+    public String listGeneralStores(Model model, HttpSession session) {
+
+        List<Store> stores = storeService.findByType(StoreType.GENERAL);
+
+        String sort = (String) session.getAttribute("publicStoreSort");
+        String dir  = (String) session.getAttribute("publicStoreDir");
+
+        stores = storeService.sortStores(stores, sort, dir);
+
+        model.addAttribute("stores", stores);
+        model.addAttribute("hasStores", stores != null && !stores.isEmpty());
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        model.addAttribute("title", "一般店舗一覧"); // ★追加
 
         return "public/stores";
     }
@@ -60,6 +73,7 @@ public class PublicStoreController {
     @PostMapping("/view-sort")
     public String sortStoreList(@RequestParam(required = false) String sort,
                                 @RequestParam(required = false) String dir,
+                                @RequestParam(required = false) String redirectTo,
                                 HttpSession session) {
 
         // 防御：一般公開は name のみ
@@ -74,13 +88,25 @@ public class PublicStoreController {
             session.setAttribute("publicStoreDir", dir);
         }
 
+        // 学生の模擬店舗および一般店舗用のリダイレクト
+        if ("/stores/student".equals(redirectTo) || "/stores/general".equals(redirectTo)) {
+            return "redirect:" + redirectTo;
+        }
+
         return "redirect:/stores";
     }
 
     @PostMapping("/view-sort/clear")
-    public String clearStoreListSort(HttpSession session) {
+    public String clearStoreListSort(@RequestParam(required = false) String redirectTo,
+                                     HttpSession session) {
         session.removeAttribute("publicStoreSort");
         session.removeAttribute("publicStoreDir");
+
+        // 学生の模擬店舗および一般店舗用のリダイレクト
+        if ("/stores/student".equals(redirectTo) || "/stores/general".equals(redirectTo)) {
+            return "redirect:" + redirectTo;
+        }
+
         return "redirect:/stores";
     }
 

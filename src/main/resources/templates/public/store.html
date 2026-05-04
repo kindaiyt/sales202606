@@ -122,7 +122,10 @@
         </div>
 
         <div class="form-actions mt-16">
-            <a th:href="@{/stores}" class="btn btn-secondary">店舗一覧に戻る</a>
+            <a th:href="@{${store.storeType.name() == 'STUDENT'} ? '/stores/student' : '/stores/general'}"
+               class="btn btn-secondary">
+                店舗一覧へ戻る
+            </a>
         </div>
 
     </main>

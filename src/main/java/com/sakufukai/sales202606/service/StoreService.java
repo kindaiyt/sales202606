@@ -249,4 +249,25 @@ public class StoreService {
         return store;
     }
 
+    @Transactional(readOnly = true)
+    public List<Store> findByType(StoreType storeType) {
+        return storeRepository.findByStoreType(storeType);
+    }
+
+    public List<Store> sortStores(List<Store> stores, String sort, String dir) {
+        if (stores == null) return List.of();
+        if (!"name".equals(sort)) return stores;
+
+        boolean desc = "desc".equalsIgnoreCase(dir);
+
+        return stores.stream()
+                .sorted((a, b) -> {
+                    String an = a.getName() == null ? "" : a.getName();
+                    String bn = b.getName() == null ? "" : b.getName();
+                    int cmp = an.compareToIgnoreCase(bn);
+                    return desc ? -cmp : cmp;
+                })
+                .toList();
+    }
+
 }
