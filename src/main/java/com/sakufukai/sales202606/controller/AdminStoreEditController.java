@@ -136,4 +136,10 @@ public class AdminStoreEditController {
         return "redirect:/admin/stores/" + trimmedNewUrl + "/edit";
     }
 
+    @PostMapping("/admin/stores/{url}/edit/image/delete")
+    public String deleteLocationImage(@PathVariable String url) {
+        storeService.deleteLocationImage(url);
+        return "redirect:/admin/stores/" + url + "/edit";
+    }
+
 }

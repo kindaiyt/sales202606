@@ -101,6 +101,33 @@ public class StoreLocationImageStorageService {
         return UUID.randomUUID() + extension;
     }
 
+    public void delete(String key) {
+        if (key == null || key.isBlank()) {
+            return;
+        }
+
+        if ("s3".equalsIgnoreCase(storageType)) {
+            deleteFromS3(key);
+        } else {
+            deleteFromLocal(key);
+        }
+    }
+
+    private void deleteFromS3(String key) {
+        throw new UnsupportedOperationException("S3削除処理は未実装です。");
+    }
+
+    private void deleteFromLocal(String key) {
+        try {
+            Path targetPath = Paths.get(localDir).resolve(key).normalize();
+
+            Files.deleteIfExists(targetPath);
+
+        } catch (IOException e) {
+            throw new IllegalArgumentException("画像の削除に失敗しました。", e);
+        }
+    }
+
     public record StoreLocationImageResult(String key, String url) {
     }
 }

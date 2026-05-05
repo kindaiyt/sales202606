@@ -303,4 +303,26 @@ public class StoreService {
                 .toList();
     }
 
+    @Transactional
+    public void deleteLocationImage(String url) {
+        Store store = storeRepository.findByUrl(url)
+                .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません: " + url));
+
+        String imageKey = store.getLocationImageKey();
+
+        // 画像が未登録なら何もしない
+        if (imageKey == null || imageKey.isBlank()) {
+            return;
+        }
+
+        // ローカルまたはS3上の画像本体を削除
+        imageStorageService.delete(imageKey);
+
+        // DB上の画像情報を削除
+        store.setLocationImageKey(null);
+        store.setLocationImageUrl(null);
+
+        storeRepository.save(store);
+    }
+
 }

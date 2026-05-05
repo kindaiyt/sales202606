@@ -36,6 +36,15 @@
                     <a th:href="@{/admin/stores/{url}/edit/info(url=${store.url})}" class="btn btn-sm">
                         店舗情報を編集
                     </a>
+                    <form th:if="${!#strings.isEmpty(store.locationImageUrl)}"
+                          th:action="@{/admin/stores/{url}/edit/image/delete(url=${store.url})}"
+                          method="post"
+                          style="display:inline;"
+                          onsubmit="return confirm('現在の画像を削除しますか？');">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            場所の画像を削除
+                        </button>
+                    </form>
                 </div>
             </div>
 
