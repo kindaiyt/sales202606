@@ -191,11 +191,18 @@ public class StoreService {
         );
         store.setStoreType(StoreType.valueOf(storeType));
         if (locationImage != null && !locationImage.isEmpty()) {
+            String oldImageKey = store.getLocationImageKey();
+
             StoreLocationImageStorageService.StoreLocationImageResult imageResult =
                     imageStorageService.save(locationImage);
 
             store.setLocationImageKey(imageResult.key());
             store.setLocationImageUrl(imageResult.url());
+
+            if (oldImageKey != null && !oldImageKey.isBlank()
+                    && !oldImageKey.equals(imageResult.key())) {
+                imageStorageService.delete(oldImageKey);
+            }
         }
         storeRepository.save(store);
     }
