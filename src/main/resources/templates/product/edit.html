@@ -43,6 +43,38 @@
         </div>
 
         <div class="form-group">
+            <label>在庫状況: </label>
+
+            <fieldset class="radio-inline-group">
+
+                <input id="soldOut-false"
+                       class="radio-inline__input"
+                       type="radio"
+                       name="soldOut"
+                       value="false"
+                       th:checked="${!product.soldOut}" />
+
+                <label class="radio-inline__label" for="soldOut-false">
+                    在庫あり
+                </label>
+
+                <input id="soldOut-true"
+                       class="radio-inline__input"
+                       type="radio"
+                       name="soldOut"
+                       value="true"
+                       th:checked="${product.soldOut}" />
+
+                <label class="radio-inline__label" for="soldOut-true">
+                    売り切れ
+                </label>
+
+            </fieldset>
+
+            <div th:if="${storeTypeError}" class="error-message" th:text="${storeTypeError}"></div>
+        </div>
+
+        <div class="form-group">
             <label for="note">説明（任意）</label>
             <textarea id="note" name="note" rows="4"
                       class="note-textarea"
