@@ -21,6 +21,19 @@
                 <!-- 編集リンクなし：表示のみ -->
                 <div class="note-display" th:utext="${noteWithLinks}"></div>
 
+                <p>
+                    <b>店舗の場所: </b>
+                    <span th:text="${#strings.isEmpty(store.locationName) ? '-' : store.locationName}"></span>
+                </p>
+                <p th:if="${!#strings.isEmpty(store.locationImageUrl)}" class="image-help">
+                    画像をクリックすることで拡大表示できます。再度クリックすると元に戻ります。
+                </p>
+                <p th:if="${!#strings.isEmpty(store.locationImageUrl)}">
+                    <img th:src="@{${store.locationImageUrl}}"
+                         alt="現在保存されている画像"
+                         class="store-location-image clickable-image">
+                </p>
+
                 <!-- 商品0件なら、ソートUI/表は出さずメッセージ -->
                 <div th:if="${!hasProducts}" class="store-info" style="margin-top:14px;">
                     <p>商品が登録されていません。</p>
@@ -154,9 +167,11 @@
                 店舗一覧へ戻る
             </a>
         </div>
-
+        <div id="image-modal" class="image-modal">
+            <img id="image-modal-img" class="image-modal-img" alt="拡大画像">
+        </div>
     </main>
-
+    <script th:src="@{/js/image-modal.js}"></script>
 </th:block>
 </body>
 </html>
