@@ -30,13 +30,13 @@
                 <div th:if="${hasProducts}" class="store-actions">
 
                     <p class="product-sort-help">
-                        タイトル行の「商品名」「価格」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
+                        タイトル行の「商品名」「価格」「在庫状況」もしくは並べ替えボタンをクリックすると、それぞれの項目で並べ替えて表示することができます。
                         デフォルトの並び順に戻すこともできます。
                     </p>
 
                     <!-- スマホ用ソートボタン（商品名/価格） -->
                     <div class="sort-bar">
-                        <form th:action="@{|/stores/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                        <form th:action="@{|/stores/${storeType}/${store.url}/view-sort|}" method="post" class="sort-bar__form">
                             <input type="hidden" name="sort" value="name">
                             <input type="hidden" name="dir"
                                    th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
@@ -46,7 +46,7 @@
                             </button>
                         </form>
 
-                        <form th:action="@{|/stores/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                        <form th:action="@{|/stores/${storeType}/${store.url}/view-sort|}" method="post" class="sort-bar__form">
                             <input type="hidden" name="sort" value="price">
                             <input type="hidden" name="dir"
                                    th:value="${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}">
@@ -55,11 +55,22 @@
                                 <span th:if="${sort == 'price'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
                             </button>
                         </form>
+
+                        <!-- 在庫ソート -->
+                        <form th:action="@{|/stores/${storeType}/${store.url}/view-sort|}" method="post" class="sort-bar__form">
+                            <input type="hidden" name="sort" value="soldOut">
+                            <input type="hidden" name="dir"
+                                   th:value="${sort == 'soldOut' and dir == 'asc' ? 'desc' : 'asc'}">
+                            <button type="submit" class="btn btn-sm sort-bar__btn">
+                                在庫で並べ替え
+                                <span th:if="${sort == 'soldOut'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                            </button>
+                        </form>
                     </div>
 
                     <!-- 並び替え解除 -->
                     <form th:if="${sort != null}"
-                          th:action="@{|/stores/${store.url}/view-sort/clear|}"
+                          th:action="@{|/stores/${storeType}/${store.url}/view-sort/clear|}"
                           method="post"
                           class="product-sort-clear-form">
                         <button type="submit" class="btn btn-secondary btn-sm">
@@ -76,7 +87,7 @@
                     <thead>
                     <tr>
                         <th>
-                            <form th:action="@{|/stores/${store.url}/view-sort|}" method="post" style="display:inline;">
+                            <form th:action="@{|/stores/${storeType}/${store.url}/view-sort|}" method="post" style="display:inline;">
                                 <input type="hidden" name="sort" value="name">
                                 <input type="hidden" name="dir"
                                        th:value="${sort == 'name' and dir == 'asc' ? 'desc' : 'asc'}">
@@ -88,7 +99,7 @@
                         </th>
 
                         <th>
-                            <form th:action="@{|/stores/${store.url}/view-sort|}" method="post" style="display:inline;">
+                            <form th:action="@{|/stores/${storeType}/${store.url}/view-sort|}" method="post" style="display:inline;">
                                 <input type="hidden" name="sort" value="price">
                                 <input type="hidden" name="dir"
                                        th:value="${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}">
@@ -100,6 +111,18 @@
                         </th>
 
                         <th>説明</th>
+
+                        <th>
+                            <form th:action="@{|/stores/${storeType}/${store.url}/view-sort|}" method="post" style="display:inline;">
+                                <input type="hidden" name="sort" value="soldOut">
+                                <input type="hidden" name="dir"
+                                       th:value="${sort == 'soldOut' and dir == 'asc' ? 'desc' : 'asc'}">
+                                <button type="submit" class="th-sort-btn">
+                                    在庫状況
+                                    <span th:if="${sort == 'soldOut'}" th:text="${dir == 'asc' ? '▲' : '▼'}"></span>
+                                </button>
+                            </form>
+                        </th>
                     </tr>
                     </thead>
 
@@ -114,6 +137,10 @@
                         <td class="cell-note" data-label="説明"
                             th:text="${#strings.isEmpty(product.note) ? '-' : product.note}">
                         </td>
+
+                        <td class="cell-note" data-label="在庫状況"
+                            th:text="${product.soldOut == true ? '売り切れ' : '在庫あり'}">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -122,7 +149,7 @@
         </div>
 
         <div class="form-actions mt-16">
-            <a th:href="@{${store.storeType.name() == 'STUDENT'} ? '/stores/student' : '/stores/general'}"
+            <a th:href="@{/stores/{storeType}(storeType=${storeType})}"
                class="btn btn-secondary">
                 店舗一覧へ戻る
             </a>

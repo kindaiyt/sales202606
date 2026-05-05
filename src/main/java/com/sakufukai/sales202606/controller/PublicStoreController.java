@@ -47,6 +47,8 @@ public class PublicStoreController {
         model.addAttribute("dir", dir);
         model.addAttribute("title", "学生の模擬店舗一覧"); // ★追加
 
+        model.addAttribute("storeType", "student");
+
         return "public/stores";
     }
 
@@ -66,6 +68,8 @@ public class PublicStoreController {
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         model.addAttribute("title", "一般店舗一覧"); // ★追加
+
+        model.addAttribute("storeType", "general");
 
         return "public/stores";
     }
@@ -117,13 +121,30 @@ public class PublicStoreController {
     // ・表示用ソート：商品名/価格（DB順は変えない）
     // ・ソート状態は Session に保持（URLは /stores/{url} のまま）
     // =========================
-    @GetMapping("/{url}")
-    public String storeDetail(@PathVariable String url, Model model, HttpSession session) {
+    @GetMapping("/{storeType}/{url}")
+    public String storeDetail(@PathVariable String storeType,
+                              @PathVariable String url,
+                              Model model,
+                              HttpSession session) {
+
+        StoreType expectedType;
+
+        if ("student".equals(storeType)) {
+            expectedType = StoreType.STUDENT;
+        } else if ("general".equals(storeType)) {
+            expectedType = StoreType.GENERAL;
+        } else {
+            return "error/404";
+        }
 
         Store store;
         try {
             store = storeService.findByUrl(url);
         } catch (RuntimeException e) {
+            return "error/404";
+        }
+
+        if (store.getStoreType() != expectedType) {
             return "error/404";
         }
 
@@ -142,17 +163,20 @@ public class PublicStoreController {
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
 
+        model.addAttribute("storeType", storeType);
+
         return "public/store";
     }
 
-    @PostMapping("/{url}/view-sort")
-    public String sortProducts(@PathVariable String url,
+    @PostMapping("/{storeType}/{url}/view-sort")
+    public String sortProducts(@PathVariable String storeType,
+                               @PathVariable String url,
                                @RequestParam(required = false) String sort,
                                @RequestParam(required = false) String dir,
                                HttpSession session) {
 
-        // 防御：name/price 以外は無効化
-        if (!"name".equals(sort) && !"price".equals(sort)) sort = null;
+        // 防御：name/price/soldOut 以外は無効化
+        if (!"name".equals(sort) && !"price".equals(sort) && !"soldOut".equals(sort)) sort = null;
         dir = "desc".equalsIgnoreCase(dir) ? "desc" : "asc";
 
         if (sort == null) {
@@ -164,14 +188,16 @@ public class PublicStoreController {
         }
 
         // ★URLは常に /stores/{url} に戻す
-        return "redirect:/stores/" + url;
+        return "redirect:/stores/" + storeType + "/" + url;
     }
 
-    @PostMapping("/{url}/view-sort/clear")
-    public String clearProductSort(@PathVariable String url, HttpSession session) {
+    @PostMapping("/{storeType}/{url}/view-sort/clear")
+    public String clearProductSort(@PathVariable String storeType,
+                                   @PathVariable String url,
+                                   HttpSession session) {
         session.removeAttribute("publicProductSort");
         session.removeAttribute("publicProductDir");
-        return "redirect:/stores/" + url;
+        return "redirect:/stores/" + storeType + "/" + url;
     }
 
     // URLリンク化 + 改行→<br>
