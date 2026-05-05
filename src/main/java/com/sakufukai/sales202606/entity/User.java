@@ -24,7 +24,7 @@ public class User implements SortableEntity {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<UserStore> userStores;
 
     @Column(name = "sort_order")

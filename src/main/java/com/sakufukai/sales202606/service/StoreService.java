@@ -109,7 +109,18 @@ public class StoreService {
         User user = userRepository.findById(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        userStoreRepository.deleteByUserAndStore(user, store);
+        UserStore userStore = userStoreRepository.findByUserAndStore(user, store)
+                .orElseThrow(() -> new RuntimeException("UserStore not found"));
+
+        if (store.getUserStores() != null) {
+            store.getUserStores().removeIf(us -> us.getId().equals(userStore.getId()));
+        }
+
+        if (user.getUserStores() != null) {
+            user.getUserStores().removeIf(us -> us.getId().equals(userStore.getId()));
+        }
+
+        userStoreRepository.delete(userStore);
     }
 
     @Transactional
@@ -128,16 +139,19 @@ public class StoreService {
         return storeRepository.findAllWithUsers();
     }
 
+    @Transactional(readOnly = true)
     public Store findByUrlWithUsers(String url) {
         return storeRepository.findByUrlWithUsers(url)
                 .orElseThrow(() -> new IllegalArgumentException("店舗が存在しません: " + url));
     }
 
+    @Transactional
     public void addUserToStoreByUrl(String url, String userEmail) {
         Store store = findByUrlWithUsers(url);
         addUserToStore(store.getId(), userEmail);
     }
 
+    @Transactional
     public void removeUserFromStoreByUrl(String url, String userEmail) {
         Store store = findByUrlWithUsers(url);
         removeUserFromStore(store.getId(), userEmail);
