@@ -84,6 +84,7 @@ public class ProductController {
         product.setPrice(priceInt);
         product.setNote(note);
         product.setStore(store);
+        product.setSoldOut(false); // 新規登録のためデフォルトで「在庫あり」
 
         // ★権限込み保存
         productService.saveForMember(product, authentication);
@@ -134,6 +135,7 @@ public class ProductController {
                                 @RequestParam(required = false) String name,
                                 @RequestParam(required = false) String price,
                                 @RequestParam(required = false) String note,
+                                @RequestParam(required = false) Boolean soldOut,
                                 Model model,
                                 Authentication authentication) {
 
@@ -146,6 +148,7 @@ public class ProductController {
         model.addAttribute("name", name);
         model.addAttribute("price", price);
         model.addAttribute("note", note);
+        model.addAttribute("soldOut", soldOut);
 
         boolean hasError = false;
 
@@ -179,6 +182,7 @@ public class ProductController {
         product.setName(name.trim());
         product.setPrice(priceInt);
         product.setNote(note);
+        product.setSoldOut(Boolean.TRUE.equals(soldOut));
 
         // ★権限込み保存
         productService.saveForMember(product, authentication);

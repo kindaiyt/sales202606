@@ -34,4 +34,12 @@ public class Product implements SortableEntity {
     @Override
     public String getSortKey() { return String.valueOf(id); }
 
+    @Column(nullable = false)
+    private boolean soldOut = false;
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
 }
