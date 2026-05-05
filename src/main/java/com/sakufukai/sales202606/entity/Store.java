@@ -33,4 +33,13 @@ public class Store {
     @Column(nullable = false)
     private StoreType storeType = StoreType.STUDENT;
 
+    @Column(name = "location_name")
+    private String locationName;
+
+    @Column(name = "location_image_key")
+    private String locationImageKey;
+
+    @Column(name = "location_image_url")
+    private String locationImageUrl;
+
 }
