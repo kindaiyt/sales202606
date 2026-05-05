@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 src/main/resources/application.yml
 run_for_local.sh
+uploads
 
 ### STS ###
 .apt_generated
