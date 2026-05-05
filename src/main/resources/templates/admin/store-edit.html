@@ -26,11 +26,13 @@
                     <b>店舗の場所: </b>
                     <span th:text="${#strings.isEmpty(store.locationName) ? '-' : store.locationName}"></span>
                 </p>
+                <p th:if="${!#strings.isEmpty(store.locationImageUrl)}" class="image-help">
+                    画像をクリックすることで拡大表示できます。再度クリックすると元に戻ります。
+                </p>
                 <p th:if="${!#strings.isEmpty(store.locationImageUrl)}">
                     <img th:src="@{${store.locationImageUrl}}"
                            alt="現在保存されている画像"
-                           class="clickable-image"
-                           style="max-width: 320px; width: 100%; height: auto;">
+                           class="store-location-image clickable-image">
                 </p>
 
                 <div class="actions" style="margin-top: 10px;">

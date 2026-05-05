@@ -86,17 +86,21 @@
 
             <div class="form-group" th:if="${!#strings.isEmpty(store.locationImageUrl)}">
                 <label>現在の場所画像: </label>
+                <p th:if="${!#strings.isEmpty(store.locationImageUrl)}" class="image-help">
+                    画像をクリックすることで拡大表示できます。再度クリックすると元に戻ります。
+                </p>
                 <div>
                     <img th:src="@{${store.locationImageUrl}}"
                          alt="現在保存されている画像"
-                         class="clickable-image"
-                         style="max-width: 320px; width: 100%; height: auto;">
+                         class="store-location-image clickable-image">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="locationImage">新たに設定する画像: </label>
-
+                <p id="image-help" class="image-help" style="display: none;">
+                    画像をクリックすることで拡大表示できます。再度クリックすると元に戻ります。
+                </p>
                 <input type="file"
                        id="locationImage"
                        name="locationImage"
@@ -113,7 +117,7 @@
 
                 <img id="location-image-preview"
                      alt="選択した画像のプレビュー"
-                     class="location-image-preview clickable-image"
+                     class="location-image-preview store-location-image clickable-image"
                      style="display: none;">
             </div>
 
@@ -133,6 +137,7 @@
             const fileName = document.getElementById("file-name");
             const fileButton = document.getElementById("file-button");
             const preview = document.getElementById("location-image-preview");
+            const imageHelp = document.getElementById("image-help");
 
             input.addEventListener("change", function () {
                 const file = input.files.length > 0 ? input.files[0] : null;
@@ -143,12 +148,16 @@
 
                     preview.src = URL.createObjectURL(file);
                     preview.style.display = "block";
+
+                    imageHelp.style.display = "block";
                 } else {
                     fileName.textContent = "未選択";
                     fileButton.classList.remove("is-selected");
 
                     preview.removeAttribute("src");
                     preview.style.display = "none";
+
+                    imageHelp.style.display = "none";
                 }
             });
         });

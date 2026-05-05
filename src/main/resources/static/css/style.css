@@ -1339,3 +1339,17 @@ button.btn {
     border-radius: 8px;
     background: #fff;
 }
+
+.store-location-image {
+    width: 180px;          /* ←ここでサイズ調整 */
+    max-width: 100%;       /* スマホで崩れない */
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.image-help {
+    margin: 6px 0 8px;
+    font-size: 12px;
+    color: #666;
+}
