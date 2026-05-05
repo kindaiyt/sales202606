@@ -24,6 +24,7 @@
                 <thead>
                 <tr>
                     <th>店舗名</th>
+                    <th>店舗の場所</th>
                     <th class="col-actions">操作</th>
                 </tr>
                 </thead>
@@ -31,6 +32,10 @@
                 <tbody>
                 <tr th:each="store : ${stores}">
                     <td class="cell-name" data-label="店舗名" th:text="${store.name}"></td>
+                    <!-- 店舗の場所 -->
+                    <td data-label="店舗の場所"
+                        th:text="${#strings.isEmpty(store.locationName) ? '-' : store.locationName}">
+                    </td>
 
                     <td class="cell-actions" data-label="操作">
                         <div class="row-actions">

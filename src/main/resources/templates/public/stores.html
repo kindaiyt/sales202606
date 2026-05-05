@@ -78,6 +78,7 @@
                         </form>
                     </th>
 
+                    <th>店舗の場所</th>
                     <th>店舗の説明</th>
                 </tr>
                 </thead>
@@ -89,6 +90,10 @@
                            th:text="${store.name}"></a>
                     </td>
 
+                    <!-- 店舗の場所 -->
+                    <td data-label="店舗の場所"
+                        th:text="${#strings.isEmpty(store.locationName) ? '-' : store.locationName}">
+                    </td>
                     <td data-label="店舗の説明"
                         th:text="${#strings.isEmpty(store.note) ? '-' : store.note}">
                     </td>
