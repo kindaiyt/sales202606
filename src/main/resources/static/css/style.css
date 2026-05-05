@@ -1238,3 +1238,75 @@ button.btn {
     outline: 3px solid #80bdff;
     outline-offset: 2px;
 }
+
+/* inputは隠す */
+.file-input {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* ボタン見た目（radio-inline__labelと統一） */
+.file-button {
+    display: inline-block;
+    width: auto;
+    max-width: max-content;
+    padding: 8px 16px;
+    margin-right: 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+/* ホバー */
+.file-button:hover {
+    background-color: #e9ecef;
+}
+
+/* ファイル選択後に青くする */
+.file-button.is-selected {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+/* フォーカス */
+.file-input:focus + .file-button {
+    outline: 3px solid #80bdff;
+    outline-offset: 2px;
+}
+
+/* ファイル名表示 */
+.file-name {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    transform: translateY(-2px);
+    color: #555;
+}
+
+.file-input:valid + .file-button {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.file-select-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.location-image-preview {
+    display: block;
+    margin-top: 12px;
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}

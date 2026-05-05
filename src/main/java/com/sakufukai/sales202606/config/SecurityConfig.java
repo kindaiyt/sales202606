@@ -58,6 +58,9 @@ public class SecurityConfig {
                         .requestMatchers("/store/**", "/product/**", "/users/**")
                         .hasAnyRole("USER", "ADMIN")
 
+                        // ===== 画像用 =====
+                        .requestMatchers("/uploads/**").permitAll()
+
                         // ===== その他は拒否 =====
                         .anyRequest().denyAll()
                 )

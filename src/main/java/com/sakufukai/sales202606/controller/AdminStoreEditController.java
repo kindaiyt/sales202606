@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -75,6 +76,7 @@ public class AdminStoreEditController {
                                   @RequestParam(required = false) String newUrl,
                                   @RequestParam(required = false) String locationName,
                                   @RequestParam(required = false) String storeType,
+                                  @RequestParam(required = false) MultipartFile locationImage,
                                   Model model) {
 
         Store store = storeService.findByUrl(url);
@@ -120,7 +122,12 @@ public class AdminStoreEditController {
         }
 
         try {
-            storeService.updateStoreInfo(url, name, trimmedNewUrl, locationName, storeType);
+            storeService.updateStoreInfo(url,
+                    name,
+                    trimmedNewUrl,
+                    locationName,
+                    storeType,
+                    locationImage);
         } catch (IllegalArgumentException e) {
             model.addAttribute("urlError", e.getMessage());
             return "admin/store-info-edit";

@@ -13,7 +13,7 @@
     <main class="content">
         <h1>店舗情報編集</h1>
 
-        <form th:action="@{/admin/stores/{url}/edit/info(url=${store.url})}" method="post">
+        <form th:action="@{/admin/stores/{url}/edit/info(url=${store.url})}" method="post" enctype="multipart/form-data">
 
             <!-- 店舗名 -->
             <div class="form-group">
@@ -84,6 +84,38 @@
                 <div th:if="${storeTypeError}" class="error-message" th:text="${storeTypeError}"></div>
             </div>
 
+            <div class="form-group" th:if="${!#strings.isEmpty(store.locationImageUrl)}">
+                <label>現在の場所画像: </label>
+                <div>
+                    <img th:src="@{${store.locationImageUrl}}"
+                         alt="現在保存されている画像"
+                         style="max-width: 320px; width: 100%; height: auto;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="locationImage">新たに設定する画像: </label>
+
+                <input type="file"
+                       id="locationImage"
+                       name="locationImage"
+                       accept="image/png,image/jpeg,image/webp"
+                       class="file-input">
+
+                <div class="file-select-row">
+                    <label for="locationImage" id="file-button" class="file-button">
+                        ファイルを選択
+                    </label>
+
+                    <span id="file-name" class="file-name">未選択</span>
+                </div>
+
+                <img id="location-image-preview"
+                     alt="選択した画像のプレビュー"
+                     class="location-image-preview"
+                     style="display: none;">
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn">更新</button>
                 <a th:href="@{/admin/stores/{url}/edit(url=${store.url})}" class="btn btn-secondary">戻る</a>
@@ -91,7 +123,32 @@
 
         </form>
     </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("locationImage");
+            const fileName = document.getElementById("file-name");
+            const fileButton = document.getElementById("file-button");
+            const preview = document.getElementById("location-image-preview");
 
+            input.addEventListener("change", function () {
+                const file = input.files.length > 0 ? input.files[0] : null;
+
+                if (file) {
+                    fileName.textContent = file.name;
+                    fileButton.classList.add("is-selected");
+
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = "block";
+                } else {
+                    fileName.textContent = "未選択";
+                    fileButton.classList.remove("is-selected");
+
+                    preview.removeAttribute("src");
+                    preview.style.display = "none";
+                }
+            });
+        });
+    </script>
 </th:block>
 </body>
 </html>

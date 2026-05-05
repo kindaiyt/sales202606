@@ -26,6 +26,11 @@
                     <b>店舗の場所: </b>
                     <span th:text="${#strings.isEmpty(store.locationName) ? '-' : store.locationName}"></span>
                 </p>
+                <p th:if="${!#strings.isEmpty(store.locationImageUrl)}">
+                    <img th:src="@{${store.locationImageUrl}}"
+                           alt="現在保存されている画像"
+                           style="max-width: 320px; width: 100%; height: auto;">
+                </p>
 
                 <div class="actions" style="margin-top: 10px;">
                     <a th:href="@{/admin/stores/{url}/edit/info(url=${store.url})}" class="btn btn-sm">

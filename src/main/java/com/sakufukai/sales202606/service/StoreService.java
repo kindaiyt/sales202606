@@ -8,21 +8,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StoreService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
     private final UserStoreRepository userStoreRepository;
+    private final StoreLocationImageStorageService imageStorageService;
 
     public StoreService(StoreRepository storeRepository,
                         UserRepository userRepository,
-                        UserStoreRepository userStoreRepository) {
+                        UserStoreRepository userStoreRepository,
+                        StoreLocationImageStorageService imageStorageService) {
         this.storeRepository = storeRepository;
         this.userRepository = userRepository;
         this.userStoreRepository = userStoreRepository;
+        this.imageStorageService = imageStorageService;
     }
 
     // 店舗作成
@@ -162,7 +167,8 @@ public class StoreService {
                                 String name,
                                 String newUrl,
                                 String locationName,
-                                String storeType) {
+                                String storeType,
+                                MultipartFile locationImage) {
         Store store = storeRepository.findByUrl(currentUrl)
                 .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません: " + currentUrl));
 
@@ -184,6 +190,13 @@ public class StoreService {
                         : locationName.trim()
         );
         store.setStoreType(StoreType.valueOf(storeType));
+        if (locationImage != null && !locationImage.isEmpty()) {
+            StoreLocationImageStorageService.StoreLocationImageResult imageResult =
+                    imageStorageService.save(locationImage);
+
+            store.setLocationImageKey(imageResult.key());
+            store.setLocationImageUrl(imageResult.url());
+        }
         storeRepository.save(store);
     }
 
