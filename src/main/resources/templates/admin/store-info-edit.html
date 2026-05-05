@@ -89,6 +89,7 @@
                 <div>
                     <img th:src="@{${store.locationImageUrl}}"
                          alt="現在保存されている画像"
+                         class="clickable-image"
                          style="max-width: 320px; width: 100%; height: auto;">
                 </div>
             </div>
@@ -112,7 +113,7 @@
 
                 <img id="location-image-preview"
                      alt="選択した画像のプレビュー"
-                     class="location-image-preview"
+                     class="location-image-preview clickable-image"
                      style="display: none;">
             </div>
 
@@ -122,6 +123,9 @@
             </div>
 
         </form>
+        <div id="image-modal" class="image-modal">
+            <img id="image-modal-img" class="image-modal-img" alt="拡大画像">
+        </div>
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -149,6 +153,7 @@
             });
         });
     </script>
+    <script th:src="@{/js/image-modal.js}"></script>
 </th:block>
 </body>
 </html>

@@ -1310,3 +1310,32 @@ button.btn {
     border-radius: 8px;
     border: 1px solid #ddd;
 }
+
+.clickable-image {
+    cursor: zoom-in;
+}
+
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: zoom-out;
+}
+
+.image-modal.is-open {
+    display: flex;
+}
+
+.image-modal-img {
+    max-width: 95vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    background: #fff;
+}

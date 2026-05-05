@@ -29,6 +29,7 @@
                 <p th:if="${!#strings.isEmpty(store.locationImageUrl)}">
                     <img th:src="@{${store.locationImageUrl}}"
                            alt="現在保存されている画像"
+                           class="clickable-image"
                            style="max-width: 320px; width: 100%; height: auto;">
                 </p>
 
@@ -47,6 +48,7 @@
                     </form>
                 </div>
             </div>
+        </div>
 
             <!-- 現在所属ユーザー -->
         <h2 class="section-title">現在所属しているユーザー</h2>
@@ -104,7 +106,11 @@
         <div class="actions">
             <a th:href="@{/admin/stores}" class="btn btn-secondary">店舗一覧へ戻る</a>
         </div>
+        <div id="image-modal" class="image-modal">
+            <img id="image-modal-img" class="image-modal-img" alt="拡大画像">
+        </div>
     </main>
+    <script th:src="@{/js/image-modal.js}"></script>
 </th:block>
 </body>
 </html>
