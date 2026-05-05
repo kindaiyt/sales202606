@@ -121,6 +121,9 @@ public class ProductService {
                         p -> p.getPrice() == null ? 0 : p.getPrice()
                 );
                 break;
+            case "soldOut":
+                comparator = Comparator.comparing(Product::isSoldOut);
+                break;
             default:
                 return base;
         }
