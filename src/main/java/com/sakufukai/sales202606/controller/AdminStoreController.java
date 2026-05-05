@@ -72,6 +72,7 @@ public class AdminStoreController {
     public String newStoreForm(Model model) {
         model.addAttribute("name", "");
         model.addAttribute("url", "");
+        model.addAttribute("locationName", "");
         model.addAttribute("storeType", "STUDENT");
         return "admin/store-form";
     }
@@ -80,11 +81,13 @@ public class AdminStoreController {
     @PostMapping("/new")
     public String saveStore(@RequestParam(required = false) String name,
                             @RequestParam(required = false) String url,
+                            @RequestParam(required = false) String locationName,
                             @RequestParam(required = false) String storeType,
                             Model model) {
 
         model.addAttribute("name", name);
         model.addAttribute("url", url);
+        model.addAttribute("locationName", locationName);
         model.addAttribute("storeType", storeType);
 
         boolean hasError = false;
@@ -129,6 +132,11 @@ public class AdminStoreController {
         Store store = new Store();
         store.setName(name.trim());
         store.setUrl(trimmedUrl);
+        store.setLocationName(
+                locationName == null || locationName.trim().isEmpty()
+                        ? null
+                        : locationName.trim()
+        );
         store.setStoreType(type);
 
         try {

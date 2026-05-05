@@ -73,6 +73,7 @@ public class AdminStoreEditController {
     public String updateStoreInfo(@PathVariable String url,
                                   @RequestParam(required = false) String name,
                                   @RequestParam(required = false) String newUrl,
+                                  @RequestParam(required = false) String locationName,
                                   @RequestParam(required = false) String storeType,
                                   Model model) {
 
@@ -82,6 +83,7 @@ public class AdminStoreEditController {
         // 入力値保持
         model.addAttribute("name", name);
         model.addAttribute("newUrl", newUrl);
+        model.addAttribute("locationName", locationName);
         model.addAttribute("storeType", storeType);
 
         boolean hasError = false;
@@ -118,7 +120,7 @@ public class AdminStoreEditController {
         }
 
         try {
-            storeService.updateStoreInfo(url, name, trimmedNewUrl, storeType);
+            storeService.updateStoreInfo(url, name, trimmedNewUrl, locationName, storeType);
         } catch (IllegalArgumentException e) {
             model.addAttribute("urlError", e.getMessage());
             return "admin/store-info-edit";

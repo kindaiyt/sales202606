@@ -161,6 +161,7 @@ public class StoreService {
     public void updateStoreInfo(String currentUrl,
                                 String name,
                                 String newUrl,
+                                String locationName,
                                 String storeType) {
         Store store = storeRepository.findByUrl(currentUrl)
                 .orElseThrow(() -> new IllegalArgumentException("店舗が見つかりません: " + currentUrl));
@@ -177,6 +178,11 @@ public class StoreService {
         }
 
         store.setName(trimmedName);
+        store.setLocationName(
+                locationName == null || locationName.trim().isEmpty()
+                        ? null
+                        : locationName.trim()
+        );
         store.setStoreType(StoreType.valueOf(storeType));
         storeRepository.save(store);
     }

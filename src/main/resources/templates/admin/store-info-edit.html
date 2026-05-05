@@ -44,6 +44,15 @@
             </div>
 
             <div class="form-group">
+                <label for="locationName">文化祭中の場所を入力（例: 中庭、北校舎1階調理実習室）（省略可）: </label>
+                <input type="text"
+                       id="locationName"
+                       name="locationName"
+                       placeholder="ここに店舗の場所を入力（省略可）"
+                       th:value="${locationName != null ? locationName : store.locationName}">
+            </div>
+
+            <div class="form-group">
                 <label>店舗種別: </label>
 
                 <fieldset class="radio-inline-group">

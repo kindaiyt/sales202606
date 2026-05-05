@@ -18,10 +18,13 @@
             <div class="store-info">
                 <p><b>店舗名: </b><span th:text="${store.name}"></span></p>
                 <p><b>店舗URL: </b><span th:text="${store.url}"></span></p>
-
                 <p>
                     <b>店舗分類: </b>
                     <span th:text="${store.storeType != null ? store.storeType.displayName : '-'}"></span>
+                </p>
+                <p>
+                    <b>店舗の場所: </b>
+                    <span th:text="${#strings.isEmpty(store.locationName) ? '-' : store.locationName}"></span>
                 </p>
 
                 <div class="actions" style="margin-top: 10px;">
