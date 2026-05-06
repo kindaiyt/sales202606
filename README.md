@@ -2,7 +2,7 @@
 
 ## 説明
 
-2026年兵庫県立明石北高等学校の文化祭運営に使用予定のアプリです。明石北高校の同窓会組織である朔風会の役員が開発しています。このアプリはAWSにてデプロイ済みです。
+2026年兵庫県立明石北高等学校の文化祭運営に使用予定のアプリです。明石北高校の同窓会組織である朔風会の役員のYuto T.が開発しています。このアプリはAWSにてデプロイ済みです。
 
 朔風会ホームページ: [朔風会公式ホームページ](https://www.sakufukai.com/)
 
@@ -10,15 +10,24 @@
 
 ## 使用方法
 
-1. src/main/resources/application.yml を作成し、以下の内容を入力します。また、環境変数は以下の値をAWSの環境プロパティに設定してください。
+1. src/main/resources/application.yml を作成し、以下の内容を入力します。また、環境変数は以下の値をAWSの環境プロパティに設定してください。ローカルの場合は、環境変数をエクスポートしてください。
 
-SERVER_FORWARD_HEADERS_STRATEGY: リバースプロキシ（ALB等）経由でも正しいURL・HTTPS情報を認識するための設定
-SERVER_PORT: アプリケーションが待ち受けるサーバのポート番号を指定する設定
+```
+ローカル・AWS共通
 SPRING_DATASOURCE_PASSWORD: データベースに接続するためのパスワード
 SPRING_DATASOURCE_URL: 接続先データベースの場所（RDS等）を指定するURL
 SPRING_DATASOURCE_USERNAME: データベースに接続するためのユーザー名
 SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: Googleログインに使用するOAuthクライアントID
 SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: Googleログイン認証に使用するクライアント秘密鍵
+APP_IMAGE_STORAGE_TYPE: ローカルの場合は 'local'、AWS上では 's3'
+APP_IMAGE_LOCAL_DIR: $(pwd)/uploads/store-locations のように、ローカル上で画像を格納する絶対パスを記述。AWS 上では不要
+APP_IMAGE_PUBLIC_PATH: '/uploads/store-locations' のように、ローカル上で画像を格納するパスを記述。AWS 上では不要
+APP_ADMIN_EMAILS: 初期値の管理者として登録するGoogleアカウント。ymlファイルに直接書く場合は設定不要
+
+AWS上でのみ必要なもの
+SERVER_FORWARD_HEADERS_STRATEGY: リバースプロキシ（ALB等）経由でも正しいURL・HTTPS情報を認識するための設定
+SERVER_PORT: アプリケーションが待ち受けるサーバのポート番号を指定する設定
+```
 
 ```
 spring:
@@ -32,11 +41,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+#      ddl-auto: update # ローカル用
+      ddl-auto: none # AWS 用
     show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+#    properties: # ローカル用
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
   security:
     oauth2:
@@ -59,53 +74,21 @@ spring:
 
 app:
   # ローカルではこのリストを使う / EBでは APP_ADMIN_EMAILS で上書き可能
-  admin-emails: ${APP_ADMIN_EMAILS:example1@gmail.com,example2@gmail.com,sakufukai@gmail.com}
+  admin-emails: ${APP_ADMIN_EMAILS:example1@gmail.com,example2@gmail.com}
+  image-storage:
+    type: ${APP_IMAGE_STORAGE_TYPE:local}
+    local-dir: ${APP_IMAGE_LOCAL_DIR:uploads/store-locations}
+    public-path: ${APP_IMAGE_PUBLIC_PATH:/uploads/store-locations}
+    s3-bucket: ${APP_IMAGE_S3_BUCKET:}
+    s3-prefix: ${APP_IMAGE_S3_PREFIX:store-locations}
+    s3-region: ${APP_IMAGE_S3_REGION:ap-northeast-1}
+
 
 server:
   error:
     whitelabel:
       enabled: false
-```
 
-開発時には、以下のapplication.ymlを使用していました。`<client-id>`と`<client-secret>`には、Google OAuthのクライアントIDとクライアントシークレットを入力して下さい。また、`admin-emails`には、管理者として登録したいメールアドレスを入れて下さい。
-
-```
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/sales202606?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci
-    username: root
-    password: rootpassword
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: <client-id>
-            client-secret: <client-secret>
-            scope:
-              - openid     # OidcUser を取得するには openid が必須
-              - email
-              - profile
-        provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
-            user-name-attribute: sub
-
-app:
-  admin-emails:
-    - "example1@gmail.com"
-    - "example2@gmail.com"
-
-server:
-  error:
-    whitelabel:
-      enabled: false
 ```
 
 2. 以下のコマンドを実行して、データベースとして MySQL コンテナを立てます。AWS上では、Amazon RDSを用いてデータベースを作成します。同じVPCに配置することを忘れないでください。
