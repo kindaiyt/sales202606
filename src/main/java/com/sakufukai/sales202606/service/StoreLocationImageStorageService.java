@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.UUID;
 
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.core.sync.RequestBody;
+
 @Service
 public class StoreLocationImageStorageService {
 
@@ -28,6 +33,12 @@ public class StoreLocationImageStorageService {
 
     @Value("${app.image-storage.s3-region}")
     private String s3Region;
+
+    private final S3Client s3Client;
+
+    public StoreLocationImageStorageService(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
 
     public StoreLocationImageResult save(MultipartFile file) {
         if (file == null || file.isEmpty()) {
@@ -61,26 +72,25 @@ public class StoreLocationImageStorageService {
     }
 
     private StoreLocationImageResult saveToS3(MultipartFile file, String fileName) {
-        // 後でAWS SDK実装に差し替える場所
-        // 先に設計だけ通すなら、ここはまだ例外でOK
-        throw new UnsupportedOperationException("S3保存処理は未実装です。");
+        try {
+            String key = s3Prefix + "/" + fileName;
 
-        /*
-        String key = s3Prefix + "/" + fileName;
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(s3Bucket)
+                            .key(key)
+                            .contentType(file.getContentType() != null ? file.getContentType() : "application/octet-stream")
+                            .build(),
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+            );
 
-        s3Client.putObject(
-            PutObjectRequest.builder()
-                .bucket(s3Bucket)
-                .key(key)
-                .contentType(file.getContentType())
-                .build(),
-            RequestBody.fromInputStream(file.getInputStream(), file.getSize())
-        );
+            String imageUrl = "https://" + s3Bucket + ".s3." + s3Region + ".amazonaws.com/" + key;
 
-        String imageUrl = "https://" + s3Bucket + ".s3." + s3Region + ".amazonaws.com/" + key;
+            return new StoreLocationImageResult(key, imageUrl);
 
-        return new StoreLocationImageResult(key, imageUrl);
-        */
+        } catch (IOException e) {
+            throw new IllegalArgumentException("S3へのアップロードに失敗しました。", e);
+        }
     }
 
     private String buildFileName(MultipartFile file) {
@@ -114,7 +124,12 @@ public class StoreLocationImageStorageService {
     }
 
     private void deleteFromS3(String key) {
-        throw new UnsupportedOperationException("S3削除処理は未実装です。");
+        s3Client.deleteObject(
+                DeleteObjectRequest.builder()
+                        .bucket(s3Bucket)
+                        .key(key)
+                        .build()
+        );
     }
 
     private void deleteFromLocal(String key) {
