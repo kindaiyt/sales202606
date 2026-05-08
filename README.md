@@ -15,7 +15,7 @@
 ```
 ローカル・AWS共通
 SPRING_DATASOURCE_PASSWORD: データベースに接続するためのパスワード
-SPRING_DATASOURCE_URL: 接続先データベースの場所（RDS等）を指定するURL
+SPRING_DATASOURCE_URL: 接続先データベースの場所（RDS等）を指定するURL（例: jdbc:mysql://localhost:3306/sales202606?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci&serverTimezone=Asia/Tokyo）
 SPRING_DATASOURCE_USERNAME: データベースに接続するためのユーザー名
 SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: Googleログインに使用するOAuthクライアントID
 SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: Googleログイン認証に使用するクライアント秘密鍵
@@ -25,8 +25,8 @@ APP_IMAGE_PUBLIC_PATH: '/uploads/store-locations' のように、ローカル上
 APP_ADMIN_EMAILS: 初期値の管理者として登録するGoogleアカウント。ymlファイルに直接書く場合は設定不要
 
 AWS上でのみ必要なもの
-SERVER_FORWARD_HEADERS_STRATEGY: リバースプロキシ（ALB等）経由でも正しいURL・HTTPS情報を認識するための設定
-SERVER_PORT: アプリケーションが待ち受けるサーバのポート番号を指定する設定
+SERVER_FORWARD_HEADERS_STRATEGY: リバースプロキシ（ALB等）経由でも正しいURL・HTTPS情報を認識するための設定（例: native）
+SERVER_PORT: アプリケーションが待ち受けるサーバのポート番号を指定する設定（例: 5000）
 ```
 
 ```
